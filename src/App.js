@@ -11,8 +11,7 @@
 */
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
-import Tables from "./pages/Tables";
-import Billing from "./pages/Billing";
+import Account from "./pages/Account/Account";
 import Rtl from "./pages/Rtl";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
@@ -21,6 +20,20 @@ import Main from "./components/layout/Main";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
+import ServicesPackage from "./pages/servicespackage/ServicesPackage";
+import Transaction from "./pages/Transaction";
+import ReportList from "./pages/ReportList";
+import ProductCategory from "./pages/ProductCategory";
+import GardenerPosts from "./pages/GardenerPosts";
+import GardenerVerification from "./pages/GardenerVerification";
+import Contracts from "./pages/Contracts";
+import Orders from "./pages/Orders";
+import Revenue from "./pages/Revenue";
+import Services from "./pages/services/Services";
+import Services_add from "./pages/services/Services_add";
+import NotificationPage from "./pages/Notification";
+
+
 
 function App() {
   return (
@@ -30,10 +43,27 @@ function App() {
         <Route path="/sign-in" exact component={SignIn} />
         <Main>
           <Route exact path="/dashboard" component={Home} />
-          <Route exact path="/tables" component={Tables} />
-          <Route exact path="/billing" component={Billing} />
+          <Route exact path="/account" component={Account} />
+          <Route path="/services" component={Services} />
+          <Route exact path="/package" component={ServicesPackage} />
+          <Route exact path="/transaction" component={Transaction} />
+          <Route exact path="/reports-list" component={ReportList} />
+          <Route exact path="/productcategory" component={ProductCategory} />
+          <Route exact path="/gardener-posts" component={GardenerPosts} />
+          <Route
+            exact
+            path="/gardener-verification"
+            component={GardenerVerification}
+          />
+          <Route exact path="/services/Services_add" component={Services_add} />
+          <Route exact path="/notifications" component={NotificationPage}/>
+          <Route exact path="/subscription-contracts" component={Contracts} />
+          <Route exact path="/subscription-orders" component={Orders} />
+          <Route exact path="/revenue" component={Revenue} />
           <Route exact path="/rtl" component={Rtl} />
           <Route exact path="/profile" component={Profile} />
+
+
           <Redirect from="*" to="/dashboard" />
         </Main>
       </Switch>

@@ -1,15 +1,3 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
 
 import {
@@ -37,6 +25,7 @@ import {
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
+import { useLocation } from "react-router-dom";
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {
@@ -268,11 +257,31 @@ function Header({
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
 
+  const breadcrumbMap = {
+    dashboard: "Tổng Quan",
+    account: "Nhà Vườn",
+    "gardener-verification": "Đại Lý",
+    services: "Danh Sách Dịch Vụ",
+    package: "Danh Sách Gói",
+    productcategory: "Danh Mục Sản Phẩm",
+    "subscription-contracts": "Hợp Đồng",
+    "subscription-orders": "Đơn Hàng & Thanh Toán",
+    notifications: "Thông Báo",
+    "reports-list": "Danh Sách Báo Cáo",
+    "reported-posts": "Bài Viết Bị Báo Cáo",
+    profile: "Hồ Sơ",
+    "sign-in": "Đăng Nhập",
+    "sign-up": "Đăng Ký"
+  };
+  const location = useLocation();
+  const path = location.pathname.replace("/", "");
+  const pageTitle = breadcrumbMap[path] || path;
+
   return (
     <>
-      <div className="setting-drwer" onClick={showDrawer}>
+      {/* <div className="setting-drwer" onClick={showDrawer}>
         {setting}
-      </div>
+      </div> */}
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
           <Breadcrumb>
@@ -280,7 +289,7 @@ function Header({
               <NavLink to="/">Pages</NavLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
-              {name.replace("/", "")}
+              {pageTitle}
             </Breadcrumb.Item>
           </Breadcrumb>
           <div className="ant-page-header-heading">
@@ -288,149 +297,11 @@ function Header({
               className="ant-page-header-heading-title"
               style={{ textTransform: "capitalize" }}
             >
-              {subName.replace("/", "")}
+              {pageTitle}
             </span>
           </div>
         </Col>
-        <Col span={24} md={18} className="header-control">
-          <Badge size="small" count={4}>
-            <Dropdown overlay={menu} trigger={["click"]}>
-              <a
-                href="#pablo"
-                className="ant-dropdown-link"
-                onClick={(e) => e.preventDefault()}
-              >
-                {bell}
-              </a>
-            </Dropdown>
-          </Badge>
-          <Button type="link" onClick={showDrawer}>
-            {logsetting}
-          </Button>
-          <Button
-            type="link"
-            className="sidebar-toggler"
-            onClick={() => onPress()}
-          >
-            {toggler}
-          </Button>
-          <Drawer
-            className="settings-drawer"
-            mask={true}
-            width={360}
-            onClose={hideDrawer}
-            placement={placement}
-            visible={visible}
-          >
-            <div layout="vertical">
-              <div className="header-top">
-                <Title level={4}>
-                  Configurator
-                  <Text className="subtitle">See our dashboard options.</Text>
-                </Title>
-              </div>
-
-              <div className="sidebar-color">
-                <Title level={5}>Sidebar Color</Title>
-                <div className="theme-color mb-2">
-                  <ButtonContainer>
-                    <Button
-                      type="primary"
-                      onClick={() => handleSidenavColor("#1890ff")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="success"
-                      onClick={() => handleSidenavColor("#52c41a")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="danger"
-                      onClick={() => handleSidenavColor("#d9363e")}
-                    >
-                      1
-                    </Button>
-                    <Button
-                      type="yellow"
-                      onClick={() => handleSidenavColor("#fadb14")}
-                    >
-                      1
-                    </Button>
-
-                    <Button
-                      type="black"
-                      onClick={() => handleSidenavColor("#111")}
-                    >
-                      1
-                    </Button>
-                  </ButtonContainer>
-                </div>
-
-                <div className="sidebarnav-color mb-2">
-                  <Title level={5}>Sidenav Type</Title>
-                  <Text>Choose between 2 different sidenav types.</Text>
-                  <ButtonContainer className="trans">
-                    <Button
-                      type={sidenavType === "transparent" ? "primary" : "white"}
-                      onClick={() => {
-                        handleSidenavType("transparent");
-                        setSidenavType("transparent");
-                      }}
-                    >
-                      TRANSPARENT
-                    </Button>
-                    <Button
-                      type={sidenavType === "white" ? "primary" : "white"}
-                      onClick={() => {
-                        handleSidenavType("#fff");
-                        setSidenavType("white");
-                      }}
-                    >
-                      WHITE
-                    </Button>
-                  </ButtonContainer>
-                </div>
-                <div className="fixed-nav mb-2">
-                  <Title level={5}>Navbar Fixed </Title>
-                  <Switch onChange={(e) => handleFixedNavbar(e)} />
-                </div>
-                <div className="ant-docment">
-                  <ButtonContainer>
-                    <Button type="black" size="large">
-                      FREE DOWNLOAD
-                    </Button>
-                    <Button size="large">VIEW DOCUMENTATION</Button>
-                  </ButtonContainer>
-                </div>
-                <div className="viewstar">
-                  <a href="#pablo">{<StarOutlined />} Star</a>
-                  <a href="#pablo"> 190</a>
-                </div>
-
-                <div className="ant-thank">
-                  <Title level={5} className="mb-2">
-                    Thank you for sharing!
-                  </Title>
-                  <ButtonContainer className="social">
-                    <Button type="black">{<TwitterOutlined />}TWEET</Button>
-                    <Button type="black">{<FacebookFilled />}SHARE</Button>
-                  </ButtonContainer>
-                </div>
-              </div>
-            </div>
-          </Drawer>
-          <Link to="/sign-in" className="btn-sign-in">
-            {profile}
-            <span>Sign in</span>
-          </Link>
-          <Input
-            className="header-search"
-            placeholder="Type here..."
-            prefix={<SearchOutlined />}
-          />
-        </Col>
+     
       </Row>
     </>
   );
