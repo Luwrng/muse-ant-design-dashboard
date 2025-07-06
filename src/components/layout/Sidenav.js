@@ -93,7 +93,7 @@ function Sidenav() {
         </Menu.SubMenu>
 
         {/* FE-04: Quản lý danh mục sản phẩm */}
-        <Menu.SubMenu
+        {/* <Menu.SubMenu
           key="product-management"
           icon={<FontAwesomeIcon icon={faShoppingBasket} />}
           title="Quản Lý Sản Phẩm"
@@ -104,7 +104,7 @@ function Sidenav() {
               <span>Danh Mục Sản Phẩm</span>
             </NavLink>
           </Menu.Item>
-        </Menu.SubMenu>
+        </Menu.SubMenu> */}
 
         {/* FE-05 & FE-06: Quản lý đăng ký */}
         <Menu.SubMenu
@@ -115,7 +115,7 @@ function Sidenav() {
           <Menu.Item key="subscription-contracts">
             <NavLink to="/subscription-contracts">
               <FontAwesomeIcon icon={faFileContract} />
-              <span>Hợp Đồng</span>
+              <span>Quản lí mua gói</span>
             </NavLink>
           </Menu.Item>
           <Menu.Item key="subscription-orders">
@@ -124,23 +124,19 @@ function Sidenav() {
               <span>Đơn Hàng & Thanh Toán</span>
             </NavLink>
           </Menu.Item>
+
+          <Menu.Item key="statistics">
+            <NavLink to="/statistics">
+              <FontAwesomeIcon icon={faChartLine} />
+              <span>Thống Kê</span>
+            </NavLink>
+          </Menu.Item>
         </Menu.SubMenu>
 
-        {/* FE-07: Revenue Statistics */}
-        {/* <Menu.Item key="revenue">
-          <NavLink to="/revenue">
-            <FontAwesomeIcon icon={faChartLine} />
-            <span style={{ fontSize: "16px", color: "red" }}>
-              Revenue Statistics
-            </span>
-          </NavLink>
-        </Menu.Item> */}
-
-        {/* FE-08: Thông báo */}
-        <Menu.Item key="notifications">
-          <NavLink to="/notifications">
-            <FontAwesomeIcon icon={faBell} />
-            <span>Thông Báo</span>
+        <Menu.Item key="active-package-customers">
+          <NavLink to="/active-package-customers">
+            <FontAwesomeIcon icon={faUserGroup} />
+            <span>Khách Hàng Đang Sử Dụng Gói</span>
           </NavLink>
         </Menu.Item>
 

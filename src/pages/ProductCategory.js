@@ -8,95 +8,72 @@ import {
   Modal,
   Space,
 } from "antd";
-import DetailButton from "../components/button/DetailButton"; 
+import DetailButton from "../components/button/DetailButton";
 import SearchButton from "../components/button/SearchButton";
 
 const { Title } = Typography;
 
-function ProductCategory() {
+function GardenerPostStatistics() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedGardener, setSelectedGardener] = useState(null);
   const [searchText, setSearchText] = useState("");
 
-
+  // Dữ liệu mock: bài đăng của mỗi Gardener
   const [data, setData] = useState([
     {
-      ProductId: 1,
-      ProductName: "Cà Rốt Hữu Cơ",
-      CreatedAt: "2025-06-01T10:00:00Z",
-      UpdatedAt: "2025-06-10T12:00:00Z",
-      Status: "Hoạt động",
-      ProductCategoryId: 1,
       GardenerId: 101,
-
-      Name: "Rau củ",
-      Description: "Rau củ hữu cơ tươi sạch",
-
+      GardenerName: "Nguyễn Văn A",
+      Posts: [
+        { ProductId: 1, ProductName: "Cà Rốt Hữu Cơ" },
+        { ProductId: 4, ProductName: "Củ cải trắng" },
+      ],
     },
     {
-      ProductId: 2,
-      ProductName: "Chuối",
-      CreatedAt: "2025-06-03T11:30:00Z",
-      UpdatedAt: "2025-06-11T09:45:00Z",
-      Status: "Ngừng hoạt động",
-      ProductCategoryId: 2,
       GardenerId: 102,
-
-      Name: "Trái cây",
-      Description: "Trái cây tươi theo mùa",
-
+      GardenerName: "Lê Thị B",
+      Posts: [{ ProductId: 2, ProductName: "Chuối" }],
     },
     {
-      ProductId: 3,
-      ProductName: "Lá Bạc Hà",
-      CreatedAt: "2025-06-05T09:15:00Z",
-      UpdatedAt: "2025-06-12T08:20:00Z",
-      Status: "Hoạt động",
-      ProductCategoryId: 3,
       GardenerId: 103,
-
-      Name: "Thảo mộc",
-      Description: "Thảo mộc dùng để nấu ăn",
-
+      GardenerName: "Trần Văn C",
+      Posts: [
+        { ProductId: 3, ProductName: "Lá Bạc Hà" },
+        { ProductId: 5, ProductName: "Lá Tía Tô" },
+        { ProductId: 6, ProductName: "Hành Lá" },
+      ],
     },
-  ])
+  ]);
 
   const showModal = (record) => {
+    setSelectedGardener(record);
     setIsModalVisible(true);
-    setSelectedData(record);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setSelectedData(null);
+    setSelectedGardener(null);
   };
-
 
   const columns = [
     {
       title: "STT",
-      dataIndex: "ProductId",
-      key: "ProductId",
+      dataIndex: "GardenerId",
+      key: "GardenerId",
       width: 100,
     },
     {
-      title: "Tên",
-      dataIndex: "ProductName",
-      key: "ProductName",
-      width: 200,
+      title: "Tên Gardener",
+      dataIndex: "GardenerName",
+      key: "GardenerName",
       filteredValue: [searchText],
-      onFilter: (value, record) => {
-        return (
-          String(record.ProductName).toLowerCase().includes(value.toLowerCase()) ||
-          String(record.Name).toLowerCase().includes(value.toLowerCase())
-        );
-      },
+      onFilter: (value, record) =>
+        record.GardenerName.toLowerCase().includes(value.toLowerCase()),
     },
     {
-      title: "Mô tả",
-      dataIndex: "Description",
-      key: "Description",
-      width: 400,
+      title: "Số bài đăng",
+      key: "PostCount",
+      render: (_, record) => record.Posts.length,
+      width: 150,
     },
     {
       title: "Thao tác",
@@ -105,11 +82,10 @@ function ProductCategory() {
       render: (_, record) => (
         <Space size={20}>
           <DetailButton
-            tooltip="Xem chi tiết"
+            tooltip="Xem chi tiết bài đăng"
             record={record}
             showModal={showModal}
           />
-
         </Space>
       ),
     },
@@ -126,16 +102,15 @@ function ProductCategory() {
               title={
                 <Row justify="space-between" align="middle">
                   <Col>
-                    <Title level={5}>Danh Mục Sản Phẩm</Title>
+                    <Title level={5}>Thống Kê Bài Đăng Theo Gardener</Title>
                   </Col>
                   <Col>
                     <Space>
                       <SearchButton
-                        placeholder="Tìm kiếm danh mục..."
+                        placeholder="Tìm kiếm Gardener..."
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                       />
-                     
                     </Space>
                   </Col>
                 </Row>
@@ -148,9 +123,8 @@ function ProductCategory() {
                   pagination={{
                     position: ["bottomCenter", "bottomRight"],
                     pageSize: 10,
-                    showTotal: (total, range) =>
-                      `${total} danh mục`,
                   }}
+                  rowKey="GardenerId"
                   className="ant-border-space"
                 />
               </div>
@@ -158,19 +132,23 @@ function ProductCategory() {
           </Col>
         </Row>
       </div>
+
       <Modal
-        title="Chi tiết danh mục"
+        title="Chi tiết bài đăng"
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
-        <div style={{ padding: "12px 0" }}>
-          <p><strong>Tên danh mục: </strong> {selectedData?.Name}</p>
-          <p><strong>Mô tả: </strong> {selectedData?.Description}</p>
-        </div>
+        {selectedGardener && (
+          <ul style={{ paddingLeft: 20 }}>
+            {selectedGardener.Posts.map((post) => (
+              <li key={post.ProductId}>{post.ProductName}</li>
+            ))}
+          </ul>
+        )}
       </Modal>
     </>
   );
 }
 
-export default ProductCategory;
+export default GardenerPostStatistics;

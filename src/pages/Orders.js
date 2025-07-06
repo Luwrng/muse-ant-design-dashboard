@@ -79,16 +79,16 @@ const Orders = () => {
       render: (amount) => `${Number(amount).toLocaleString()} đ`,
       align: "center"
     },
-    // {
-    //   title: "Trạng Thái",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   align: "center",
-    //   render: (status) => (
-    //     <Tag color={getStatusColor(status)}>{status}</Tag>
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (status) => (
+        <Tag color={getStatusColor(status)}>{status}</Tag>
 
-    //   ),
-    // },
+      ),
+    },
     {
       title: "Ngày Tạo",
       dataIndex: "createdAt",
@@ -137,7 +137,7 @@ const Orders = () => {
       gardenerId: "GDN002",
       servicePackageId: "PKG002",
       totalAmount: 300000,
-      status: "In Progress",
+      status: "Cancelled",
       createdAt: "2025-06-14",
     },
     {
@@ -159,7 +159,7 @@ const Orders = () => {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Quản Lý Đơn Mua Gói Dịch Vụ"
+              title="Danh sách đơn mua gói dịch vụ"
               extra={
                 <Space>
                   <SearchButton
@@ -177,7 +177,6 @@ const Orders = () => {
                   pagination={{
                     position: ["bottomCenter", "bottomRight"],
                     pageSize: 10,
-                    showTotal: (total) => `Tổng cộng ${total} đơn`,
                   }}
                 />
               </div>

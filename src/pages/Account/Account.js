@@ -39,6 +39,7 @@ import face5 from "../../assets/images/face-5.jpeg";
 import face6 from "../../assets/images/face-6.jpeg";
 import mauGiayChuDoanhNghiep from "../../assets/images/mauGiayChuDoanhNghiep.jpg";
 import SearchButton from "../../components/button/SearchButton";
+import DetailButton from "../../components/button/DetailButton";
 
 
 
@@ -285,6 +286,7 @@ function Account() {
       dataIndex: "Avatar",
       key: "avatar",
       width: 80,
+      align: "center",
       render: (avatar) => <Avatar size={40} src={avatar} />,
     },
     {
@@ -292,23 +294,27 @@ function Account() {
       dataIndex: "Name",
       key: "name",
       width: 150,
+      align: "center",
     },
     {
       title: "Email",
       dataIndex: "Email",
       key: "email",
       width: 200,
+      align: "center",
     },
     {
       title: "Số điện thoại",
       dataIndex: "PhoneNumber",
       key: "phone",
       width: 150,
+      align: "center",
     },
     {
       title: "Trạng thái",
       dataIndex: "Status",
       width: 120,
+      align: "center",
       render: (status, record) => {
         const isHovered = hoveredStatus === record.key;
 
@@ -317,7 +323,7 @@ function Account() {
             ? "Đang hoạt động"
             : status === "Inactive"
               ? "Ngưng hoạt động"
-              : status;
+              : status; 
 
         return (
           <>
@@ -378,17 +384,20 @@ function Account() {
       width: 80,
       align: "center",
       render: (_, record) => (
-        <FontAwesomeIcon
-          icon={faEye}
-          onClick={() => showUserDetails(record)}
+        <Space>
+          <DetailButton
+            onClick={() => showUserDetails(record)}
+            icon={faEye}
+            title="Xem chi tiết"
           style={{
             fontSize: "16px",
             color: "#1890ff",
             cursor: "pointer",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        />
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          />
+        </Space>
       ),
     },
   ];
@@ -410,6 +419,7 @@ function Account() {
                     placeholder="Tìm kiếm tài khoản..."
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
+                    SiSi
                   />
                 </Space>
               } 
@@ -476,6 +486,10 @@ function Account() {
           </Col>
         </Row>
       </div>
+
+
+
+      
       {/* modal thông tin cá nhân */}
       <Modal
         title={null}
@@ -503,8 +517,11 @@ function Account() {
               <p><strong>Email:</strong> {selectedUser?.Email}</p>
               <p><strong>Điện thoại:</strong> {selectedUser?.PhoneNumber}</p>
               <p><strong>Giới tính:</strong> {selectedUser?.Gender}</p>
+              <p><strong>Địa chỉ:</strong> {selectedUser?.Address}</p>
               <p><strong>Trạng thái:</strong> {selectedUser?.Status}</p>
+
               <p><strong>Ngày tạo:</strong> {selectedUser?.CreatedAt}</p>
+              
               <p><strong>Ngày cập nhật:</strong> {selectedUser?.UpdatedAt}</p>
               <p>
                 <strong>Xác thực:</strong>{" "}

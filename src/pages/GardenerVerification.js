@@ -19,7 +19,7 @@ import {
   Image,
 } from "antd";
 import DetailButton from "../components/button/DetailButton";
-import SearchButton from "../components/button/SearchButton";   
+import SearchButton from "../components/button/SearchButton";
 // Images
 import face3 from "../assets/images/face-3.jpg";
 import face4 from "../assets/images/face-4.jpg";
@@ -259,6 +259,7 @@ function GardenerVerification() {
       title: "Đại lý",
       key: "retailer",
       width: 250,
+
       render: (_, record) => (
         <Space>
           <Avatar size={40} src={record.avatar} />
@@ -271,44 +272,46 @@ function GardenerVerification() {
         </Space>
       ),
     },
-
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       width: 180,
+
     },
-    {
-      title: "Ngày đăng ký",
-      dataIndex: "registrationDate",
-      key: "registrationDate",
-      width: 180,
-      render: (date) => new Date(date).toLocaleString(),
-      sorter: (a, b) =>
-        new Date(a.registrationDate) - new Date(b.registrationDate),
-    },
+
     {
       title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
       width: 180,
       render: (phone) => phone.replace(/(\d{4})(\d{3})(\d{3})/, "$1-$2-$3"),
-    },   {
+      align: "center",
+    },
+    {
       title: "Địa chỉ ",
       dataIndex: "address",
       key: "address",
       width: 180,
       render: (address) => address.replace(/(\d{4})(\d{3})(\d{3})/, "$1-$2-$3"),
+      align: "center",
+    },
+    {
+      title: "Ngày đăng ký",
+      dataIndex: "registrationDate",
+      key: "registrationDate",
+      width: 180,
+      align: "center",
     },
 
     {
       title: "Thao tác",
       key: "action",
-      width: 50,
+      width: 100,
       align: "center",
       render: (_, record) => (
         <Space>
-       <DetailButton record={record} showModal={showViewModal} /> 
+          <DetailButton record={record} showModal={showViewModal} />
         </Space>
       ),
     },
@@ -322,7 +325,7 @@ function GardenerVerification() {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-                title="Danh sách đại lý "
+              title="Danh sách đại lý "
               extra={
                 <Space>
                   <SearchButton
@@ -332,7 +335,7 @@ function GardenerVerification() {
                   />
                 </Space>
               }
-                >
+            >
               <div className="table-responsive">
                 <Table
                   columns={columns}
@@ -340,9 +343,6 @@ function GardenerVerification() {
                   pagination={{
                     position: ["bottomCenter", "bottomCenter"],
                     pageSize: 6,
-              
-                    showTotal: (total, range) =>
-                      `${total} items`,
                   }}
                   className="ant-border-space"
                 />
@@ -358,7 +358,7 @@ function GardenerVerification() {
         visible={isViewModalVisible}
         onCancel={handleCancel}
         width={600}
-        footer={null} 
+        footer={null}
       >
         {viewingRecord && (
           <>
@@ -383,11 +383,12 @@ function GardenerVerification() {
               <Descriptions.Item label="Địa chỉ" span={2}>
                 {viewingRecord.address}
               </Descriptions.Item>
-              <Descriptions.Item label="Kinh nghiệm" span={2}>
-                {viewingRecord.experience}
-              </Descriptions.Item>
+            
               <Descriptions.Item label="Giới tính" span={2}>
                 {viewingRecord.gender}
+              </Descriptions.Item>
+              <Descriptions.Item label="Trạng thái" span={2}>
+                {viewingRecord.status === "Approved" ? <Tag color="green">Đã phê duyệt</Tag> : <Tag color="red">Chưa phê duyệt</Tag>}
               </Descriptions.Item>
             </Descriptions>
           </>

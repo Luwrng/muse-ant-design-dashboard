@@ -12,7 +12,7 @@ import {
   Descriptions,
   List,
   Popconfirm,
-  
+
 } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,7 +43,7 @@ const ServicesPackage = () => {
       title: "Tên Gói Dịch Vụ",
       dataIndex: "name",
       key: "name",
- 
+
     },
     {
       title: "Mô Tả",
@@ -62,7 +62,7 @@ const ServicesPackage = () => {
       title: "Thời Hạn",
       dataIndex: "duration",
       key: "duration",
-      render: (duration) => `${duration} tháng`,
+      render: (duration) => `${duration} ngày `,
       align: "center",
     },
     {
@@ -97,14 +97,14 @@ const ServicesPackage = () => {
     setIsModalVisible(true);
   };
 
-  const data = 
+  const data =
     [
       {
         key: "1",
         name: "Gói Đăng Bài Cơ Bản",
         description: "Cho phép Gardener đăng và hiển thị số lượng bài viết giới hạn với mức ưu tiên thấp.",
         price: 500000,
-        duration: 1, // 1 tháng
+        duration: 30, // 1 tháng
         status: "active",
         services: [
           "Tối đa 5 bài đăng sản phẩm cùng lúc",
@@ -118,7 +118,7 @@ const ServicesPackage = () => {
         name: "Gói Đăng Bài Nâng Cao",
         description: "Tăng giới hạn bài đăng và thời gian hiển thị, phù hợp với Gardener có danh mục đa dạng.",
         price: 1200000,
-        duration: 3, // 3 tháng
+        duration: 90, // 3 tháng
         status: "active",
         services: [
           "Tối đa 10 bài đăng sản phẩm cùng lúc",
@@ -132,7 +132,7 @@ const ServicesPackage = () => {
         name: "Gói Đăng Bài Doanh Nghiệp",
         description: "Dành cho đơn vị kinh doanh lớn, tối ưu khả năng hiển thị và tiếp cận khách hàng.",
         price: 2500000,
-        duration: 6, // 6 tháng
+        duration: 180, // 6 tháng
         status: "inactive",
         services: [
           "Không giới hạn số bài đăng cùng lúc",
@@ -142,7 +142,7 @@ const ServicesPackage = () => {
         ]
       }
     ]
-  
+
 
   return (
     <>
@@ -176,8 +176,6 @@ const ServicesPackage = () => {
                     position: ["bottomCenter", "bottomRight"],
                     total: data.length,
                     pageSize: 5,
-
-                    showTotal: (total) => `Tổng số ${total} gói dịch vụ`,
                   }}
                 />
               </div>
@@ -208,7 +206,7 @@ const ServicesPackage = () => {
               {`${Number(selectedPackage.price).toLocaleString()} đ`}
             </Descriptions.Item>
             <Descriptions.Item label="Thời Hạn">
-              {`${selectedPackage.duration} tháng`}
+              {`${selectedPackage.duration} ngày`}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng Thái">
               <Tag color={selectedPackage.status === "active" ? "success" : "error"}>
@@ -221,8 +219,7 @@ const ServicesPackage = () => {
                 dataSource={selectedPackage.services}
                 renderItem={(item) => (
                   <List.Item>
-                    <CheckOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                    {item}
+                    - {item}
                   </List.Item>
                 )}
               />

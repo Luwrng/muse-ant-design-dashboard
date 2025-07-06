@@ -156,7 +156,7 @@ const Customers = () => {
                                         total: data.length,
                                         pageSize: 5,
                                         showSizeChanger: true,
-                                        showTotal: (total) => `Tổng số ${total} khách hàng`,
+                                      
                                     }}
                                 />
                             </div>

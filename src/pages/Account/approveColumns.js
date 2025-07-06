@@ -5,13 +5,15 @@ import { Avatar } from "antd";
 import { useState } from "react";
 import { message } from "antd";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import DetailButton from "../../components/button/DetailButton";
 
-const approveColumns = ({ handleApprove,  handleViewImage, openRejectModal }) => [
+const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => [
   {
     title: "Hình đại diện",
     dataIndex: "Avatar",
     key: "avatar",
     width: 80,
+    align: "center",
     render: (avatar) => <Avatar size={40} src={avatar} />,
   },
   {
@@ -19,18 +21,21 @@ const approveColumns = ({ handleApprove,  handleViewImage, openRejectModal }) =>
     dataIndex: "Name",
     key: "name",
     width: 150,
+    align: "center",
   },
   {
     title: "Email",
     dataIndex: "Email",
     key: "email",
     width: 200,
+    align: "center",
   },
   {
     title: "Số điện thoại",
     dataIndex: "PhoneNumber",
     key: "phone",
     width: 150,
+    align: "center",
   },
   {
     title: "Xem chi tiết ",
@@ -40,22 +45,16 @@ const approveColumns = ({ handleApprove,  handleViewImage, openRejectModal }) =>
     align: "center",
     render: (_, record) => (
       <Space>
-        <FontAwesomeIcon
-          icon={faEye}
+        <DetailButton
           onClick={() => handleViewImage(record.ViewCertificate)}
-          style={{
-            fontSize: "16px",
-            color: "#1890ff",
-            cursor: "pointer",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          icon={faEye}
+          title="Xem chi tiết"
         />
       </Space>
     ),
   },
   {
-    title: "Thao tác",
+    title: "Phê duyệt",
     key: "actions",
     width: 80,
     align: "center",

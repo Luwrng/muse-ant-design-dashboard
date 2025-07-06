@@ -42,13 +42,13 @@ export default class SignIn extends Component {
                 <Menu.Item key="3">
                   <Link to="/sign-up">
                  
-                    <span> Sign Up</span>
+                    <span> Đăng kí </span>
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="4">
                   <Link to="/sign-in">
             
-                    <span> Sign In</span>
+                    <span> Đăng nhập </span>
                   </Link>
                 </Menu.Item>
               </Menu>
@@ -97,14 +97,14 @@ export default class SignIn extends Component {
                     <Input placeholder="Mật khẩu" />
                   </Form.Item>
 
-                  <Form.Item
+                  {/* <Form.Item
                     name="remember"
                     className="aligin-center"
                     valuePropName="checked"
                   >
                     <Switch defaultChecked onChange={onChange} />
-                    Remember me
-                  </Form.Item>
+                 Ghi nhớ 
+                  </Form.Item> */}
 
                   <Form.Item>
                     <Button
