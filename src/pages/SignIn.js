@@ -18,11 +18,30 @@ import {
   InstagramOutlined,
   GithubOutlined,
 } from "@ant-design/icons";
+import styled from "styled-components";
+
 function onChange(checked) {
   console.log(`switch to ${checked}`);
 }
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
+
+const CustomButton = styled(Button)`
+  width: 100%;
+  background: #28bf8d;
+  border: none;
+
+  &:hover {
+    background: #239e78 !important;
+    border: none !important;
+  }
+  ,
+  &:focus,
+  &:active {
+    background: #28bf8d !important;
+    border: none !important;
+  }
+`;
 
 export default class SignIn extends Component {
   render() {
@@ -41,13 +60,11 @@ export default class SignIn extends Component {
               <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="3">
                   <Link to="/sign-up">
-                 
                     <span> Đăng kí </span>
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="4">
                   <Link to="/sign-in">
-            
                     <span> Đăng nhập </span>
                   </Link>
                 </Menu.Item>
@@ -107,13 +124,15 @@ export default class SignIn extends Component {
                   </Form.Item> */}
 
                   <Form.Item>
-                    <Button
+                    <CustomButton
                       type="primary"
                       htmlType="submit"
-                      style={{ width: "100%" }}
+                      onClick={(e) => {
+                        e.currentTarget.blur(); // remove focus so it returns to normal
+                      }}
                     >
-                      SIGN IN
-                    </Button>
+                      Đăng nhập
+                    </CustomButton>
                   </Form.Item>
                   <p className="font-semibold text-muted">
                     Bạn chưa có tài khoản ?{" "}
@@ -123,9 +142,7 @@ export default class SignIn extends Component {
                   </p>
                 </Form>
               </Col>
-              <Col
-                className="sign-img"
-              >
+              <Col className="sign-img">
                 <img src={signinbg} alt="" />
               </Col>
             </Row>

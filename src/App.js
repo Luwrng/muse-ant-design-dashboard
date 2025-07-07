@@ -37,7 +37,9 @@ import StatisticsPage from "./pages/StatisticsPage";
 import ActivePackageCustomers from "./pages/ActivePackageCustomers";
 
 //Gardener import
+import GardenerMain from "./components/gardenerlayout/Main";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
+import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
 
 function App() {
   return (
@@ -47,6 +49,9 @@ function App() {
         <Route path="/sign-in" exact component={SignIn} />
         //Gardener Pages router
         <Route path="/gardener/dashboard" component={GardenerLandingPage} />
+        <GardenerMain>
+          <Route path="/gardener/product" component={GardenerProductPage} />
+        </GardenerMain>
         <Main>
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/account" component={Account} />
