@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 /*!
 =========================================================
 * Muse Ant Design Dashboard - v1.0.0
@@ -35,6 +36,8 @@ import NotificationPage from "./pages/Notification";
 import StatisticsPage from "./pages/StatisticsPage";
 import ActivePackageCustomers from "./pages/ActivePackageCustomers";
 
+//Gardener import
+import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 
 function App() {
   return (
@@ -42,6 +45,8 @@ function App() {
       <Switch>
         <Route path="/sign-up" exact component={SignUp} />
         <Route path="/sign-in" exact component={SignIn} />
+        //Gardener Pages router
+        <Route path="/gardener/dashboard" component={GardenerLandingPage} />
         <Main>
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/account" component={Account} />
@@ -64,11 +69,13 @@ function App() {
           <Route exact path="/revenue" component={Revenue} />
           <Route exact path="/rtl" component={Rtl} />
           <Route exact path="/profile" component={Profile} />
-          <Route exact path="/active-package-customers" component={ActivePackageCustomers} />
-
-
-          <Redirect from="*" to="/dashboard" />
+          <Route
+            exact
+            path="/active-package-customers"
+            component={ActivePackageCustomers}
+          />
         </Main>
+        <Redirect from="*" to="/dashboard" />
       </Switch>
     </div>
   );
