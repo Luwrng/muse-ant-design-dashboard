@@ -37,7 +37,7 @@ import StatisticsPage from "./pages/StatisticsPage";
 import ActivePackageCustomers from "./pages/ActivePackageCustomers";
 
 //Gardener import
-import GardenerMain from "./components/gardenerlayout/Main";
+import GardenerMain from "./components/gardenerlayout/GardenerMain";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
 
@@ -45,13 +45,27 @@ function App() {
   return (
     <div className="App">
       <Switch>
+        {/* Auth routes */}
         <Route path="/sign-up" exact component={SignUp} />
         <Route path="/sign-in" exact component={SignIn} />
-        //Gardener Pages router
-        <Route path="/gardener/dashboard" component={GardenerLandingPage} />
-        <GardenerMain>
-          <Route path="/gardener/product" component={GardenerProductPage} />
-        </GardenerMain>
+
+        {/* Gardener routes */}
+        <Route path="/gardener/landing" component={GardenerLandingPage} />
+        <Route
+          path="/gardener"
+          render={() => (
+            <GardenerMain>
+              <Switch>
+                <Route
+                  path="/gardener/product"
+                  component={GardenerProductPage}
+                />
+              </Switch>
+            </GardenerMain>
+          )}
+        ></Route>
+
+        {/* Admin routes */}
         <Main>
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/account" component={Account} />
