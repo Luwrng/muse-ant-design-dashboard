@@ -41,6 +41,8 @@ import GardenerMain from "./components/gardenerlayout/GardenerMain";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
 import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
+import GProductCategory from "./pages/GardenerPage/OrderManagement/ProductCategory/GProductCategory";
+import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
 
 function App() {
   return (
@@ -62,6 +64,11 @@ function App() {
                   component={GardenerProductPage}
                 />
                 <Route path="/gardener/order" component={GOrderPage} />
+                <Route
+                  path="/gardener/product-category"
+                  component={GProductCategory}
+                />
+                <Route path="/gardener/post" component={GPostPage} />
               </Switch>
             </GardenerMain>
           )}

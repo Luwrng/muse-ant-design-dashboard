@@ -12,11 +12,14 @@ import {
   Descriptions,
   List,
   Popconfirm,
-
 } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import DetailButton from "../../components/button/DetailButton";
 import EditButton from "../../components/button/EditButton";
 import DeleteButton from "../../components/button/DeleteButton";
@@ -37,19 +40,16 @@ const ServicesPackage = () => {
   };
   const { Text } = Typography;
 
-
   const columns = [
     {
       title: "Tên Gói Dịch Vụ",
       dataIndex: "name",
       key: "name",
-
     },
     {
       title: "Mô Tả",
       dataIndex: "description",
       key: "description",
-
     },
     {
       title: "Giá",
@@ -91,58 +91,58 @@ const ServicesPackage = () => {
     },
   ];
 
-
   const showModal = (record) => {
     setSelectedPackage(record);
     setIsModalVisible(true);
   };
 
-  const data =
-    [
-      {
-        key: "1",
-        name: "Gói Đăng Bài Cơ Bản",
-        description: "Cho phép Gardener đăng và hiển thị số lượng bài viết giới hạn với mức ưu tiên thấp.",
-        price: 500000,
-        duration: 30, // 1 tháng
-        status: "active",
-        services: [
-          "Tối đa 5 bài đăng sản phẩm cùng lúc",
-          "Không ưu tiên hiển thị trên trang chủ",
-          "Không có nhãn nổi bật",
-          "Bài đăng hết hạn sau 15 ngày"
-        ]
-      },
-      {
-        key: "2",
-        name: "Gói Đăng Bài Nâng Cao",
-        description: "Tăng giới hạn bài đăng và thời gian hiển thị, phù hợp với Gardener có danh mục đa dạng.",
-        price: 1200000,
-        duration: 90, // 3 tháng
-        status: "active",
-        services: [
-          "Tối đa 10 bài đăng sản phẩm cùng lúc",
-          "Ưu tiên hiển thị đầu danh mục trong 3 ngày",
-          "Gắn nhãn nổi bật cho 2 bài đăng mỗi tháng",
-          "Bài đăng hết hạn sau 30 ngày"
-        ]
-      },
-      {
-        key: "3",
-        name: "Gói Đăng Bài Doanh Nghiệp",
-        description: "Dành cho đơn vị kinh doanh lớn, tối ưu khả năng hiển thị và tiếp cận khách hàng.",
-        price: 2500000,
-        duration: 180, // 6 tháng
-        status: "inactive",
-        services: [
-          "Không giới hạn số bài đăng cùng lúc",
-          "Ưu tiên hiển thị toàn thời gian",
-          "Tất cả bài đăng được gắn nhãn nổi bật",
-          "Hỗ trợ nội dung và thiết kế bài đăng chuyên nghiệp"
-        ]
-      }
-    ]
-
+  const data = [
+    {
+      key: "1",
+      name: "Gói Đăng Bài Cơ Bản",
+      description:
+        "Cho phép Gardener đăng và hiển thị số lượng bài viết giới hạn với mức ưu tiên thấp.",
+      price: 500000,
+      duration: 30, // 1 tháng
+      status: "active",
+      services: [
+        "Tối đa 5 bài đăng sản phẩm cùng lúc",
+        "Không ưu tiên hiển thị trên trang chủ",
+        "Không có nhãn nổi bật",
+        "Bài đăng hết hạn sau 15 ngày",
+      ],
+    },
+    {
+      key: "2",
+      name: "Gói Đăng Bài Nâng Cao",
+      description:
+        "Tăng giới hạn bài đăng và thời gian hiển thị, phù hợp với Gardener có danh mục đa dạng.",
+      price: 1200000,
+      duration: 90, // 3 tháng
+      status: "active",
+      services: [
+        "Tối đa 10 bài đăng sản phẩm cùng lúc",
+        "Ưu tiên hiển thị đầu danh mục trong 3 ngày",
+        "Gắn nhãn nổi bật cho 2 bài đăng mỗi tháng",
+        "Bài đăng hết hạn sau 30 ngày",
+      ],
+    },
+    {
+      key: "3",
+      name: "Gói Đăng Bài Doanh Nghiệp",
+      description:
+        "Dành cho đơn vị kinh doanh lớn, tối ưu khả năng hiển thị và tiếp cận khách hàng.",
+      price: 2500000,
+      duration: 180, // 6 tháng
+      status: "inactive",
+      services: [
+        "Không giới hạn số bài đăng cùng lúc",
+        "Ưu tiên hiển thị toàn thời gian",
+        "Tất cả bài đăng được gắn nhãn nổi bật",
+        "Hỗ trợ nội dung và thiết kế bài đăng chuyên nghiệp",
+      ],
+    },
+  ];
 
   return (
     <>
@@ -160,12 +160,8 @@ const ServicesPackage = () => {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                   />
-                  <Button type="primary">
-                    Thêm Gói Mới
-                  </Button>
-
+                  <Button type="primary">Thêm Gói Mới</Button>
                 </Space>
-
               }
             >
               <div className="table-responsive">
@@ -209,7 +205,11 @@ const ServicesPackage = () => {
               {`${selectedPackage.duration} ngày`}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng Thái">
-              <Tag color={selectedPackage.status === "active" ? "success" : "error"}>
+              <Tag
+                color={
+                  selectedPackage.status === "active" ? "success" : "error"
+                }
+              >
                 {selectedPackage.status === "active" ? "Đang Bán" : "Ngừng Bán"}
               </Tag>
             </Descriptions.Item>
@@ -217,11 +217,7 @@ const ServicesPackage = () => {
               <List
                 size="small"
                 dataSource={selectedPackage.services}
-                renderItem={(item) => (
-                  <List.Item>
-                    - {item}
-                  </List.Item>
-                )}
+                renderItem={(item) => <List.Item>- {item}</List.Item>}
               />
             </Descriptions.Item>
           </Descriptions>

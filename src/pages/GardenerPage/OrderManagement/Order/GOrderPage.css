@@ -1,4 +1,5 @@
 .gorder-order-management {
+  max-width: 100rem;
   margin: 0 auto;
   padding: 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -6,7 +7,7 @@
 }
 
 .gorder-page-title {
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: 600;
   color: #333;
   margin-bottom: 24px;

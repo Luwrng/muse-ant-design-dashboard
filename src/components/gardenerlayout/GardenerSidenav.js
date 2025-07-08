@@ -39,24 +39,12 @@ function GardenerSidenav() {
         </Menu.Item>
 
         {/* Quản lý đơn hàng */}
-        <Menu.SubMenu
-          key="order-management"
-          icon={<FontAwesomeIcon icon={faFileInvoice} />}
-          title="Quản lý đơn hàng"
-        >
-          <Menu.Item key="order">
-            <NavLink to="/gardener/order">
-              <FontAwesomeIcon icon={faClipboardList} />
-              <span>Đơn hàng</span>
-            </NavLink>
-          </Menu.Item>
-          <Menu.Item key="order-delivery">
-            <NavLink to="/gardener/order-delivery">
-              <FontAwesomeIcon icon={faTruck} />
-              <span>Đơn vận chuyển</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.SubMenu>
+        <Menu.Item key="order">
+          <NavLink to="/gardener/order">
+            <FontAwesomeIcon icon={faClipboardList} />
+            <span>Đơn hàng</span>
+          </NavLink>
+        </Menu.Item>
 
         {/* FE-02: Quản lý bài đăng */}
         <Menu.Item key="post">
