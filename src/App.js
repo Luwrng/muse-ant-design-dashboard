@@ -41,8 +41,9 @@ import GardenerMain from "./components/gardenerlayout/GardenerMain";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
 import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
-import GProductCategory from "./pages/GardenerPage/OrderManagement/ProductCategory/GProductCategory";
+import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCategory";
 import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
+import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
 
 function App() {
   return (
@@ -69,6 +70,10 @@ function App() {
                   component={GProductCategory}
                 />
                 <Route path="/gardener/post" component={GPostPage} />
+                <Route
+                  path="/gardener/appointment"
+                  component={GAppointmentPage}
+                />
               </Switch>
             </GardenerMain>
           )}
