@@ -176,27 +176,29 @@ function GardenerLandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-emerald-500 text-white">
-        <div className="container mx-auto px-4 py-4">
+      <header className="glanding-hearder bg-emerald-500 text-white">
+        <div className="glanding-container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="logo flex items-center space-x-2">
-              <div className="logo-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+            <div className="glanding-logo flex items-center space-x-2">
+              <div className="glanding-logo-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-emerald-500" />
               </div>
-              <span className="logo-text text-xl font-bold">CleanFoodViet</span>
+              <span className="glanding-logo-text text-xl font-bold">
+                CleanFoodViet
+              </span>
             </div>
-            <nav className="nav md:flex items-center space-x-8">
-              <div className="link-div">
-                <a href="#" className="a-link">
+            <nav className="glanding-nav md:flex items-center space-x-8">
+              <div className="glanding-link-div">
+                <a href="#" className="glanding-a-link">
                   Tính năng
                 </a>
               </div>
-              <div className="link-div">
-                <a href="#" className="a-link">
+              <div className="glanding-link-div">
+                <a href="#" className="glanding-a-link">
                   Gói dịch vụ
                 </a>
               </div>
-              <button className="nav-button bg-white text-emerald-500 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50">
+              <button className="glanding-nav-button bg-white text-emerald-500 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50">
                 Tham gia chợ
               </button>
             </nav>
@@ -205,10 +207,10 @@ function GardenerLandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="hero bg-emerald-500 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="hero-grid lg:grid-cols-2 gap-12 items-center">
-            <div className="hero-content">
+      <section className="glanding-hero bg-emerald-500 text-white py-16">
+        <div className="glanding-container mx-auto px-4">
+          <div className="glanding-hero-grid lg:grid-cols-2 gap-12 items-center">
+            <div className="glanding-hero-content">
               <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                 Sản phẩm tươi
                 <br />
@@ -220,24 +222,24 @@ function GardenerLandingPage() {
                 nhất từ Người làm vườn trực tiếp đến Nhà bán lẻ bằng nguồn cung
                 ứng minh bạch, có thể truy xuất nguồn gốc.
               </p>
-              <div className="hero-buttons flex flex-col sm:flex-row gap-4">
-                <button className="btn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50">
+              <div className="glanding-hero-buttons flex flex-col sm:flex-row gap-4">
+                <button className="bglanding-tn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50">
                   Xem sản phẩm
                 </button>
-                <button className="btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600">
+                <button className="glanding-btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600">
                   Bán sản phẩm của bạn
                 </button>
               </div>
-              <div className="hero-features flex items-center gap-8 mt-8 text-sm">
-                <div className="hero-feature flex items-center gap-2">
+              <div className="glanding-hero-features flex items-center gap-8 mt-8 text-sm">
+                <div className="glanding-hero-feature flex items-center gap-2">
                   <Sprout className="w-4 h-4" />
                   <span>Sản phẩm sạch</span>
                 </div>
-                <div className="hero-feature flex items-center gap-2">
+                <div className="glanding-hero-feature flex items-center gap-2">
                   <HeartHandshake className="w-4 h-4" />
                   <span>Kết nối trực tiếp</span>
                 </div>
-                <div className="hero-feature flex items-center gap-2">
+                <div className="glanding-hero-feature flex items-center gap-2">
                   <MapPinHouse className="w-4 h-4" />
                   <span>Nguồn cung ổn định</span>
                 </div>
@@ -255,9 +257,9 @@ function GardenerLandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="reatures py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="features-header text-center mb-12">
+      <section className="glanding-features py-16 bg-gray-50">
+        <div className="glanding-container mx-auto px-4">
+          <div className="glanding-features-header text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">
               Tại sao bạn lại chọn Clean Food Viet
             </h2>
@@ -267,10 +269,10 @@ function GardenerLandingPage() {
             </p>
           </div>
 
-          <div className="features-grid grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="feature-card bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <HeartHandshake className="feature-icon w-6 h-6 text-emerald-600" />
+          <div className="glanding-features-grid grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="glanding-feature-card bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="glanding-feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <HeartHandshake className="glanding-feature-icon w-6 h-6 text-emerald-600" />
               </div>
               <h3 className="font-semibold mb-2">Kết nối trực tiếp</h3>
               <p className="text-sm text-gray-600">
@@ -279,9 +281,9 @@ function GardenerLandingPage() {
               </p>
             </div>
 
-            <div className="feature-card bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BadgeCheck className="feature-icon w-6 h-6 text-emerald-600" />
+            <div className="glanding-feature-card bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="glanding-feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BadgeCheck className="glanding-feature-icon w-6 h-6 text-emerald-600" />
               </div>
               <h3 className="font-semibold mb-2">Đảm bảo chất lượng</h3>
               <p className="text-sm text-gray-600">
@@ -291,9 +293,9 @@ function GardenerLandingPage() {
               </p>
             </div>
 
-            <div className="feature-card bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <HandHeart className="feature-icon w-6 h-6 text-emerald-600" />
+            <div className="glanding-feature-card bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="glanding-feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <HandHeart className="glanding-feature-icon w-6 h-6 text-emerald-600" />
               </div>
               <h3 className="font-semibold mb-2">Quảng bá sản phẩm của bạn</h3>
               <p className="text-sm text-gray-600">
@@ -303,9 +305,9 @@ function GardenerLandingPage() {
               </p>
             </div>
 
-            <div className="feature-card bg-white p-6 rounded-lg shadow-sm text-center">
-              <div className="feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <CalendarDays className="feature-icon w-6 h-6 text-emerald-600" />
+            <div className="glanding-feature-card bg-white p-6 rounded-lg shadow-sm text-center">
+              <div className="glanding-feature-icon-div w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <CalendarDays className="glanding-feature-icon w-6 h-6 text-emerald-600" />
               </div>
               <h3 className="font-semibold mb-2">Lên lịch hẹn</h3>
               <p className="text-sm text-gray-600">
@@ -318,9 +320,9 @@ function GardenerLandingPage() {
       </section>
 
       {/* Package Selection Section */}
-      <section className="packages py-16">
-        <div className="container mx-auto px-4">
-          <div className="packages-header text-center mb-12">
+      <section className="glanding-packages py-16">
+        <div className="glanding-container mx-auto px-4">
+          <div className="glanding-packages-header text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Chọn gói của bạn</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Chúng tôi có kế hoạch hoàn hảo giúp bạn thành công, hãy đăng ký
@@ -329,18 +331,18 @@ function GardenerLandingPage() {
           </div>
 
           {loading ? (
-            <div className="loading-container text-center">
-              <div className="spinner inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
-              <p className="loading-text mt-2 text-gray-600">
+            <div className="glanding-loading-container text-center">
+              <div className="glanding-spinner inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+              <p className="glanding-loading-text mt-2 text-gray-600">
                 Đang tải gói dịch vụ...
               </p>
             </div>
           ) : (
-            <div className="packages-grid grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="glanding-packages-grid grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {servicePackages.map((pkg) => (
                 <div
                   key={pkg.ServicePackageId}
-                  className={`package-card bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${
+                  className={`glanding-package-card bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${
                     pkg.PackageName === "Plus"
                       ? "border-emerald-500 relative"
                       : "border-gray-200"
@@ -354,28 +356,28 @@ function GardenerLandingPage() {
                     </div>
                   )} */}
 
-                  <div className="package-header text-center mb-6">
-                    <h3 className="package-name text-xl font-bold mb-2">
+                  <div className="glanding-package-header text-center mb-6">
+                    <h3 className="glanding-package-name text-xl font-bold mb-2">
                       {pkg.PackageName}
                     </h3>
-                    <div className="package-pricemb-4">
-                      <span className="price-amount text-3xl font-bold">
+                    <div className="glanding-package-pricemb-4">
+                      <span className="glanding-price-amount text-3xl font-bold">
                         {formatPrice(pkg.Price)}
                       </span>
-                      <span className="price-period text-gray-500 ml-1">
+                      <span className="glanding-price-period text-gray-500 ml-1">
                         /{pkg.Duration} ngày
                       </span>
                     </div>
-                    <p className="package-description text-gray-600 text-sm">
+                    <p className="glanding-package-description text-gray-600 text-sm">
                       {pkg.Description}
                     </p>
                   </div>
 
                   <button
-                    className={`package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors ${
+                    className={`glanding-package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors ${
                       pkg.PackageName === "Plus"
-                        ? "primary bg-emerald-500 text-white"
-                        : "secondary bg-gray-100 text-gray-800"
+                        ? "glanding-primary bg-emerald-500 text-white"
+                        : "glanding-secondary bg-gray-100 text-gray-800"
                     }`}
                   >
                     {pkg.PackageName === "Plus"
@@ -383,14 +385,14 @@ function GardenerLandingPage() {
                       : `Chọn ${pkg.PackageName}`}
                   </button>
 
-                  <div className="package-features space-y-3">
+                  <div className="glanding-package-features space-y-3">
                     {pkg.Features.map((feature, index) => (
                       <div
                         key={index}
-                        className="package-feature flex items-start gap-3"
+                        className="glanding-package-feature flex items-start gap-3"
                       >
-                        <Check className="feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span className="feature-text text-sm text-gray-700">
+                        <Check className="glanding-feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span className="glanding-feature-text text-sm text-gray-700">
                           {feature.Action}: {feature.DefaultValue}
                         </span>
                       </div>
@@ -404,26 +406,26 @@ function GardenerLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="footer bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="footer-content flex items-center justify-between">
+      <footer className="glanding-footer bg-gray-900 text-white py-12">
+        <div className="glanding-container mx-auto px-4">
+          <div className="glanding-footer-content flex items-center justify-between">
             <div>
-              <div className="footer-logo flex items-center space-x-2 mb-4">
-                <div className="footer-logo-icon w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+              <div className="glanding-footer-logo flex items-center space-x-2 mb-4">
+                <div className="glanding-footer-logo-icon w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
                   <Leaf className="w-5 h-5 text-white" />
                 </div>
-                <span className="footer-logo-text text-xl font-bold">
+                <span className="glanding-footer-logo-text text-xl font-bold">
                   CleanFoodViet
                 </span>
               </div>
-              <p className="footer-description text-gray-400 max-w-md">
+              <p className="glanding-footer-description text-gray-400 max-w-md">
                 Kết nối nhà bán lẻ và người làm vườn để tạo nên một hệ sinh thái
                 thực phẩm sạch và lành mạnh hơn.
               </p>
             </div>
           </div>
 
-          <div className="footer-bottom border-t border-gray-800 mt-8 pt-8 text-center">
+          <div className="glanding-footer-bottom border-t border-gray-800 mt-8 pt-8 text-center">
             <p className="text-gray-400 text-sm">
               © 2025 CleanFoodViet. All rights reserved.
             </p>

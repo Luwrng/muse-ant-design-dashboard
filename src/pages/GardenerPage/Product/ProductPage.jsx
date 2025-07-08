@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import ProuctDetailPage from "./ProuctDetailPage";
+import CreateProductPage from "./CreateProductPage";
 import "./ProductPage.css";
 
 function GardenerProductPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [showCreateProduct, setShowCreateProduct] = useState(false);
 
   const products = [
     {
@@ -61,7 +66,7 @@ function GardenerProductPage() {
 
   const SearchIcon = () => (
     <svg
-      className="icon search-icon"
+      className="gproduct-icon gproduct-search-icon"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -76,7 +81,12 @@ function GardenerProductPage() {
   );
 
   const PlusIcon = () => (
-    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="gproduct-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -87,18 +97,28 @@ function GardenerProductPage() {
   );
 
   const FilterIcon = () => (
-    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="gproduct-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
-        d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707V17l-4 4v-6.586a1 1 0 0 0-.293-.707L3.293 7.293A1 1 0 0 1 3 6.586V4Z"
+        d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.586a1 1 0  0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707V17l-4 4v-6.586a1 1 0 0 0-.293-.707L3.293 7.293A1 1 0 0 1 3 6.586V4Z"
       />
     </svg>
   );
 
   const ChevronLeftIcon = () => (
-    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="gproduct-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -109,7 +129,12 @@ function GardenerProductPage() {
   );
 
   const ChevronRightIcon = () => (
-    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="gproduct-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -120,7 +145,12 @@ function GardenerProductPage() {
   );
 
   const MoreVerticalIcon = () => (
-    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className="gproduct-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -129,6 +159,26 @@ function GardenerProductPage() {
       />
     </svg>
   );
+
+  // View Product Detail
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  //Create Product
+  const handleCreateProduct = () => {
+    setShowCreateProduct(true);
+  };
+
+  const handleBackToManagement = () => {
+    setShowCreateProduct(false);
+  };
 
   const handleClickOutside = (e) => {
     if (
@@ -144,50 +194,62 @@ function GardenerProductPage() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  // Show create product page if showCreateProduct is true
+  if (showCreateProduct) {
+    return <CreateProductPage onBack={handleBackToManagement} />;
+  }
+
   return (
-    <div className="container">
-      <div className="max-width">
+    <div className="gproduct-container">
+      <div className="gproduct-max-width">
         {/* Header */}
-        <div className="header">
-          <div className="header-content">
+        <div className="gproduct-header">
+          <div className="gproduct-header-content">
             <h1>Quản lý sản phẩm</h1>
             <p>Tổng cộng {products.length} sản phẩm</p>
           </div>
-          <button className="create-button">
+          <button
+            className="gproduct-create-button"
+            onClick={handleCreateProduct}
+          >
             <PlusIcon />
             Tạo sản phẩm
           </button>
         </div>
 
         {/* Search and Filter */}
-        <div className="search-filter-container">
-          <div className="search-container">
+        <div className="gproduct-search-filter-container">
+          <div className="gproduct-search-container">
             <SearchIcon />
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
+              className="gproduct-search-input"
             />
           </div>
-          <button className="filter-button">
+          <button className="gproduct-filter-button">
             <FilterIcon />
             Bộ lọc
           </button>
         </div>
 
         {/* Product Grid */}
-        <div className="product-grid">
+        <div className="gproduct-product-grid">
           {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="product-image">
+            <div
+              key={product.id}
+              className="gproduct-product-card"
+              onClick={() => handleProductClick(product)}
+            >
+              <div className="gproduct-product-image">
                 <img
                   src={product.image || "/placeholder.svg"}
                   alt={product.name}
                 />
                 <button
-                  className="more-actions-button"
+                  className="gproduct-more-actions-button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenDropdown(
@@ -198,27 +260,27 @@ function GardenerProductPage() {
                   <MoreVerticalIcon />
                 </button>
                 {openDropdown === product.id && (
-                  <div className="dropdown-menu">
+                  <div className="gproduct-dropdown-menu">
                     <button
-                      className="dropdown-item"
+                      className="gproduct-dropdown-item"
                       onClick={() => console.log("Edit", product.id)}
                     >
                       Chỉnh sửa
                     </button>
                     <button
-                      className="dropdown-item"
+                      className="gproduct-dropdown-item"
                       onClick={() => console.log("Duplicate", product.id)}
                     >
                       Nhân bản
                     </button>
                     <button
-                      className="dropdown-item"
+                      className="gproduct-dropdown-item"
                       onClick={() => console.log("View details", product.id)}
                     >
                       Xem chi tiết
                     </button>
                     <button
-                      className="dropdown-item danger"
+                      className="gproduct-dropdown-item danger"
                       onClick={() => console.log("Delete", product.id)}
                     >
                       Xóa
@@ -226,14 +288,20 @@ function GardenerProductPage() {
                   </div>
                 )}
               </div>
-              <div className="product-content">
-                <h3 className="product-name">{product.name}</h3>
-                <div className="product-info">
-                  <span className="product-category">{product.category}</span>
-                  <span className="status-badge">{product.status}</span>
+              <div className="gproduct-product-content">
+                <h3 className="gproduct-product-name">{product.name}</h3>
+                <div className="gproduct-product-info">
+                  <span className="gproduct-product-category">
+                    {product.category}
+                  </span>
+                  <span className="gproduct-status-badge">
+                    {product.status}
+                  </span>
                 </div>
-                <div className="product-footer">
-                  <span className="product-price">{product.price}</span>
+                <div className="gproduct-product-footer">
+                  <span className="gproduct-product-price">
+                    {product.price}
+                  </span>
                 </div>
               </div>
             </div>
@@ -241,13 +309,13 @@ function GardenerProductPage() {
         </div>
 
         {/* Pagination */}
-        <div className="pagination-container">
-          <p className="pagination-info">
+        <div className="gproduct-pagination-container">
+          <p className="gproduct-pagination-info">
             Hiển thị từ 1 đến 6 trong tổng số XX kết quả
           </p>
-          <div className="pagination-controls">
+          <div className="gproduct-pagination-controls">
             <button
-              className="pagination-button"
+              className="gproduct-pagination-button"
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
             >
@@ -257,7 +325,7 @@ function GardenerProductPage() {
             {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
               <button
                 key={index}
-                className={`pagination-button ${
+                className={`gproduct-pagination-button ${
                   currentPage === page ? "active" : ""
                 }`}
                 onClick={() => typeof page === "number" && setCurrentPage(page)}
@@ -268,7 +336,7 @@ function GardenerProductPage() {
             ))}
 
             <button
-              className="pagination-button"
+              className="gproduct-pagination-button"
               onClick={() =>
                 setCurrentPage(Math.min(totalPages, currentPage + 1))
               }
@@ -278,6 +346,11 @@ function GardenerProductPage() {
             </button>
           </div>
         </div>
+        <ProuctDetailPage
+          product={selectedProduct}
+          isOpen={isDetailModalOpen}
+          onClose={handleCloseDetail}
+        />
       </div>
     </div>
   );
