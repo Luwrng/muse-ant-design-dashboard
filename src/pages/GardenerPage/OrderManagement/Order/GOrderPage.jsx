@@ -35,6 +35,60 @@ function GOrderPage() {
       status: "completed",
       statusText: "Hoàn thành",
     },
+    {
+      id: "ORD004",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
+    {
+      id: "ORD005",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
+    {
+      id: "ORD006",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
+    {
+      id: "ORD007",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
+    {
+      id: "ORD008",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
+    {
+      id: "ORD009",
+      store: "Nature Shop",
+      total: "800.000",
+      items: 2,
+      date: "09:15 13/01/2024",
+      status: "completed",
+      statusText: "Hoàn thành",
+    },
   ];
 
   const filterTabs = [
@@ -59,15 +113,17 @@ function GOrderPage() {
   };
 
   return (
-    <div className="order-management">
-      <h1 className="page-title">Quản lý đơn hàng</h1>
+    <div className="gorder-order-management">
+      <h1 className="gorder-page-title">Quản lý đơn hàng</h1>
 
       {/* Filter Tabs */}
-      <div className="filter-tabs">
+      <div className="gorder-filter-tabs">
         {filterTabs.map((tab) => (
           <button
             key={tab.key}
-            className={`filter-tab ${activeFilter === tab.key ? "active" : ""}`}
+            className={`gorder-filter-tab ${
+              activeFilter === tab.key ? "active" : ""
+            }`}
             onClick={() => handleFilterChange(tab.key)}
           >
             {tab.label} ({tab.count})
@@ -76,44 +132,46 @@ function GOrderPage() {
       </div>
 
       {/* Order Cards */}
-      <div className="orders-grid">
-        {filteredOrders.map((order) => (
-          <div key={order.id} className="order-card">
-            <div className="order-header">
-              <div className="order-id">{order.id}</div>
-              <div className={`order-status ${order.status}`}>
-                {order.statusText}
+      <div className="gorder-orders-grid-div">
+        <div className="gorder-orders-grid">
+          {filteredOrders.map((order) => (
+            <div key={order.id} className="gorder-order-card">
+              <div className="gorder-order-header">
+                <div className="gorder-order-id">{order.id}</div>
+                <div className={`gorder-order-status ${order.status}`}>
+                  {order.statusText}
+                </div>
+              </div>
+
+              <div className="gorder-order-store">{order.store}</div>
+
+              <div className="gorder-order-details">
+                <div className="gorder-order-row">
+                  <span className="gorder-label">Tổng tiền:</span>
+                  <span className="gorder-value">{order.total} ₫</span>
+                </div>
+                <div className="gorder-order-row">
+                  <span className="gorder-label">Số sản phẩm:</span>
+                  <span className="gorder-value">{order.items} loại</span>
+                </div>
+                <div className="gorder-order-row">
+                  <span className="gorder-label">Ngày tạo:</span>
+                  <span className="gorder-value">{order.date}</span>
+                </div>
               </div>
             </div>
-
-            <div className="order-store">{order.store}</div>
-
-            <div className="order-details">
-              <div className="order-row">
-                <span className="label">Tổng tiền:</span>
-                <span className="value">{order.total} ₫</span>
-              </div>
-              <div className="order-row">
-                <span className="label">Số sản phẩm:</span>
-                <span className="value">{order.items} loại</span>
-              </div>
-              <div className="order-row">
-                <span className="label">Ngày tạo:</span>
-                <span className="value">{order.date}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Pagination */}
-      <div className="pagination">
-        <div className="pagination-info">
+      <div className="gorder-pagination">
+        <div className="gorder-pagination-info">
           Hiển thị từ 1 đến 6 trong tổng số XX kết quả
         </div>
-        <div className="pagination-controls">
+        <div className="gorder-pagination-controls">
           <button
-            className="pagination-btn"
+            className="gorder-pagination-btn"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -123,7 +181,7 @@ function GOrderPage() {
           {[1, 2, 3].map((page) => (
             <button
               key={page}
-              className={`pagination-btn ${
+              className={`gorder-pagination-btn ${
                 currentPage === page ? "active" : ""
               }`}
               onClick={() => handlePageChange(page)}
@@ -132,12 +190,12 @@ function GOrderPage() {
             </button>
           ))}
 
-          <span className="pagination-dots">...</span>
+          <span className="gorder-pagination-dots">...</span>
 
           {[8, 9, 10].map((page) => (
             <button
               key={page}
-              className="pagination-btn"
+              className="gorder-pagination-btn"
               onClick={() => handlePageChange(page)}
             >
               {page}
@@ -145,7 +203,7 @@ function GOrderPage() {
           ))}
 
           <button
-            className="pagination-btn"
+            className="gorder-pagination-btn"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === 10}
           >

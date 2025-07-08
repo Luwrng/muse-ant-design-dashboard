@@ -1,13 +1,11 @@
-.order-management {
-  max-width: 1200px;
+.gorder-order-management {
   margin: 0 auto;
   padding: 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #f8f9fa;
-  min-height: 100vh;
 }
 
-.page-title {
+.gorder-page-title {
   font-size: 24px;
   font-weight: 600;
   color: #333;
@@ -15,13 +13,13 @@
 }
 
 /* Filter Tabs */
-.filter-tabs {
+.gorder-filter-tabs {
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
 }
 
-.filter-tab {
+.gorder-filter-tab {
   padding: 8px 16px;
   border: 1px solid #e0e0e0;
   border-radius: 20px;
@@ -32,26 +30,32 @@
   transition: all 0.2s ease;
 }
 
-.filter-tab:hover {
+.gorder-filter-tab:hover {
   border-color: #28a745;
   color: #28a745;
 }
 
-.filter-tab.active {
+.gorder-filter-tab.active {
   background: #28a745;
   color: white;
   border-color: #28a745;
 }
 
 /* Orders Grid */
-.orders-grid {
+.gorder-orders-grid-div{
+  height: 56vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.gorder-orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   margin-bottom: 60px;
 }
 
-.order-card {
+.gorder-order-card {
   background: white;
   border-radius: 8px;
   padding: 20px;
@@ -59,76 +63,76 @@
   transition: box-shadow 0.2s ease;
 }
 
-.order-card:hover {
+.gorder-order-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.order-header {
+.gorder-order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.order-id {
+.gorder-order-id {
   font-weight: 600;
   font-size: 16px;
   color: #333;
 }
 
-.order-status {
+.gorder-order-status {
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.order-status.pending {
+.gorder-order-status.pending {
   background: #fff3cd;
   color: #856404;
 }
 
-.order-status.delivering {
+.gorder-order-status.delivering {
   background: #cce5ff;
   color: #0066cc;
 }
 
-.order-status.completed {
+.gorder-order-status.completed {
   background: #d4edda;
   color: #155724;
 }
 
-.order-store {
+.gorder-order-store {
   font-size: 14px;
   color: #666;
   margin-bottom: 16px;
 }
 
-.order-details {
+.gorder-order-details {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.order-row {
+.gorder-order-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.order-row .label {
+.gorder-order-row .gorder-label {
   font-size: 14px;
   color: #666;
 }
 
-.order-row .value {
+.gorder-order-row .gorder-value {
   font-size: 14px;
   color: #333;
   font-weight: 500;
 }
 
 /* Pagination */
-.pagination {
+.gorder-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,18 +142,18 @@
   background: #f8f9fa;
 }
 
-.pagination-info {
+.gorder-pagination-info {
   font-size: 14px;
   color: #666;
 }
 
-.pagination-controls {
+.gorder-pagination-controls {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.pagination-btn {
+.gorder-pagination-btn {
   padding: 8px 12px;
   border: 1px solid #e0e0e0;
   background: white;
@@ -160,23 +164,23 @@
   transition: all 0.2s ease;
 }
 
-.pagination-btn:hover:not(:disabled) {
+.gorder-pagination-btn:hover:not(:disabled) {
   border-color: #007bff;
   color: #007bff;
 }
 
-.pagination-btn.active {
+.gorder-pagination-btn.active {
   background: #007bff;
   color: white;
   border-color: #007bff;
 }
 
-.pagination-btn:disabled {
+.gorder-pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.pagination-dots {
+.gorder-pagination-dots {
   padding: 8px 4px;
   color: #666;
   font-size: 14px;
@@ -184,21 +188,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .order-management {
+  .gorder-order-management {
     padding: 16px;
   }
 
-  .orders-grid {
+  .gorder-orders-grid {
     grid-template-columns: 1fr;
   }
 
-  .pagination {
+  .gorder-pagination {
     flex-direction: column;
     gap: 16px;
     align-items: center;
   }
 
-  .filter-tabs {
+  .gorder-filter-tabs {
     flex-wrap: wrap;
   }
 }

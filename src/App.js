@@ -40,6 +40,7 @@ import ActivePackageCustomers from "./pages/ActivePackageCustomers";
 import GardenerMain from "./components/gardenerlayout/GardenerMain";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
+import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
                   path="/gardener/product"
                   component={GardenerProductPage}
                 />
+                <Route path="/gardener/order" component={GOrderPage} />
               </Switch>
             </GardenerMain>
           )}
