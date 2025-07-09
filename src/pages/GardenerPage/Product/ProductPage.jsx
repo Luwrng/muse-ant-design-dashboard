@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import ProductDetailPage from "./ProductDetailPage";
 import CreateProductPage from "./CreateProductPage";
+import ProductChangeStatus from "./ProductChangeStatus";
+import UpdateProductPrice from "./UpdateProductPrice";
+import LoadingPage from "./Loading/LoadingPage";
+import PErrorModal from "./ErrorModal/PErrorModal";
+import PSuccessModal from "./SuccessModal/PSuccessModal";
+
 import "./ProductPage.css";
 
 function GardenerProductPage() {
@@ -10,6 +16,14 @@ function GardenerProductPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [showCreateProduct, setShowCreateProduct] = useState(false);
+  const [showUpdatePrice, setShowUpdatePrice] = useState(false);
+  const [showConfirmStatus, setShowConfirmStatus] = useState(false);
+  const [statusAction, setStatusAction] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successData, setSuccessData] = useState({ title: "", message: "" });
+  const [showError, setShowError] = useState(false);
+  const [errorData, setErrorData] = useState({ title: "", message: "" });
 
   const products = [
     {
@@ -178,6 +192,80 @@ function GardenerProductPage() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const handleUpdatePrice = (product) => {
+    setSelectedProduct(product);
+    setShowUpdatePrice(true);
+    setOpenDropdown(null);
+  };
+
+  const handleChangeStatus = (product, action) => {
+    setSelectedProduct(product);
+    setStatusAction(action);
+    setShowConfirmStatus(true);
+    setOpenDropdown(null);
+  };
+
+  const handlePriceSubmit = async (priceData) => {
+    setIsLoading(true);
+    setShowUpdatePrice(false);
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      setSuccessData({
+        title: "Cập nhật giá thành công",
+        message: `Giá sản phẩm "${selectedProduct.name}" đã được cập nhật.`,
+      });
+      setShowSuccess(true);
+    } catch (error) {
+      setErrorData({
+        title: "Lỗi cập nhật giá",
+        message: "Có lỗi xảy ra khi cập nhật giá sản phẩm.",
+      });
+      setShowError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusConfirm = async () => {
+    setShowConfirmStatus(false);
+
+    // Check constraints after user confirms
+    if (selectedProduct.status === "Đang bán" && statusAction === "hide") {
+      setErrorData({
+        title: "Không thể ẩn sản phẩm",
+        message: "Sản phẩm đang hoạt động không thể thay đổi trạng thái.",
+      });
+      setShowError(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const actionText = statusAction === "hide" ? "ẩn" : "hiển thị";
+
+      setSuccessData({
+        title: "Thay đổi trạng thái thành công",
+        message: `Sản phẩm "${selectedProduct.name}" đã được ${actionText}.`,
+      });
+      setShowSuccess(true);
+    } catch (error) {
+      setErrorData({
+        title: "Lỗi thay đổi trạng thái",
+        message: "Có lỗi xảy ra khi thay đổi trạng thái sản phẩm.",
+      });
+      setShowError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Show create product page if showCreateProduct is true
   if (showCreateProduct) {
     return <CreateProductPage onBack={handleBackToManagement} />;
@@ -243,13 +331,19 @@ function GardenerProductPage() {
                   <div className="gproduct-dropdown-menu">
                     <button
                       className="gproduct-dropdown-item"
-                      onClick={() => console.log("Edit", product.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUpdatePrice(product);
+                      }}
                     >
                       Chỉnh sửa giá
                     </button>
                     <button
                       className="gproduct-dropdown-item"
-                      onClick={() => console.log("Duplicate", product.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleChangeStatus(product, "hide");
+                      }}
                     >
                       Ẩn sản phẩm
                     </button>
@@ -317,10 +411,50 @@ function GardenerProductPage() {
             </button>
           </div>
         </div>
+
+        {/* Product Detail */}
         <ProductDetailPage
           product={selectedProduct}
           isOpen={isDetailModalOpen}
           onClose={handleCloseDetail}
+          onUpdatePrice={handleUpdatePrice}
+          onChangeStatus={handleChangeStatus}
+        />
+
+        {/* Update Price Popup */}
+        <UpdateProductPrice
+          product={selectedProduct}
+          isOpen={showUpdatePrice}
+          onClose={() => setShowUpdatePrice(false)}
+          onSubmit={handlePriceSubmit}
+        />
+
+        {/* Update Product Status */}
+        <ProductChangeStatus
+          product={selectedProduct}
+          isOpen={showConfirmStatus}
+          onClose={() => setShowConfirmStatus(false)}
+          onConfirm={handleStatusConfirm}
+          action={statusAction}
+        />
+
+        {/* Loading Page */}
+        <LoadingPage isOpen={isLoading} />
+
+        {/* Success Popup */}
+        <PSuccessModal
+          isOpen={showSuccess}
+          title={successData.title}
+          message={successData.message}
+          onClose={() => setShowSuccess(false)}
+        />
+
+        {/* Error Popup */}
+        <PErrorModal
+          isOpen={showError}
+          title={errorData.title}
+          message={errorData.message}
+          onClose={() => setShowError(false)}
         />
       </div>
     </div>

@@ -1,7 +1,13 @@
 import React from "react";
 import "./ProductDetailPage.css";
 
-function ProductDetailPage({ product, isOpen, onClose }) {
+function ProductDetailPage({
+  product,
+  isOpen,
+  onClose,
+  onUpdatePrice,
+  onChangeStatus,
+}) {
   if (!isOpen || !product) return null;
 
   const handleOverlayClick = (e) => {
@@ -51,8 +57,18 @@ function ProductDetailPage({ product, isOpen, onClose }) {
             Quay lại
           </button>
           <div className="gpd-header-actions">
-            <button className="gpd-edit-button">Chỉnh sửa</button>
-            <button className="gpd-hide-button">Ẩn sản phẩm</button>
+            <button
+              className="gpd-edit-button"
+              onClick={() => onUpdatePrice(product)}
+            >
+              Chỉnh sửa
+            </button>
+            <button
+              className="gpd-hide-button"
+              onClick={() => onChangeStatus(product, "hide")}
+            >
+              Ẩn sản phẩm
+            </button>
           </div>
         </div>
 
