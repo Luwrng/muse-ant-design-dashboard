@@ -127,7 +127,6 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s;
   position: relative;
-  cursor: pointer;
 }
 
 .gproduct-product-image {
@@ -168,7 +167,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  z-index: 20;
+  z-index: 999;
   min-width: 8rem;
   overflow: hidden;
 }
@@ -184,6 +183,7 @@
   font-size: 0.875rem;
   transition: background-color 0.2s;
   border-bottom: 1px solid #f3f4f6;
+  z-index: 30;
 }
 
 .gproduct-dropdown-item:last-child {
@@ -210,6 +210,7 @@
 
 .gproduct-product-content {
   padding: 1rem;
+  cursor: pointer;
 }
 
 .gproduct-product-name {

@@ -73,49 +73,31 @@ function CreateProductPage({ onBack }) {
             <label className="cproduct-form-label">
               Giá tiền <span className="cproduct-required">*</span>
             </label>
-            <div className="cproduct-custom-search-label">Custom search</div>
             <div className="cproduct-search-input-container">
               <input
                 type="text"
                 className="cproduct-search-input"
-                placeholder="Chọn giá"
+                placeholder="Nhập giá bán"
                 value={formData.price}
                 onChange={(e) => handleInputChange("price", e.target.value)}
                 required
               />
-              <SearchIcon />
-            </div>
-          </div>
-
-          {/* Weight/Unit */}
-          <div className="cproduct-form-group">
-            <label className="cproduct-form-label">Đơn vị khối lượng</label>
-            <div className="cproduct-input-container">
-              <input
-                type="text"
-                className="cproduct-form-input"
-                placeholder="Mô tả đơn vị khối lượng của bạn"
-                value={formData.weight}
-                onChange={(e) => handleInputChange("weight", e.target.value)}
-                maxLength={180}
-              />
-              <span className="cproduct-character-count">
-                {formData.weight.length}/180
-              </span>
             </div>
           </div>
 
           {/* Category */}
           <div className="cproduct-form-group">
-            <label className="cproduct-form-label">Phân loại</label>
-            <div className="cproduct-custom-search-label">Custom search</div>
+            <label className="cproduct-form-label">
+              Phân loại <span className="cproduct-required">*</span>
+            </label>
             <div className="cproduct-search-input-container">
               <input
                 type="text"
                 className="cproduct-search-input"
-                placeholder="Chọn giá"
+                placeholder="Chọn phân loại"
                 value={formData.category}
                 onChange={(e) => handleInputChange("category", e.target.value)}
+                required
               />
               <SearchIcon />
             </div>

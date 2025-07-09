@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ProuctDetailPage from "./ProuctDetailPage";
+import ProductDetailPage from "./ProductDetailPage";
 import CreateProductPage from "./CreateProductPage";
 import "./ProductPage.css";
 
@@ -16,7 +16,7 @@ function GardenerProductPage() {
       id: 1,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -24,7 +24,7 @@ function GardenerProductPage() {
       id: 2,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -32,7 +32,7 @@ function GardenerProductPage() {
       id: 3,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -40,7 +40,7 @@ function GardenerProductPage() {
       id: 4,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -48,7 +48,7 @@ function GardenerProductPage() {
       id: 5,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -56,7 +56,7 @@ function GardenerProductPage() {
       id: 6,
       name: "Rau cải",
       category: "Rau củ",
-      price: "50.000đ/kg",
+      price: 50000,
       status: "Đang bán",
       image: "/placeholder.svg?height=200&width=300",
     },
@@ -144,22 +144,6 @@ function GardenerProductPage() {
     </svg>
   );
 
-  const MoreVerticalIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-      />
-    </svg>
-  );
-
   // View Product Detail
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -238,11 +222,7 @@ function GardenerProductPage() {
         {/* Product Grid */}
         <div className="gproduct-product-grid">
           {products.map((product) => (
-            <div
-              key={product.id}
-              className="gproduct-product-card"
-              onClick={() => handleProductClick(product)}
-            >
+            <div key={product.id} className="gproduct-product-card">
               <div className="gproduct-product-image">
                 <img
                   src={product.image || "/placeholder.svg"}
@@ -257,7 +237,7 @@ function GardenerProductPage() {
                     );
                   }}
                 >
-                  <MoreVerticalIcon />
+                  ⋯
                 </button>
                 {openDropdown === product.id && (
                   <div className="gproduct-dropdown-menu">
@@ -265,30 +245,21 @@ function GardenerProductPage() {
                       className="gproduct-dropdown-item"
                       onClick={() => console.log("Edit", product.id)}
                     >
-                      Chỉnh sửa
+                      Chỉnh sửa giá
                     </button>
                     <button
                       className="gproduct-dropdown-item"
                       onClick={() => console.log("Duplicate", product.id)}
                     >
-                      Nhân bản
-                    </button>
-                    <button
-                      className="gproduct-dropdown-item"
-                      onClick={() => console.log("View details", product.id)}
-                    >
-                      Xem chi tiết
-                    </button>
-                    <button
-                      className="gproduct-dropdown-item danger"
-                      onClick={() => console.log("Delete", product.id)}
-                    >
-                      Xóa
+                      Ẩn sản phẩm
                     </button>
                   </div>
                 )}
               </div>
-              <div className="gproduct-product-content">
+              <div
+                className="gproduct-product-content"
+                onClick={() => handleProductClick(product)}
+              >
                 <h3 className="gproduct-product-name">{product.name}</h3>
                 <div className="gproduct-product-info">
                   <span className="gproduct-product-category">
@@ -300,7 +271,7 @@ function GardenerProductPage() {
                 </div>
                 <div className="gproduct-product-footer">
                   <span className="gproduct-product-price">
-                    {product.price}
+                    {new Intl.NumberFormat("vi-VN").format(product.price)}đ /kg
                   </span>
                 </div>
               </div>
@@ -346,7 +317,7 @@ function GardenerProductPage() {
             </button>
           </div>
         </div>
-        <ProuctDetailPage
+        <ProductDetailPage
           product={selectedProduct}
           isOpen={isDetailModalOpen}
           onClose={handleCloseDetail}

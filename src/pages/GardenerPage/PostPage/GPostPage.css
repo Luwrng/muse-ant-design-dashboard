@@ -155,12 +155,12 @@
 
 .gpost-bookmark-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 1rem;
+  right: 1rem;
   background: rgba(255, 255, 255, 0.9);
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -168,6 +168,7 @@
   justify-content: center;
   font-size: 16px;
   color: #6c757d;
+  z-index: 10;
 }
 
 .gpost-article-content {

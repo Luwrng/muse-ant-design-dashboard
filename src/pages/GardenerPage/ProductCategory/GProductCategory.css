@@ -146,6 +146,18 @@
   background-color: #fee2e2;
 }
 
+.gpcategory-edit-btn:focus {
+  background-color: #e4f6bf;
+  border: none;
+  outline: none;
+}
+
+.gpcategory-delete-btn:focus {
+  background-color: #fee2e2;
+  border: none;
+  outline: none;
+}
+
 .gpcategory-pagination {
   display: flex;
   justify-content: space-between;

@@ -1,7 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import { EyeFilled, DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled } from "@ant-design/icons";
 import { FaPenToSquare } from "react-icons/fa6";
+import GCreateProductCategory from "./GCreateProductCategory";
+import GEditProductCategory from "./GEditProductCategory";
+import GDeleteProductCategory from "./GDeleteProductCategory";
+import LoadingOverlay from "./LoadingPopup/LoadingOverlay";
+import ErrorModal from "./ErrorModal/ErrorModal";
+import SuccessModal from "./SuccessModal/GSuccessModal";
 import "./GProductCategory.css";
 
 function GProductCategory() {
@@ -46,21 +52,117 @@ function GProductCategory() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalResults = categories.length;
-
-  const handleView = (id) => {
-    console.log("View category:", id);
-  };
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleDelete = (id) => {
-    console.log("Delete category:", id);
+    const category = categories.find((cat) => cat.id === id);
+    setSelectedCategory(category);
+    setShowDeleteModal(true);
   };
 
+  //Temp
+  const handleEdit = (id) => {
+    const category = categories.find((cat) => cat.id === id);
+    setSelectedCategory(category);
+    setShowEditModal(true);
+  };
+
+  //Create
   const handleCreateCategory = () => {
-    console.log("Create new category");
+    setShowCreateModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowCreateModal(false);
+  };
+
+  const handleSubmitCategory = async (categoryData) => {
+    console.log("Creating category:", categoryData);
+    setIsLoading(true);
+    // Send Api here
+    //->>>
+
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsLoading(false);
+
+    //Set an if-else condition here for catching response
+    setSuccessMessage(
+      `Danh mục "${categoryData.name}" đã được tạo thành công!`
+    );
+    setShowSuccessModal(true);
+    setShowCreateModal(false);
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  //Handle Delete
+  const handleConfirmDelete = async () => {
+    setIsLoading(true);
+    setShowDeleteModal(false);
+
+    // Simulate API call with random constraint violation
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Temp call api later
+    const hasRelatedProducts = true;
+
+    if (hasRelatedProducts) {
+      setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể xóa!");
+      setShowErrorModal(true);
+    } else {
+      console.log("Category deleted successfully:", selectedCategory);
+      setSuccessMessage(
+        `Danh mục "${selectedCategory.name}" đã được xóa thành công!`
+      );
+      setShowSuccessModal(true);
+    }
+
+    setIsLoading(false);
+    setSelectedCategory(null);
+  };
+
+  //Handle Edit
+  const handleConfirmEdit = async (categoryData) => {
+    setIsLoading(true);
+    setShowEditModal(false);
+
+    // Simulate API call with random constraint violation
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Simulate backend constraint (randomly decide if category has products)
+    const hasRelatedProducts = true;
+
+    if (hasRelatedProducts) {
+      setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể sửa!");
+      setShowErrorModal(true);
+    } else {
+      console.log("Category updated successfully:", categoryData);
+      setSuccessMessage(
+        `Danh mục "${selectedCategory.name}" đã được xóa thành công!`
+      );
+      setShowSuccessModal(true);
+    }
+
+    setIsLoading(false);
+    setSelectedCategory(null);
+  };
+
+  const handleCloseModals = () => {
+    setShowDeleteModal(false);
+    setShowEditModal(false);
+    setShowErrorModal(false);
+    setShowSuccessModal(false);
+    setSelectedCategory(null);
   };
 
   return (
@@ -80,7 +182,6 @@ function GProductCategory() {
           Tạo danh mục
         </button>
       </div>
-
       <div className="gpcategory-table-container">
         <table className="gpcategory-category-table">
           <thead>
@@ -100,16 +201,16 @@ function GProductCategory() {
                   {category.description}
                 </td>
                 <td className="gpcategory-actions">
-                  <button
+                  {/*<button
                     className="gpcategory-action-btn gpcategory-view-btn"
                     onClick={() => handleView(category.id)}
                     title="Xem chi tiết"
                   >
                     <EyeFilled />
-                  </button>
+                  </button> */}
                   <button
                     className="gpcategory-action-btn gpcategory-edit-btn"
-                    onClick={() => handleView(category.id)}
+                    onClick={() => handleEdit(category.id)}
                     title="Chỉnh sửa"
                   >
                     <FaPenToSquare />
@@ -127,7 +228,6 @@ function GProductCategory() {
           </tbody>
         </table>
       </div>
-
       <div className="gpcategory-pagination">
         <div className="gpcategory-pagination-info">
           Hiển thị từ 1 đến {totalResults} trong tổng số {totalResults} kết quả
@@ -169,6 +269,43 @@ function GProductCategory() {
           </button>
         </div>
       </div>
+      {/* Show create popup */}
+      {showCreateModal && (
+        <GCreateProductCategory
+          onClose={handleCloseModal}
+          onSubmit={handleSubmitCategory}
+        />
+      )}
+      {/* Show Delete Popup */}
+      {showDeleteModal && selectedCategory && (
+        <GDeleteProductCategory
+          category={selectedCategory}
+          onClose={handleCloseModals}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
+      {/* Show Edit Popup */}
+      {showEditModal && selectedCategory && (
+        <GEditProductCategory
+          category={selectedCategory}
+          onClose={handleCloseModals}
+          onSubmit={handleConfirmEdit}
+        />
+      )}
+
+      {/* Show success popup */}
+      {showSuccessModal && (
+        <SuccessModal message={successMessage} onClose={handleCloseModals} />
+      )}
+
+      {/* Show error popup */}
+      {showErrorModal && (
+        <ErrorModal message={errorMessage} onClose={handleCloseModals} />
+      )}
+
+      {/* Show loading popup */}
+      {isLoading && <LoadingOverlay />}
     </div>
   );
 }

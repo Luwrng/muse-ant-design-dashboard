@@ -1,7 +1,7 @@
 import React from "react";
 import "./ProductDetailPage.css";
 
-function ProuctDetailPage({ product, isOpen, onClose }) {
+function ProductDetailPage({ product, isOpen, onClose }) {
   if (!isOpen || !product) return null;
 
   const handleOverlayClick = (e) => {
@@ -70,13 +70,19 @@ function ProuctDetailPage({ product, isOpen, onClose }) {
             <h1 className="gpd-product-title">Cà chua cherry đỏ</h1>
 
             <div className="gpd-product-id-section">
-              <span className="gpd-product-id">Id: P01234355</span>
-              <span className="gpd-status-badge">{product.status}</span>
+              <span className="gpd-product-id-title">Id: </span>
+              <span className="gpd-product-id-value">{product.id}</span>
+            </div>
+            <div className="gpd-product-status-section">
+              <span className="gpd-status-badge">Status: </span>
+              <span className="gpd-status-badge-value">{product.status}</span>
             </div>
 
             <div className="gpd-price-section">
-              <div className="gpd-price">35.000 đ</div>
-              <div className="gpd-price-unit">Đơn vị tính: Kilogram</div>
+              <div className="gpd-price">
+                {new Intl.NumberFormat("vi-VN").format(product.price)}đ
+              </div>
+              <div className="gpd-price-unit">Đơn vị: Kilogram</div>
             </div>
 
             <div className="gpd-info-section">
@@ -84,18 +90,20 @@ function ProuctDetailPage({ product, isOpen, onClose }) {
                 <div className="gpd-info-label">Danh mục:</div>
                 <div className="gpd-category-tag">
                   <TagIcon />
-                  Rau củ quả tươi
+                  Rau củ quả tươi {/*Change to product value */}
                 </div>
               </div>
 
               <div className="gpd-date-info">
                 <div className="gpd-date-item">
-                  <span className="gpd-date-label">Ngày tạo:</span>
+                  <span className="gpd-date-label">Ngày tạo: </span>
                   <span className="gpd-date-value">01/01/2025</span>
+                  {/*Change to product value */}
                 </div>
                 <div className="gpd-date-item">
                   <span className="gpd-date-label">Ngày cập nhật:</span>
                   <span className="gpd-date-value">01/01/2025</span>
+                  {/*Change to product value */}
                 </div>
               </div>
             </div>
@@ -106,4 +114,4 @@ function ProuctDetailPage({ product, isOpen, onClose }) {
   );
 }
 
-export default ProuctDetailPage;
+export default ProductDetailPage;
