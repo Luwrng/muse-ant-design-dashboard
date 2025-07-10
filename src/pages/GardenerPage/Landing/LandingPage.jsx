@@ -11,12 +11,14 @@ import {
   BadgeCheck,
   HandHeart,
 } from "lucide-react";
+import { useHistory } from "react-router-dom";
 import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
 import "./LandingPage.css";
 
 function GardenerLandingPage() {
   const [servicePackages, setServicePackages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const history = useHistory();
 
   // Mock API call - replace with your actual API endpoint
   useEffect(() => {
@@ -189,7 +191,7 @@ function GardenerLandingPage() {
             </div>
             <nav className="glanding-nav md:flex items-center space-x-8">
               <div className="glanding-link-div">
-                <a href="#" className="glanding-a-link">
+                <a href="/gardener/dashboard" className="glanding-a-link">
                   Tính năng
                 </a>
               </div>
@@ -198,9 +200,9 @@ function GardenerLandingPage() {
                   Gói dịch vụ
                 </a>
               </div>
-              <button className="glanding-nav-button bg-white text-emerald-500 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50">
+              {/* <button className="glanding-nav-button bg-white text-emerald-500 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50">
                 Tham gia chợ
-              </button>
+              </button> */}
             </nav>
           </div>
         </div>
@@ -223,11 +225,17 @@ function GardenerLandingPage() {
                 ứng minh bạch, có thể truy xuất nguồn gốc.
               </p>
               <div className="glanding-hero-buttons flex flex-col sm:flex-row gap-4">
-                <button className="bglanding-tn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50">
-                  Xem sản phẩm
+                <button
+                  className="glanding-btn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50"
+                  onClick={() => history.push("/gardener/product")}
+                >
+                  Quản lý sản phẩm
                 </button>
-                <button className="glanding-btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600">
-                  Bán sản phẩm của bạn
+                <button
+                  className="glanding-btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600"
+                  onClick={() => history.push("/gardener/post")}
+                >
+                  Quản lý bài đăng
                 </button>
               </div>
               <div className="glanding-hero-features flex items-center gap-8 mt-8 text-sm">
@@ -379,9 +387,10 @@ function GardenerLandingPage() {
                         ? "glanding-primary bg-emerald-500 text-white"
                         : "glanding-secondary bg-gray-100 text-gray-800"
                     }`}
+                    disabled={pkg.PackageName === "Plus" ? true : false}
                   >
                     {pkg.PackageName === "Plus"
-                      ? "Chon Plus"
+                      ? "Gói hiện tại"
                       : `Chọn ${pkg.PackageName}`}
                   </button>
 

@@ -45,12 +45,15 @@ import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCateg
 import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
 import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
 
+//Auth
+import SignUpPage from "./pages/authentication/SignUpPage";
+
 function App() {
   return (
     <div className="App">
       <Switch>
         {/* Auth routes */}
-        <Route path="/sign-up" exact component={SignUp} />
+        <Route path="/sign-up" exact component={SignUpPage} />
         <Route path="/sign-in" exact component={SignIn} />
 
         {/* Gardener routes */}

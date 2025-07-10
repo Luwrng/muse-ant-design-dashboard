@@ -546,11 +546,13 @@ body {
 .glanding-package-button.glanding-primary {
   background-color: #10b981;
   color: white;
+  opacity: 0.8;
+  cursor: default;
 }
 
-.glanding-package-button.glanding-primary:hover {
+/* .glanding-package-button.glanding-primary:hover {
   background-color: #059669;
-}
+} */
 
 .glanding-package-button.glanding-secondary {
   background-color: #f3f4f6;

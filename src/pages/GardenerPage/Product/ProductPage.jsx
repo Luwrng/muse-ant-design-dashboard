@@ -246,6 +246,7 @@ function GardenerProductPage() {
 
     try {
       // Simulate API call
+      //--->>>
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const actionText = statusAction === "hide" ? "ẩn" : "hiển thị";
