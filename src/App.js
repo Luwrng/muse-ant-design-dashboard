@@ -49,6 +49,9 @@ import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
 
+//Test
+import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
+
 function App() {
   return (
     <div className="App">
@@ -60,6 +63,7 @@ function App() {
         {/* Gardener routes */}
         <Route path="/gardener/landing" component={GardenerLandingPage} />
         <Route path="/gardener/service-package" component={GServicePackage} />
+        <Route path="/testing/chat" component={GChatPage} />
         <Route
           path="/gardener"
           render={() => (
