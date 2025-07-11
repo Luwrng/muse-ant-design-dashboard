@@ -63,7 +63,7 @@ function App() {
         {/* Gardener routes */}
         <Route path="/gardener/landing" component={GardenerLandingPage} />
         <Route path="/gardener/service-package" component={GServicePackage} />
-        <Route path="/testing/chat" component={GChatPage} />
+
         <Route
           path="/gardener"
           render={() => (
@@ -83,6 +83,7 @@ function App() {
                   path="/gardener/appointment"
                   component={GAppointmentPage}
                 />
+                <Route path="/gardener/chat" component={GChatPage} />
               </Switch>
             </GardenerMain>
           )}

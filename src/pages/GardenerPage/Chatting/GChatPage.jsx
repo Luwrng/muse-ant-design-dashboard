@@ -1,34 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { App as SendbirdApp } from "@sendbird/uikit-react";
 import "@sendbird/uikit-react/dist/index.css";
-import { useUser } from "@clerk/clerk-react";
 import SendbirdProvider from "@sendbird/uikit-react/SendbirdProvider";
+import { GroupChannelList } from "@sendbird/uikit-react/GroupChannelList";
+import { GroupChannel } from "@sendbird/uikit-react/GroupChannel";
+import "./GChatPage.css";
 
 function GChatPage() {
-  const { user } = useUser();
+  const [user, setUser] = useState({
+    phone: "0123456789",
+    email: "test@gmail.com",
+    name: "Test",
+    imageUrl: "https://picsum.photos/200",
+  });
   const [userId, setUserId] = useState();
+  const [channelUrl, setChannelUrl] = useState();
 
   useEffect(() => {
     if (user) {
-      const id = (user.primaryEmailAddress?.emailAddress).split("@")[0];
+      const id = user.email.split("@")[0];
       setUserId(id);
     }
   }, [user]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div className="gchat-chat-container">
       <SendbirdProvider
         appId={"296C6AE3-686D-44BF-8FDA-7DDFF64921C3"}
         userId={userId}
-        nickname={user.fullName}
+        nickname={user.name}
         profileUrl={user?.imageUrl}
         allowProfileEdit={true}
       >
-        {/* <SendbirdApp
-          appId={"296C6AE3-686D-44BF-8FDA-7DDFF64921C3"}
-          userId={"0000001"}
-          accessToken={"ACCESS_TOKEN"} // Optional, but recommended
-        /> */}
+        <div className="gchat-chat-layout">
+          {/* Channel List */}
+          <div className="gchat-chat-sidebar">
+            <GroupChannelList
+              onChannelSelect={(channel) => {
+                if (channel && channel.url) {
+                  setChannelUrl(channel.url);
+                } else {
+                  // The channel might be null if it was deleted
+                  setChannelUrl(null);
+                }
+              }}
+              channelListQueryParams={{
+                includeEmpty: true,
+              }}
+            />
+          </div>
+          {/* Channel Message Area */}
+          <div className="gchat-chat-main">
+            <GroupChannel channelUrl={channelUrl} />
+          </div>
+        </div>
       </SendbirdProvider>
     </div>
   );
