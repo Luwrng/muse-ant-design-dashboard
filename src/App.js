@@ -44,6 +44,7 @@ import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
 import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCategory";
 import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
 import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
+import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage";
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
@@ -58,6 +59,7 @@ function App() {
 
         {/* Gardener routes */}
         <Route path="/gardener/landing" component={GardenerLandingPage} />
+        <Route path="/gardener/service-package" component={GServicePackage} />
         <Route
           path="/gardener"
           render={() => (

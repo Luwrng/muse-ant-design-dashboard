@@ -1,0 +1,235 @@
+/* Modal Styles */
+.garequest-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.garequest-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.garequest-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  border-radius: 12px 12px 0 0;
+}
+
+.garequest-back-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.garequest-back-button:hover {
+  color: #374151;
+}
+
+.garequest-modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+.garequest-modal-body {
+  padding: 24px;
+}
+
+.garequest-user-section {
+  margin-bottom: 32px;
+}
+
+.garequest-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.garequest-user-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #374151;
+}
+
+.garequest-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.garequest-user-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.garequest-status-badge {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.garequest-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.garequest-detail-row {
+  display: flex;
+  gap: 16px;
+}
+
+.garequest-description-row {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.garequest-detail-label {
+  color: #6b7280;
+  font-weight: 500;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.garequest-detail-value {
+  color: #111827;
+  font-weight: 500;
+}
+
+.garequest-description-content {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  color: #374151;
+  line-height: 1.6;
+  min-height: 120px;
+}
+
+.garequest-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.garequest-approve-button {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.garequest-approve-button:hover {
+  background-color: #059669;
+}
+
+.garequest-reject-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.garequest-reject-button:hover {
+  background-color: #dc2626;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .garequest-modal-overlay {
+    padding: 10px;
+  }
+
+  .garequest-modal-content {
+    max-height: 95vh;
+  }
+
+  .garequest-modal-header,
+  .garequest-modal-body {
+    padding: 16px;
+  }
+
+  .garequest-user-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .garequest-user-name {
+    font-size: 18px;
+  }
+
+  .garequest-modal-title {
+    font-size: 20px;
+  }
+
+  .garequest-detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .garequest-detail-label {
+    min-width: auto;
+  }
+
+  .garequest-modal-actions {
+    flex-direction: column;
+  }
+
+  .garequest-approve-button,
+  .garequest-reject-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

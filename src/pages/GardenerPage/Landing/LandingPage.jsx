@@ -196,7 +196,7 @@ function GardenerLandingPage() {
                 </a>
               </div>
               <div className="glanding-link-div">
-                <a href="#" className="glanding-a-link">
+                <a href="/gardener/service-package" className="glanding-a-link">
                   Gói dịch vụ
                 </a>
               </div>

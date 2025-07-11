@@ -11,9 +11,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.2rem;
+  /* border-bottom: 1px solid #e9ecef; */
 }
 
 .gpost-title-section h1 {
@@ -37,21 +37,6 @@
 
 .gpost-search-container {
   position: relative;
-}
-
-.gpost-search-input {
-  padding: 10px 15px;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  width: 300px;
-  font-size: 14px;
-  background-color: white;
-}
-
-.gpost-search-input:focus {
-  outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
 }
 
 .gpost-create-btn {
@@ -80,19 +65,26 @@
 /* Filter Tabs */
 .gpost-filter-tabs {
   display: flex;
-  gap: 8px;
   margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.gpost-filter-tabs-options{
+  display: flex;
+  gap: 32px;
 }
 
 .gpost-filter-tab {
-  padding: 8px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  background: white;
+  padding: 12px 0;
+  border: none;
+  background: none;
   color: #666;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  position: relative;
+  transition: color 0.2s ease;
 }
 
 .gpost-filter-tab:hover {
@@ -101,12 +93,31 @@
 }
 
 .gpost-filter-tab.active {
-  background: #28a745;
+  background-color: #fafafa;
   color: white;
   border-color: #28a745;
+  color: #666;
+}
+
+.gpost-filter-tab.active::after{
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #28a745;
+}
+
+.gpost-search-filter-tabs{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  align-items: center;
 }
 
 .gpost-sort-options {
+  display: flex;
   color: #6c757d;
   font-size: 1rem;
   font-weight: 500;
@@ -115,10 +126,27 @@
   background-color: #e9e7e7;
   border: none;
   border-radius: 0.4rem;
+  max-width: 5rem;
 }
 
 .gpost-sort-options:hover{
   background-color: #c4c4c4;
+}
+
+.gpost-search-input {
+  display: flex;
+  padding: 10px 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.gpost-search-input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
 }
 
 .gpost-articles-grid {
@@ -173,6 +201,7 @@
 
 .gpost-article-content {
   padding: 20px;
+  cursor: pointer;
 }
 
 .gpost-article-title {
@@ -181,6 +210,12 @@
   color: #212529;
   margin: 0 0 12px 0;
   line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gpost-article-description {
@@ -188,6 +223,12 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 16px 0;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gpost-article-meta {

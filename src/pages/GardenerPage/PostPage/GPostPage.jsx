@@ -114,19 +114,9 @@ function GPostPage() {
       <div className="gpost-header">
         <div className="gpost-title-section">
           <h1>Quản lý bài viết</h1>
-          <p className="gpost-subtitle">Tổng cộng 6 bài viết</p>
         </div>
 
         <div className="gpost-header-actions">
-          <div className="gpost-search-container">
-            <input
-              type="text"
-              placeholder="Tìm kiếm bài viết..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="gpost-search-input"
-            />
-          </div>
           <button className="gpost-create-btn">+ Tạo bài viết</button>
         </div>
       </div>
@@ -134,20 +124,33 @@ function GPostPage() {
       <div className="gpost-tabs-container">
         {/* Filter Tabs */}
         <div className="gpost-filter-tabs">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.key}
-              className={`gpost-filter-tab ${
-                activeFilter === tab.label ? "active" : ""
-              }`}
-              onClick={() => handleFilterChange(tab.label)}
-            >
-              {tab.label} ({tab.count})
-            </button>
-          ))}
-        </div>
+          <div className="gpost-filter-tabs-options">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`gpost-filter-tab ${
+                  activeFilter === tab.label ? "active" : ""
+                }`}
+                onClick={() => handleFilterChange(tab.label)}
+              >
+                {tab.label} ({tab.count})
+              </button>
+            ))}
+          </div>
 
-        <div className="gpost-sort-options">Bộ lọc</div>
+          <div className="gpost-search-filter-tabs">
+            <div className="gpost-search-container">
+              <input
+                type="text"
+                placeholder="Tìm kiếm bài viết..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="gpost-search-input"
+              />
+            </div>
+            {/* <div className="gpost-sort-options">Bộ lọc</div> */}
+          </div>
+        </div>
       </div>
 
       <div className="gpost-articles-grid">

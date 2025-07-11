@@ -2,6 +2,9 @@ import React from "react";
 
 import { useState } from "react";
 import { EyeFilled, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import GRequestAppointment from "./GRequestAppointment";
+import GAppointmentDetail from "./GAppointmentDetail";
+import GAppointmentCancelModal from "./GAppointmentCancelModal";
 import "./GAppointmentPage.css";
 
 const scheduledAppointments = [
@@ -76,7 +79,11 @@ const waitingApprovals = [
     time: "10:30",
     duration: "120 phút",
     type: "Garden Design",
+    subject: "Tư vấn thiết kế sân vườn",
+    description:
+      "Tư vấn thiết kế sân vườn cho biệt thự với diện tích 200m2, bao gồm lựa chọn cây cảnh, bố trí không gian xanh và hệ thống tưới nước tự động. Khách hàng mong muốn có một không gian xanh mát, thân thiện với môi trường và dễ dàng chăm sóc.",
     avatar: "/placeholder.svg?height=40&width=40",
+    status: "Chờ phê duyệt",
   },
   {
     id: 4,
@@ -86,7 +93,11 @@ const waitingApprovals = [
     time: "09:00",
     duration: "60 phút",
     type: "Consultation",
+    subject: "Tư vấn cây cảnh văn phòng",
+    description:
+      "Tư vấn lựa chọn và bố trí cây cảnh cho không gian văn phòng 50m2, yêu cầu cây dễ chăm sóc và phù hợp với ánh sáng trong nhà. Khách hàng muốn tạo không gian làm việc xanh, tươi mát và tăng năng suất làm việc cho nhân viên.",
     avatar: "/placeholder.svg?height=40&width=40",
+    status: "Chờ phê duyệt",
   },
 ];
 
@@ -144,6 +155,12 @@ const timeSlots = [
 function GAppointmentPage() {
   const [activeTab, setActiveTab] = useState("wait-approve");
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
+
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
 
   // Function to get the start of the week (Monday)
   const getWeekStart = (date) => {
@@ -258,6 +275,55 @@ function GAppointmentPage() {
     return end - start;
   };
 
+  // Modal functions for Wait for Approve
+  const openRequestModal = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowRequestModal(true);
+  };
+
+  const closeRequestModal = () => {
+    setShowRequestModal(false);
+    setSelectedAppointment(null);
+  };
+
+  const handleApprove = (appointment) => {
+    console.log("Approved appointment:", appointment);
+    closeRequestModal();
+  };
+
+  const handleReject = (appointment) => {
+    console.log("Rejected appointment:", appointment);
+    closeRequestModal();
+  };
+
+  // Modal functions for Schedule Detail
+  const openDetailModal = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowDetailModal(true);
+  };
+
+  const closeDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedAppointment(null);
+  };
+
+  const handleCancelRequest = (appointment) => {
+    setShowDetailModal(false);
+    setShowCancelPopup(true);
+  };
+
+  // Cancel popup functions
+  const closeCancelPopup = () => {
+    setShowCancelPopup(false);
+    setSelectedAppointment(null);
+  };
+
+  const handleCancelConfirm = (appointment, reason) => {
+    console.log("Cancelled appointment:", appointment, "Reason:", reason);
+    setShowCancelPopup(false);
+    setSelectedAppointment(null);
+  };
+
   return (
     <div className="gappointment-appointment-container">
       <div className="gappointment-appointment-header">
@@ -335,7 +401,10 @@ function GAppointmentPage() {
                         </span>
                       </td>
                       <td>
-                        <button className="gappointment-view-button">
+                        <button
+                          className="gappointment-view-button"
+                          onClick={() => openRequestModal(appointment)}
+                        >
                           <EyeFilled />
                         </button>
                         <button className="gappointment-approve-button">
@@ -428,12 +497,15 @@ function GAppointmentPage() {
                                     getAppointmentHeight(appointment) * 50 - 4
                                   }px`,
                                 }}
+                                onClick={() => openDetailModal(appointment)}
                               >
-                                <div className="gappointment-appointment-subject">
-                                  {appointment.subject}
-                                </div>
-                                <div className="gappointment-appointment-description">
-                                  {appointment.description}
+                                <div className="gappointment-appointment-info-block">
+                                  <div className="gappointment-appointment-subject">
+                                    {appointment.subject}
+                                  </div>
+                                  <div className="gappointment-appointment-description">
+                                    {appointment.description}
+                                  </div>
                                 </div>
                                 <div className="gappointment-appointment-badges">
                                   <span className="gappointment-type-badge-small">
@@ -460,6 +532,30 @@ function GAppointmentPage() {
           </div>
         )}
       </div>
+      {/* Request Appointment  */}
+      <GRequestAppointment
+        appointment={selectedAppointment}
+        isOpen={showRequestModal}
+        onClose={closeRequestModal}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
+
+      {/* Appointment Detail Modal (for Schedule) */}
+      <GAppointmentDetail
+        appointment={selectedAppointment}
+        isOpen={showDetailModal}
+        onClose={closeDetailModal}
+        onCancel={handleCancelRequest}
+      />
+
+      {/* Appointment Cancel Popup */}
+      <GAppointmentCancelModal
+        appointment={selectedAppointment}
+        isOpen={showCancelPopup}
+        onClose={closeCancelPopup}
+        onConfirm={handleCancelConfirm}
+      />
     </div>
   );
 }

@@ -25,6 +25,8 @@ function GardenerProductPage() {
   const [showError, setShowError] = useState(false);
   const [errorData, setErrorData] = useState({ title: "", message: "" });
 
+  const [activeFilter, setActiveFilter] = useState("all");
+
   const products = [
     {
       id: 1,
@@ -77,6 +79,27 @@ function GardenerProductPage() {
   ];
 
   const totalPages = 10;
+
+  // Filter products based on active filter
+  const filteredProducts = products.filter((product) => {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "available") return product.status === "Đang bán";
+    if (activeFilter === "out-of-stock") return product.status === "Hết hàng";
+    return true;
+  });
+
+  // Get counts for each filter
+  const getFilterCounts = () => {
+    const available = products.filter((p) => p.status === "Đang bán").length;
+    const outOfStock = products.filter((p) => p.status === "Hết hàng").length;
+    return {
+      all: products.length,
+      available,
+      outOfStock,
+    };
+  };
+
+  const filterCounts = getFilterCounts();
 
   const SearchIcon = () => (
     <svg
@@ -279,7 +302,6 @@ function GardenerProductPage() {
         <div className="gproduct-header">
           <div className="gproduct-header-content">
             <h1>Quản lý sản phẩm</h1>
-            <p>Tổng cộng {products.length} sản phẩm</p>
           </div>
           <button
             className="gproduct-create-button"
@@ -291,26 +313,56 @@ function GardenerProductPage() {
         </div>
 
         {/* Search and Filter */}
-        <div className="gproduct-search-filter-container">
-          <div className="gproduct-search-container">
-            <SearchIcon />
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="gproduct-search-input"
-            />
+        {/* Filter Tabs and Search */}
+        <div className="gproduct-filter-tabs-container">
+          <div className="gproduct-filter-tabs">
+            <button
+              className={`gproduct-filter-tab ${
+                activeFilter === "all" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("all")}
+            >
+              Tất cả ({filterCounts.all})
+            </button>
+            <button
+              className={`gproduct-filter-tab ${
+                activeFilter === "available" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("available")}
+            >
+              Đang bán ({filterCounts.available})
+            </button>
+            <button
+              className={`gproduct-filter-tab ${
+                activeFilter === "out-of-stock" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("out-of-stock")}
+            >
+              Hết hàng ({filterCounts.outOfStock})
+            </button>
           </div>
-          <button className="gproduct-filter-button">
-            <FilterIcon />
-            Bộ lọc
-          </button>
+
+          <div className="gproduct-search-filter-section">
+            <div className="gproduct-search-container">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Tìm kiếm bài viết..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="gproduct-search-input"
+              />
+            </div>
+            {/* <button className="gproduct-filter-button">
+              <FilterIcon />
+              Bộ lọc
+            </button> */}
+          </div>
         </div>
 
         {/* Product Grid */}
         <div className="gproduct-product-grid">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="gproduct-product-card">
               <div className="gproduct-product-image">
                 <img
@@ -360,7 +412,11 @@ function GardenerProductPage() {
                   <span className="gproduct-product-category">
                     {product.category}
                   </span>
-                  <span className="gproduct-status-badge">
+                  <span
+                    className={`gproduct-status-badge ${
+                      product.status === "Hết hàng" ? "out-of-stock" : ""
+                    }`}
+                  >
                     {product.status}
                   </span>
                 </div>
@@ -377,7 +433,8 @@ function GardenerProductPage() {
         {/* Pagination */}
         <div className="gproduct-pagination-container">
           <p className="gproduct-pagination-info">
-            Hiển thị từ 1 đến 6 trong tổng số XX kết quả
+            Hiển thị từ 1 đến {filteredProducts.length} trong tổng số{" "}
+            {filteredProducts.length} kết quả
           </p>
           <div className="gproduct-pagination-controls">
             <button

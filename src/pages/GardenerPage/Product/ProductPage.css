@@ -48,15 +48,62 @@
   background-color: #15803d;
 }
 
-.gproduct-search-filter-container {
+.gproduct-filter-tabs-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gproduct-filter-tabs {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex: 1;
+}
+
+.gproduct-filter-tab {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.gproduct-filter-tab:hover {
+  color: #374151;
+}
+
+.gproduct-filter-tab.active {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.gproduct-filter-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #16a34a;
+}
+
+.search-filter-section {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  align-items: center;
 }
 
 .gproduct-search-container {
   position: relative;
-  flex: 1;
+  min-width: 300px;
 }
 
 .gproduct-search-icon {
@@ -74,7 +121,7 @@
   padding: 0.75rem 0.75rem 0.75rem 2.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   height: 3rem;
 }
 
@@ -95,6 +142,7 @@
   gap: 0.5rem;
   height: 3rem;
   transition: background-color 0.2s;
+  white-space: nowrap;
 }
 
 .gproduct-filter-button:hover {
@@ -106,6 +154,24 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+
+@media (max-width: 768px) {
+  .gproduct-filter-tabs-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .gproduct-search-filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gproduct-search-container {
+    min-width: auto;
+  }
 }
 
 @media (min-width: 768px) {
@@ -238,6 +304,12 @@
   border-radius: 0.25rem;
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+
+.gproduct-status-badge.out-of-stock {
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
 .gproduct-product-footer {
