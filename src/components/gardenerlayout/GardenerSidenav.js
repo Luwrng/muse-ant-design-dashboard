@@ -106,7 +106,7 @@ function GardenerSidenav() {
           <Menu.Item key="sign-in">
             <NavLink to="/sign-in">
               <FontAwesomeIcon icon={faSignInAlt} />
-              <span>Đăng Xuất</span>
+              <span onClick={() => localStorage.clear()}>Đăng Xuất</span>
             </NavLink>
           </Menu.Item>
         </Menu.ItemGroup>

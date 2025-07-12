@@ -20,8 +20,14 @@ body {
 
 .siup-sidebar-left,
 .siup-sidebar-right {
-  width: 25%;
-  background-color: #10b981;
+  width: 32%;
+  max-height: 100vh;
+  background-color: #0fda96;
+  background-image: url('https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.9;
 }
 
 .siup-content-center {
@@ -34,7 +40,7 @@ body {
 }
 
 .siup-content-wrapper {
-  max-width: 28rem;
+  /* max-width: 28rem; */
   margin: 0 auto;
   width: 100%;
 }
@@ -64,7 +70,7 @@ body {
 }
 
 .siup-logo-text {
-  font-size: 1.5rem;
+  font-size: 2.2rem;
   font-weight: 600;
   color: #374151;
 }
@@ -214,11 +220,16 @@ body {
   color: #1f2937;
 }
 
+.siup-back-button:focus{
+  outline: none;
+}
+
 /* Links */
 .siup-link {
   color: #3b82f6;
   text-decoration: underline;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .siup-link:hover {

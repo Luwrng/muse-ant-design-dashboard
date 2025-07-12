@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 //Import Conponent
@@ -12,6 +12,7 @@ import GUpdateCertificate from "./Modals/GUpdateCertificate";
 
 //Import Styling
 import "./GProfilePage.css";
+import accountService from "../../services/accountService";
 
 function GProfilePage() {
   const [activeTab, setActiveTab] = useState("account");
@@ -81,6 +82,21 @@ function GProfilePage() {
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
     },
   ]);
+
+  //Get profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const accountId = localStorage.getItem("account_id");
+        const result = await accountService.getProfile(accountId);
+        console.log(result);
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleAddressClick = (address) => {
     setSelectedAddress(address);

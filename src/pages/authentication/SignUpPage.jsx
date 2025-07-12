@@ -56,7 +56,9 @@ function SignUpPage() {
       <>
         <div className="siup-page-layout">
           {/* Left green sidebar */}
-          <div className="siup-sidebar-left"></div>
+          <div className="siup-sidebar-left">
+            {/* <img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg" /> */}
+          </div>
 
           {/* Center white content */}
           <div className="siup-content-center">
@@ -151,6 +153,7 @@ function SignUpPage() {
                       Tôi đồng ý với các{" "}
                       <span className="siup-link">điều khoản và dịch vụ</span>{" "}
                       của Clean Food Viet
+                      {/* Add redirect */}
                     </label>
                   </div>
 
@@ -164,7 +167,12 @@ function SignUpPage() {
                   <div className="siup-login-link">
                     <span>
                       Bạn đã có tài khoản?{" "}
-                      <span className="siup-link">Đăng nhập ngay</span>
+                      <span
+                        className="siup-link"
+                        onClick={() => history.push("/sign-in")}
+                      >
+                        Đăng nhập ngay
+                      </span>
                     </span>
                   </div>
                 </div>
