@@ -1,83 +1,103 @@
 import React from "react";
 import { useState } from "react";
+import GPostDetailModal from "./GPostDetailModal";
+import GDisableConfirmModal from "./GDisableConfirmModal";
+import GCreatePostModal from "./GCreatePostModal";
+import GUpdatePostModal from "./GUpdatePostModal";
 import "./GPostPage.css";
 
 function GPostPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+  const [showDisablePopup, setShowDisablePopup] = useState(false);
 
-  const posts = [
+  const [posts, setPosts] = useState([
     {
       id: 1,
       title: "Backend API với Node.js và Express",
       description:
         "Xây dựng API backend mạnh mẽ và bảo mật với Node.js và Express framework",
+      image: "/placeholder.svg?height=200&width=300",
+      video: "/placeholder-video.mp4", // Add video
+      images: [
+        // Add multiple images
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+      ],
       status: "Đang bán",
       rating: 4.7,
-      date: "18/9/2024",
-      image: "/placeholder.svg?height=200&width=300",
-      category: "backend",
+      createdDate: "18/9/2024",
+      productName: "Cà chua cherry đỏ",
+      price: "50,000đ/kg",
+      unit: "kg",
+      harvestDate: "01/01/2025",
+      category: "Rau củ quả",
+      products: [
+        {
+          id: 1,
+          name: "Node.js Course",
+          image: "/placeholder.svg?height=40&width=40",
+        },
+        {
+          id: 2,
+          name: "Express Guide",
+          image: "/placeholder.svg?height=40&width=40",
+        },
+      ],
     },
     {
       id: 2,
       title: "Tối ưu hóa hiệu suất website",
       description:
-        "Các kỹ thuật và công cụ để tối ưu hóa tốc độ tải và hiệu suất của website",
-      status: "Hết hạn",
-      rating: 4.3,
-      date: "12/9/2024",
+        "Các kỹ thuật và công cụ để tối ưu tốc độ tải và hiệu suất của website",
       image: "/placeholder.svg?height=200&width=300",
-      category: "optimization",
+      images: [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+      ],
+      status: "Hết hàng",
+      rating: 4.3,
+      createdDate: "12/9/2024",
+      productName: "Hướng dẫn tối ưu website",
+      price: "75,000đ",
+      unit: "bộ",
+      harvestDate: "15/12/2024",
+      category: "Khóa học",
+      products: [],
+    },
+  ]);
+
+  const [productList] = useState([
+    {
+      id: 1,
+      name: "Node.js Course",
+      image: "/placeholder.svg?height=40&width=40",
+    },
+    {
+      id: 2,
+      name: "Express Guide",
+      image: "/placeholder.svg?height=40&width=40",
     },
     {
       id: 3,
-      title: "Phát triển ứng dụng di động với React Native",
-      description:
-        "Hướng dẫn từ cơ bản đến nâng cao về phát triển ứng dụng di động bằng React Native",
-      status: "Đang bán",
-      rating: 4.6,
-      date: "8/9/2024",
-      image: "/placeholder.svg?height=200&width=300",
-      category: "mobile",
+      name: "React Native App",
+      image: "/placeholder.svg?height=40&width=40",
     },
     {
       id: 4,
-      title: "JavaScript ES6+ và các tính năng mới",
-      description:
-        "Tìm hiểu về các tính năng mới nhất của JavaScript và cách sử dụng chúng hiệu quả",
-      status: "Hết hạng",
-      rating: 4.2,
-      date: "10/9/2024",
-      image: "/placeholder.svg?height=200&width=300",
-      category: "javascript",
+      name: "JavaScript ES6+",
+      image: "/placeholder.svg?height=40&width=40",
     },
-    {
-      id: 5,
-      title: "Thiết kế giao diện người dùng hiện đại",
-      description:
-        "Khám phá các nguyên tắc thiết kế UI/UX hiện đại và cách áp dụng vào dự án thực tế",
-      status: "Đang bán",
-      rating: 4.8,
-      date: "20/9/2024",
-      image: "/placeholder.svg?height=200&width=300",
-      category: "design",
-    },
-    {
-      id: 6,
-      title: "Hướng dẫn React cho người mới bắt đầu",
-      description:
-        "Một hướng dẫn chi tiết về React dành cho những người mới bắt đầu học lập trình web",
-      status: "Đang bán",
-      rating: 4.5,
-      date: "15/9/2024",
-      image: "/placeholder.svg?height=200&width=300",
-      category: "react",
-    },
-  ];
+  ]);
 
   const filterTabs = [
-    { id: "all", label: "Tất cả", count: 6 },
+    { id: "all", label: "Tất cả", count: 2 },
     { id: "draft", label: "Đang bán" },
     { id: "expired", label: "Hết hạng" },
   ];
@@ -109,6 +129,61 @@ function GPostPage() {
     ));
   };
 
+  //Function handler
+  const handlePostClick = (post) => {
+    setSelectedPost(post);
+    setShowDetailPopup(true);
+  };
+
+  const handleEdit = () => {
+    setShowDetailPopup(false);
+    setShowUpdatePopup(true);
+  };
+
+  const handleDisable = () => {
+    setShowDetailPopup(false);
+    setShowDisablePopup(true);
+  };
+
+  const handleUpdate = (updatedPost) => {
+    setPosts(
+      posts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+    );
+    setShowUpdatePopup(false);
+  };
+
+  const handleCreate = (newPostData) => {
+    const newPost = {
+      id: posts.length + 1,
+      title: newPostData.title,
+      description: newPostData.content,
+      image: "/placeholder.svg?height=200&width=300",
+      status: "Đang bán",
+      rating: 0,
+      createdDate: new Date().toLocaleDateString("vi-VN"),
+      productName: "New Product",
+      price: "100,000đ",
+      unit: "kg",
+      harvestDate: new Date().toLocaleDateString("vi-VN"),
+      category: "Unknown",
+      products: productList.filter((product) =>
+        newPostData.selectedProducts.includes(product.id)
+      ),
+    };
+    setPosts([...posts, newPost]);
+    setShowCreatePopup(false);
+  };
+
+  const handleConfirmDisable = () => {
+    setPosts(
+      posts.map((post) =>
+        post.id === selectedPost.id ? { ...post, status: "Đã ẩn" } : post
+      )
+    );
+    setShowDisablePopup(false);
+    setSelectedPost(null);
+  };
+
   return (
     <div className="gpost-article-management">
       <div className="gpost-header">
@@ -117,7 +192,12 @@ function GPostPage() {
         </div>
 
         <div className="gpost-header-actions">
-          <button className="gpost-create-btn">+ Tạo bài viết</button>
+          <button
+            className="gpost-create-btn"
+            onClick={() => setShowCreatePopup(true)}
+          >
+            + Tạo bài viết
+          </button>
         </div>
       </div>
 
@@ -155,13 +235,17 @@ function GPostPage() {
 
       <div className="gpost-articles-grid">
         {filteredPost.map((article) => (
-          <div key={article.id} className="gpost-article-card">
+          <div
+            key={article.id}
+            className="gpost-article-card"
+            onClick={() => handlePostClick(article)}
+          >
             <div className="gpost-article-image">
               <img
                 src={article.image || "/placeholder.svg"}
                 alt={article.title}
               />
-              <button className="gpost-bookmark-btn">⋯</button>
+              {/* <button className="gpost-bookmark-btn">⋯</button> */}
             </div>
             <div className="gpost-article-content">
               <h3 className="gpost-article-title">{article.title}</h3>
@@ -198,6 +282,34 @@ function GPostPage() {
           <button className="gpost-pagination-btn">›</button>
         </div>
       </div>
+      {/* Post Detail Popup */}
+      <GPostDetailModal
+        post={selectedPost}
+        isOpen={showDetailPopup}
+        onClose={() => setShowDetailPopup(false)}
+        onEdit={handleEdit}
+        onDisable={handleDisable}
+      />
+      {/* Create Post Popup */}
+      <GCreatePostModal
+        isOpen={showCreatePopup}
+        onClose={() => setShowCreatePopup(false)}
+        onCreate={handleCreate}
+        productList={productList}
+      />
+      {/* Update Post Popup */}
+      <GUpdatePostModal
+        post={selectedPost}
+        isOpen={showUpdatePopup}
+        onClose={() => setShowUpdatePopup(false)}
+        onUpdate={handleUpdate}
+      />
+      {/* Disable Post Popup */}
+      <GDisableConfirmModal
+        isOpen={showDisablePopup}
+        onClose={() => setShowDisablePopup(false)}
+        onConfirm={handleConfirmDisable}
+      />
     </div>
   );
 }

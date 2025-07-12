@@ -162,6 +162,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .gpost-article-card:hover {
@@ -201,7 +202,6 @@
 
 .gpost-article-content {
   padding: 20px;
-  cursor: pointer;
 }
 
 .gpost-article-title {

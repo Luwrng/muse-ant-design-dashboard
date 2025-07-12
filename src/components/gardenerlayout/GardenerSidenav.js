@@ -98,7 +98,7 @@ function GardenerSidenav() {
 
         <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">
           <Menu.Item key="profile">
-            <NavLink to="/profile">
+            <NavLink to="/gardener/profile">
               <FontAwesomeIcon icon={faUser} />
               <span>Hồ Sơ</span>
             </NavLink>

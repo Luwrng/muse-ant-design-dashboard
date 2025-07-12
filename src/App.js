@@ -45,12 +45,13 @@ import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCateg
 import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
 import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
 import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage";
+import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
+import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
 
 //Test
-import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
 
 function App() {
   return (
@@ -83,7 +84,8 @@ function App() {
                   path="/gardener/appointment"
                   component={GAppointmentPage}
                 />
-                <Route path="/gardener/chat" component={GChatPage} />
+                <Route path="/gardener/message" component={GChatPage} />
+                <Route path="/gardener/profile" component={GProfilePage} />
               </Switch>
             </GardenerMain>
           )}
