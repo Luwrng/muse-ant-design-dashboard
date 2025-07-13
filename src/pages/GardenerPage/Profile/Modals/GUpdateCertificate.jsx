@@ -1,13 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import "./GUpdateCertificate.css";
+import certificateService from "../../../services/apiServices/certificateService";
 
 function GUpdateCertificate({ certificate, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
     name: certificate.name,
-    issuedBy: certificate.issuedBy,
+    issuingAuthority: certificate.issuedBy,
     issueDate: certificate.issueDate,
     expiryDate: certificate.expiryDate,
+    status: certificate.status,
   });
 
   const handleSubmit = (e) => {
@@ -25,6 +27,18 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleUpdateSubmit = async () => {
+    try {
+      await certificateService.updateCertificate(
+        certificate.certificateId,
+        formData
+      );
+      onClose();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -55,12 +69,12 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           </div>
 
           <div className="gupdatecertificate-form-group">
-            <label htmlFor="issuedBy">Issued By</label>
+            <label htmlFor="issuingAuthority">Issued By</label>
             <input
               type="text"
-              id="issuedBy"
-              name="issuedBy"
-              value={formData.issuedBy}
+              id="issuingAuthority"
+              name="issuingAuthority"
+              value={formData.issuingAuthority}
               onChange={handleChange}
               required
             />
@@ -97,7 +111,7 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
             <button
               type="button"
               className="gupdatecertificate-btn-secondary"
-              onClick={onClose}
+              onClick={handleUpdateSubmit}
             >
               Cancel
             </button>

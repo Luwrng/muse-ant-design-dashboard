@@ -199,7 +199,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Layout, Menu, Button, Row, Col, Typography, Form, Input } from "antd";
 import signinbg from "../assets/images/img-signin.jpg";
 import styled from "styled-components";
-import authenticateService from "./services/authenticateService";
+import authenticateService from "./services/apiServices/authenticateService";
 
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
@@ -234,6 +234,8 @@ export default function SignIn() {
       const result = await authenticateService.login(values);
       localStorage.setItem("auth_token", result.token);
       localStorage.setItem("account_id", result.accountId);
+      localStorage.setItem("account_name", result.name);
+      localStorage.setItem("account_avatar", result.avatar);
       setLoading(false);
       setError(null);
       history.push("/gardener/landing");

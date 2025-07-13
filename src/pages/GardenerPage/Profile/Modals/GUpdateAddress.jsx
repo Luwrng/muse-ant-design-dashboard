@@ -1,4 +1,5 @@
 import React from "react";
+import addressService from "../../../services/apiServices/addressService";
 import { useState } from "react";
 import "./GUpdateAddress.css";
 
@@ -26,6 +27,15 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const onUpdateSubmit = async () => {
+    try {
+      await addressService.updateAddress(address.addressId, formData);
+      onClose();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -107,7 +117,7 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
             <button
               type="button"
               className="gupdateaddress-btn-secondary"
-              onClick={onClose}
+              onClick={onUpdateSubmit}
             >
               Cancel
             </button>

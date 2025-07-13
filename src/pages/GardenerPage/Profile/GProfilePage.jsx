@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import defaultavatar from "../../../assets/images/gardener/defaultavatar.jpg";
 
 //Import Conponent
 import GAddCertificate from "./Modals/GAddCertificate";
@@ -12,9 +13,10 @@ import GUpdateCertificate from "./Modals/GUpdateCertificate";
 
 //Import Styling
 import "./GProfilePage.css";
-import accountService from "../../services/accountService";
+import accountService from "../../services/apiServices/accountService";
 
 function GProfilePage() {
+  //Tab, Popup part
   const [activeTab, setActiveTab] = useState("account");
   const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -26,62 +28,10 @@ function GProfilePage() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedCertificate, setSelectedCertificate] = useState("");
 
-  const [profile, setProfile] = useState({
-    name: "John Smith",
-    email: "john.smith@example.com",
-    phone: "+1 (555) 123-4567",
-    gender: "Male",
-    status: "Active",
-    verificationStatus: "Verified",
-    createdDate: "2023-01-15",
-    lastUpdated: "2024-01-10",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  });
-
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      number: 1,
-      addressLine: "123 Garden Street, Apt 4B",
-      city: "New York",
-      province: "NY",
-      country: "USA",
-      postalCode: "10001",
-    },
-    {
-      id: 2,
-      number: 2,
-      addressLine: "456 Park Avenue",
-      city: "New York",
-      province: "NY",
-      country: "USA",
-      postalCode: "10002",
-    },
-  ]);
-
-  const [certificates, setCertificates] = useState([
-    {
-      id: 1,
-      name: "Organic Gardening Certification",
-      issuedBy: "Green Institute",
-      issueDate: "2023-06-15",
-      expiryDate: "2025-06-15",
-      status: "Active",
-      imageUrl:
-        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Landscape Design Certificate",
-      issuedBy: "Design Academy",
-      issueDate: "2022-03-10",
-      expiryDate: "2024-03-10",
-      status: "Active",
-      imageUrl:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
-    },
-  ]);
+  //Data part
+  const [profile, setProfile] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [certificates, setCertificates] = useState([]);
 
   //Get profile
   useEffect(() => {
@@ -89,7 +39,12 @@ function GProfilePage() {
       try {
         const accountId = localStorage.getItem("account_id");
         const result = await accountService.getProfile(accountId);
-        console.log(result);
+
+        const { addresses, certificates, ...accountInfo } = result;
+
+        setProfile(accountInfo);
+        setAddresses(addresses || []);
+        setCertificates(certificates || []);
       } catch (err) {
         console.log(err.response.data);
       }
@@ -136,7 +91,7 @@ function GProfilePage() {
           <div className="gprofile-profile-section">
             <div className="gprofile-avatar-section">
               <img
-                src={profile.avatar || "/placeholder.svg"}
+                src={profile.avatar || defaultavatar}
                 alt="Profile"
                 className="gprofile-avatar"
               />
@@ -151,7 +106,7 @@ function GProfilePage() {
                 </div>
                 <div className="gprofile-detail-item">
                   <label>Phone Number</label>
-                  <span>{profile.phone}</span>
+                  <span>{profile.phoneNumber}</span>
                 </div>
               </div>
 
@@ -171,20 +126,24 @@ function GProfilePage() {
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
                   <label>Verification Status</label>
-                  <span className="gprofile-status verified">
-                    {profile.verificationStatus}
+                  <span
+                    className={`gprofile-status ${
+                      profile.isVerified ? "verified" : "unverified"
+                    }`}
+                  >
+                    {profile.isVerified ? "Verified" : "Unverified"}
                   </span>
                 </div>
                 <div className="gprofile-detail-item">
                   <label>Created Date</label>
-                  <span>{profile.createdDate}</span>
+                  <span>{profile.createdAt}</span>
                 </div>
               </div>
 
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
                   <label>Last Updated</label>
-                  <span>{profile.lastUpdated}</span>
+                  <span>{profile.updatedAt}</span>
                 </div>
               </div>
             </div>
@@ -202,14 +161,14 @@ function GProfilePage() {
             </div>
 
             <div className="gprofile-addresses-list">
-              {addresses.map((address) => (
+              {addresses.map((address, index) => (
                 <div
                   key={address.id}
                   className="gprofile-address-item"
                   onClick={() => handleAddressClick(address)}
                 >
                   <span className="gprofile-address-number">
-                    No. {address.number}
+                    No. {index + 1}
                   </span>
                   <span className="gprofile-address-line">
                     {address.addressLine}
@@ -269,7 +228,7 @@ function GProfilePage() {
                   </div>
                   <div className="gprofile-detail-item">
                     <label>Issued By</label>
-                    <span>{selectedCertificateData.issuedBy}</span>
+                    <span>{selectedCertificateData.issuingAuthority}</span>
                   </div>
                   <div className="gprofile-detail-item">
                     <label>Issue Date</label>

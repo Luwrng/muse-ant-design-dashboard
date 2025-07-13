@@ -11,3 +11,9 @@ const accountService = {
 };
 
 export default accountService;
+
+// const getProfile = async (id) => {
+//   return await httpService.get(`${endpoint}/${id}`, {
+//      params:{input1, input2, ...}
+//   });
+// };

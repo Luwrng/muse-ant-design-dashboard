@@ -113,6 +113,11 @@
   color: #16a34a;
 }
 
+.gprofile-status.unverified {
+  background: #dcfce7;
+  color: #e33618;
+}
+
 .gprofile-addresses-section {
   margin-bottom: 30px;
 }

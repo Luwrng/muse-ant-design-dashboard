@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "./GCreateAddress.css";
+import addressService from "../../../services/apiServices/addressService";
 
 function GCreateAddress({ onClose, onAdd }) {
   const [formData, setFormData] = useState({
@@ -26,6 +27,16 @@ function GCreateAddress({ onClose, onAdd }) {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const onCreateSubmit = async () => {
+    try {
+      const accountId = localStorage.getItem("account_id");
+      await addressService.createAddress(accountId, formData);
+      onClose();
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -107,7 +118,7 @@ function GCreateAddress({ onClose, onAdd }) {
             <button
               type="button"
               className="gcreateaddress-btn-secondary"
-              onClick={onClose}
+              onClick={onCreateSubmit}
             >
               Cancel
             </button>

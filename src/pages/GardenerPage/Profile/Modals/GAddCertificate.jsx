@@ -8,7 +8,6 @@ function GAddCertificate({ onClose, onAdd }) {
     issuedBy: "",
     issueDate: "",
     expiryDate: "",
-    status: "Active",
     imageUrl: "",
   });
 
