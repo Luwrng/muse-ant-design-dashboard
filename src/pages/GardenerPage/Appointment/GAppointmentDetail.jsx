@@ -46,12 +46,15 @@ function GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
             <div className="gapdetail-detail-row">
               <span className="gapdetail-detail-label">Thời gian:</span>
               <span className="gapdetail-detail-value">
+                {/* Add a function for calculating the endTime of the appointment */}
                 {appointment.startTime} - {appointment.endTime}
               </span>
             </div>
             <div className="gapdetail-detail-row">
               <span className="gapdetail-detail-label">Loại cuộc hẹn:</span>
-              <span className="gapdetail-detail-value">{appointment.type}</span>
+              <span className="gapdetail-detail-value">
+                {appointment.appointmentType}
+              </span>
             </div>
             <div className="gapdetail-detail-row">
               <span className="gapdetail-detail-label">Trạng thái:</span>

@@ -2,11 +2,20 @@ import React from "react";
 import { useState } from "react";
 import GNotificationPopup from "./GNotificationPopup";
 import "./GNotificationItem.css";
+import notificationService from "../../services/apiServices/notificationService";
 
 function GNotificationItem({ notification }) {
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleNotificationClick = (e) => {
+  const handleNotificationClick = async (e) => {
+    try {
+      await notificationService.updaNotificationStatus(
+        notification.notificationId
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     e.stopPropagation();
     setShowPopup(true);
   };
@@ -48,18 +57,16 @@ function GNotificationItem({ notification }) {
           onClick={(e) => handleNotificationClick(e)}
         >
           <div className="gnotiitem-notification-message">
-            <span className="gnotiitem-sender-name">
-              {notification.senderName}
-            </span>
+            <span className="gnotiitem-sender-name">{notification.sender}</span>
             <span className="gnotiitem-message-text">
               {notification.message}
             </span>
           </div>
           <div className="gnotiitem-notification-meta">
-            <span className="gnotiitem-category">{notification.category}</span>
-            <span className="gnotiitem-separator">•</span>
+            {/* <span className="gnotiitem-category">{notification.category}</span>
+            <span className="gnotiitem-separator">•</span> */}
             <span className="gnotiitem-time">
-              {formatTimeAgo(notification.sendAt)}
+              {formatTimeAgo(notification.createdAt)}
             </span>
           </div>
         </div>

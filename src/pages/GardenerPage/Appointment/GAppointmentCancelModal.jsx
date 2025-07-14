@@ -7,8 +7,8 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
 
   if (!isOpen || !appointment) return null;
 
-  const handleConfirm = () => {
-    onConfirm(appointment, reason);
+  const handleConfirm = async () => {
+    await onConfirm(appointment, reason);
     setReason(""); // Reset reason after confirm
   };
 
@@ -44,6 +44,7 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
               {appointment.subject}
             </h4>
             <p className="gacancel-appointment-time">
+              {/* Add a function for calculating the endTime of the appointment */}
               {appointment.startTime} - {appointment.endTime}
             </p>
           </div>

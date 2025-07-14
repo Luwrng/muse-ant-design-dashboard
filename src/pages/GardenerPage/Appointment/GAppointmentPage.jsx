@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useState } from "react";
 import { EyeFilled, CheckOutlined, CloseOutlined } from "@ant-design/icons";
@@ -6,100 +6,101 @@ import GRequestAppointment from "./GRequestAppointment";
 import GAppointmentDetail from "./GAppointmentDetail";
 import GAppointmentCancelModal from "./GAppointmentCancelModal";
 import "./GAppointmentPage.css";
+import appointmentService from "../../services/apiServices/appointmentService";
 
-const scheduledAppointments = [
-  {
-    id: 1,
-    subject: "Garden Design Consultation",
-    description:
-      "Comprehensive consultation for residential garden redesign including landscape planning and plant selection strategies.",
-    type: "Garden Design",
-    status: "Confirmed",
-    startTime: "10:30",
-    endTime: "12:30",
-    day: new Date("2025-07-07T00:00:00"), // Monday
-    colorClass: "gappointment-appointment-orange",
-  },
-  {
-    id: 2,
-    subject: "Plant Care Session",
-    description:
-      "Expert advice on plant health, disease prevention, and proper fertilization techniques.",
-    type: "Consultation",
-    status: "Pending",
-    startTime: "14:00",
-    endTime: "15:00",
-    day: new Date("2025-07-08T00:00:00"), // Tuesday
-    colorClass: "gappointment-appointment-blue",
-  },
-  {
-    id: 3,
-    subject: "Landscape Planning",
-    description:
-      "Detailed planning session for outdoor space optimization and seasonal maintenance.",
-    type: "Planning",
-    status: "Confirmed",
-    startTime: "9:00",
-    endTime: "10:30",
-    day: new Date("2025-07-09T00:00:00"), // Thursday
-    colorClass: "gappointment-appointment-green",
-  },
-  {
-    id: 4,
-    subject: "Evening Consultation",
-    description:
-      "Late evening consultation for busy professionals who prefer after-work appointments.",
-    type: "Consultation",
-    status: "Confirmed",
-    startTime: "19:00",
-    endTime: "20:30",
-    day: new Date("2025-07-10T00:00:00"), // Wednesday
-    colorClass: "gappointment-appointment-indigo",
-  },
-  {
-    id: 5,
-    subject: "Early Morning Review",
-    description:
-      "Early morning garden maintenance review for optimal plant care scheduling.",
-    type: "Review",
-    status: "Pending",
-    startTime: "6:00",
-    endTime: "7:30",
-    day: new Date("2025-07-11T00:00:00"), // Friday
-    colorClass: "gappointment-appointment-purple",
-  },
-];
+// const scheduledAppointments = [
+//   {
+//     id: 1,
+//     subject: "Garden Design Consultation",
+//     description:
+//       "Comprehensive consultation for residential garden redesign including landscape planning and plant selection strategies.",
+//     type: "Garden Design",
+//     status: "Confirmed",
+//     startTime: "10:30",
+//     endTime: "12:30",
+//     day: new Date("2025-07-07T00:00:00"), // Monday
+//     colorClass: "gappointment-appointment-orange",
+//   },
+//   {
+//     id: 2,
+//     subject: "Plant Care Session",
+//     description:
+//       "Expert advice on plant health, disease prevention, and proper fertilization techniques.",
+//     type: "Consultation",
+//     status: "Pending",
+//     startTime: "14:00",
+//     endTime: "15:00",
+//     day: new Date("2025-07-08T00:00:00"), // Tuesday
+//     colorClass: "gappointment-appointment-blue",
+//   },
+//   {
+//     id: 3,
+//     subject: "Landscape Planning",
+//     description:
+//       "Detailed planning session for outdoor space optimization and seasonal maintenance.",
+//     type: "Planning",
+//     status: "Confirmed",
+//     startTime: "9:00",
+//     endTime: "10:30",
+//     day: new Date("2025-07-09T00:00:00"), // Thursday
+//     colorClass: "gappointment-appointment-green",
+//   },
+//   {
+//     id: 4,
+//     subject: "Evening Consultation",
+//     description:
+//       "Late evening consultation for busy professionals who prefer after-work appointments.",
+//     type: "Consultation",
+//     status: "Confirmed",
+//     startTime: "19:00",
+//     endTime: "20:30",
+//     day: new Date("2025-07-10T00:00:00"), // Wednesday
+//     colorClass: "gappointment-appointment-indigo",
+//   },
+//   {
+//     id: 5,
+//     subject: "Early Morning Review",
+//     description:
+//       "Early morning garden maintenance review for optimal plant care scheduling.",
+//     type: "Review",
+//     status: "Pending",
+//     startTime: "6:00",
+//     endTime: "7:30",
+//     day: new Date("2025-07-11T00:00:00"), // Friday
+//     colorClass: "gappointment-appointment-purple",
+//   },
+// ];
 
-const waitingApprovals = [
-  {
-    id: 3,
-    name: "David Chen",
-    phone: "0456789123",
-    date: "12/07/2024",
-    time: "10:30",
-    duration: "120 phút",
-    type: "Garden Design",
-    subject: "Tư vấn thiết kế sân vườn",
-    description:
-      "Tư vấn thiết kế sân vườn cho biệt thự với diện tích 200m2, bao gồm lựa chọn cây cảnh, bố trí không gian xanh và hệ thống tưới nước tự động. Khách hàng mong muốn có một không gian xanh mát, thân thiện với môi trường và dễ dàng chăm sóc.",
-    avatar: "/placeholder.svg?height=40&width=40",
-    status: "Chờ phê duyệt",
-  },
-  {
-    id: 4,
-    name: "Michael Johnson",
-    phone: "0123456789",
-    date: "10/07/2024",
-    time: "09:00",
-    duration: "60 phút",
-    type: "Consultation",
-    subject: "Tư vấn cây cảnh văn phòng",
-    description:
-      "Tư vấn lựa chọn và bố trí cây cảnh cho không gian văn phòng 50m2, yêu cầu cây dễ chăm sóc và phù hợp với ánh sáng trong nhà. Khách hàng muốn tạo không gian làm việc xanh, tươi mát và tăng năng suất làm việc cho nhân viên.",
-    avatar: "/placeholder.svg?height=40&width=40",
-    status: "Chờ phê duyệt",
-  },
-];
+// const waitingApprovals = [
+//   {
+//     id: 3,
+//     name: "David Chen",
+//     phone: "0456789123",
+//     date: "12/07/2024",
+//     time: "10:30",
+//     duration: "120 phút",
+//     type: "Garden Design",
+//     subject: "Tư vấn thiết kế sân vườn",
+//     description:
+//       "Tư vấn thiết kế sân vườn cho biệt thự với diện tích 200m2, bao gồm lựa chọn cây cảnh, bố trí không gian xanh và hệ thống tưới nước tự động. Khách hàng mong muốn có một không gian xanh mát, thân thiện với môi trường và dễ dàng chăm sóc.",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     status: "Chờ phê duyệt",
+//   },
+//   {
+//     id: 4,
+//     name: "Michael Johnson",
+//     phone: "0123456789",
+//     date: "10/07/2024",
+//     time: "09:00",
+//     duration: "60 phút",
+//     type: "Consultation",
+//     subject: "Tư vấn cây cảnh văn phòng",
+//     description:
+//       "Tư vấn lựa chọn và bố trí cây cảnh cho không gian văn phòng 50m2, yêu cầu cây dễ chăm sóc và phù hợp với ánh sáng trong nhà. Khách hàng muốn tạo không gian làm việc xanh, tươi mát và tăng năng suất làm việc cho nhân viên.",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     status: "Chờ phê duyệt",
+//   },
+// ];
 
 const timeSlots = [
   //   "0:00",
@@ -157,10 +158,48 @@ function GAppointmentPage() {
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
 
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
+
+  const [pendingAppointment, setPendingAppointments] = useState([]);
+  const [scheduledAppointments, setScheduledAppointments] = useState([]);
+
+  useEffect(() => {
+    const fetchPendingAppointment = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await appointmentService.getAccountAppointments(
+          gardenerId,
+          "Status",
+          "PENDING"
+        );
+
+        setPendingAppointments(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPendingAppointment();
+  }, [activeTab]);
+
+  useEffect(() => {
+    const fetchScheduledAppointment = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await appointmentService.getAccountScheduledAppointments(
+          gardenerId
+        );
+
+        setScheduledAppointments(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchScheduledAppointment();
+  }, [activeTab]);
 
   // Function to get the start of the week (Monday)
   const getWeekStart = (date) => {
@@ -286,13 +325,45 @@ function GAppointmentPage() {
     setSelectedAppointment(null);
   };
 
-  const handleApprove = (appointment) => {
-    console.log("Approved appointment:", appointment);
+  const handleApprove = async (appointment) => {
+    try {
+      await appointmentService.updateAppointmentStatus(
+        appointment.appointmentId,
+        "ACCEPTED"
+      );
+
+      setPendingAppointments(
+        pendingAppointment.map((appo) =>
+          appo.filter(
+            (item) => item.appointmentId !== appointment.appointmentId
+          )
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     closeRequestModal();
   };
 
-  const handleReject = (appointment) => {
-    console.log("Rejected appointment:", appointment);
+  const handleReject = async (appointment) => {
+    try {
+      await appointmentService.updateAppointmentStatus(
+        appointment.appointmentId,
+        "REJECTED"
+      );
+
+      setPendingAppointments(
+        pendingAppointment.map((appo) =>
+          appo.filter(
+            (item) => item.appointmentId !== appointment.appointmentId
+          )
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     closeRequestModal();
   };
 
@@ -318,8 +389,17 @@ function GAppointmentPage() {
     setSelectedAppointment(null);
   };
 
-  const handleCancelConfirm = (appointment, reason) => {
+  const handleCancelConfirm = async (appointment, reason) => {
     console.log("Cancelled appointment:", appointment, "Reason:", reason);
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      await appointmentService.cancelAppointment(appointment.appointmentId, {
+        cancelledBy: gardenerId,
+        cancellationReason: reason,
+      });
+    } catch (err) {
+      console.log(err);
+    }
     setShowCancelPopup(false);
     setSelectedAppointment(null);
   };
@@ -329,7 +409,7 @@ function GAppointmentPage() {
       <div className="gappointment-appointment-header">
         <h1 className="gappointment-appointment-title">Quản lý các cuộc hẹn</h1>
         <p className="gappointment-appointment-subtitle">
-          Quản lý các cuộc hẹn đã được đặt trước và nhưng yêu cầu về tạo cuộc
+          Quản lý các cuộc hẹn đã được đặt trước và những yêu cầu về tạo cuộc
           hẹn từ phía Retailer
         </p>
       </div>
@@ -371,8 +451,11 @@ function GAppointmentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {waitingApprovals.map((appointment) => (
-                    <tr key={appointment.id} className="gappointment-table-row">
+                  {pendingAppointment.map((appointment) => (
+                    <tr
+                      key={appointment.appointmentId}
+                      className="gappointment-table-row"
+                    >
                       <td>
                         <div className="gappointment-client-info">
                           <div className="gappointment-avatar">
@@ -387,7 +470,7 @@ function GAppointmentPage() {
                         </div>
                       </td>
                       <td className="gappointment-phone-cell">
-                        {appointment.phone}
+                        {appointment.phoneNumber}
                       </td>
                       <td className="gappointment-date-cell">
                         {appointment.time} {appointment.date}
@@ -397,7 +480,7 @@ function GAppointmentPage() {
                       </td>
                       <td>
                         <span className="gappointment-type-badge">
-                          {appointment.type}
+                          {appointment.appointmentType}
                         </span>
                       </td>
                       <td>
@@ -509,7 +592,7 @@ function GAppointmentPage() {
                                 </div>
                                 <div className="gappointment-appointment-badges">
                                   <span className="gappointment-type-badge-small">
-                                    {appointment.type}
+                                    {appointment.appointmentType}
                                   </span>
                                   <span
                                     className={`gappointment-status-badge-small ${getStatusClass(

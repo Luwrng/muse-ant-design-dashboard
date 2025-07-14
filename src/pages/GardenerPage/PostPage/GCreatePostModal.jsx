@@ -6,9 +6,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    video: null,
-    images: [],
-    selectedProducts: [],
+    harvestDate: "",
+    postEndDate: new Date(),
+    postMediaDTOs: [],
+    productId: "",
+    gardenerId: localStorage.getItem("account_id"),
   });
 
   const handleInputChange = (field, value) => {
@@ -67,9 +69,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
     setFormData({
       title: "",
       content: "",
-      video: null,
-      images: [],
-      selectedProducts: [],
+      harvestDate: "",
+      postEndDate: new Date(),
+      postMediaDTOs: [],
+      productId: "",
+      gardenerId: localStorage.getItem("account_id"),
     });
     onClose();
   };

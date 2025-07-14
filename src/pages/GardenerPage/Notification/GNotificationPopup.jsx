@@ -65,7 +65,7 @@ function GNotificationPopup({ notification, onClose }) {
         <div className="gnotipopup-popup-content">
           <div className="gnotipopup-popup-field">
             <label>Sender Name:</label>
-            <span>{notification.senderName}</span>
+            <span>{notification.sender}</span>
           </div>
 
           <div className="gnotipopup-popup-field">
@@ -88,7 +88,7 @@ function GNotificationPopup({ notification, onClose }) {
 
           <div className="gnotipopup-popup-field">
             <label>Send At:</label>
-            <span>{formatDateTime(notification.sendAt)}</span>
+            <span>{formatDateTime(notification.createdAt)}</span>
           </div>
 
           <div className="gnotipopup-popup-field">

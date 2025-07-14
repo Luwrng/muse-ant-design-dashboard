@@ -1,109 +1,66 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import GPostDetailModal from "./GPostDetailModal";
 import GDisableConfirmModal from "./GDisableConfirmModal";
 import GCreatePostModal from "./GCreatePostModal";
 import GUpdatePostModal from "./GUpdatePostModal";
+
+import productService from "../../services/apiServices/productService";
+
 import "./GPostPage.css";
+import postService from "../../services/apiServices/postService";
 
 function GPostPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("Tất cả");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeFilter, setActiveFilter] = useState("ACTIVE");
   const [selectedPost, setSelectedPost] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [showDisablePopup, setShowDisablePopup] = useState(false);
 
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "Backend API với Node.js và Express",
-      description:
-        "Xây dựng API backend mạnh mẽ và bảo mật với Node.js và Express framework",
-      image: "/placeholder.svg?height=200&width=300",
-      video: "/placeholder-video.mp4", // Add video
-      images: [
-        // Add multiple images
-        "/placeholder.svg?height=300&width=400",
-        "/placeholder.svg?height=300&width=400",
-        "/placeholder.svg?height=300&width=400",
-      ],
-      status: "Đang bán",
-      rating: 4.7,
-      createdDate: "18/9/2024",
-      productName: "Cà chua cherry đỏ",
-      price: "50,000đ/kg",
-      unit: "kg",
-      harvestDate: "01/01/2025",
-      category: "Rau củ quả",
-      products: [
-        {
-          id: 1,
-          name: "Node.js Course",
-          image: "/placeholder.svg?height=40&width=40",
-        },
-        {
-          id: 2,
-          name: "Express Guide",
-          image: "/placeholder.svg?height=40&width=40",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Tối ưu hóa hiệu suất website",
-      description:
-        "Các kỹ thuật và công cụ để tối ưu tốc độ tải và hiệu suất của website",
-      image: "/placeholder.svg?height=200&width=300",
-      images: [
-        "/placeholder.svg?height=300&width=400",
-        "/placeholder.svg?height=300&width=400",
-      ],
-      status: "Hết hàng",
-      rating: 4.3,
-      createdDate: "12/9/2024",
-      productName: "Hướng dẫn tối ưu website",
-      price: "75,000đ",
-      unit: "bộ",
-      harvestDate: "15/12/2024",
-      category: "Khóa học",
-      products: [],
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
-  const [productList] = useState([
-    {
-      id: 1,
-      name: "Node.js Course",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 2,
-      name: "Express Guide",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 3,
-      name: "React Native App",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 4,
-      name: "JavaScript ES6+",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-  ]);
+  const [productList, setProducts] = useState([]);
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const gardenerProducts = await productService.getGardenerProducts(
+          gardenerId
+        );
+        setProducts(gardenerProducts);
+
+        const gardenerPosts = await postService.getGardenerPosts(
+          gardenerId,
+          currentPage,
+          10,
+          "Status"
+        );
+        setPosts(gardenerPosts);
+        setTotalPages(gardenerPosts.totalPages);
+        setTotalResults(gardenerPosts.total);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [currentPage]);
 
   const filterTabs = [
-    { id: "all", label: "Tất cả", count: 2 },
-    { id: "draft", label: "Đang bán" },
-    { id: "expired", label: "Hết hạng" },
+    { id: "all", label: "ACTIVE", count: 2 },
+    { id: "expired", label: "INACTIVE" },
+    { id: "banned", label: "BANNED" },
   ];
 
   const filteredPost =
-    activeFilter === "Tất cả"
+    activeFilter === "ACTIVE"
       ? posts
       : posts.filter((post) => post.status === activeFilter);
 
@@ -145,10 +102,22 @@ function GPostPage() {
     setShowDisablePopup(true);
   };
 
-  const handleUpdate = (updatedPost) => {
-    setPosts(
-      posts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
-    );
+  const handleUpdate = async (updatedPost) => {
+    try {
+      await postService.updatePost(updatedPost.postId, {
+        title: updatedPost.title,
+        content: updatedPost.content,
+      });
+
+      setPosts(
+        posts.map((post) =>
+          post.postId === updatedPost.postId ? updatedPost : post
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     setShowUpdatePopup(false);
   };
 
@@ -174,12 +143,23 @@ function GPostPage() {
     setShowCreatePopup(false);
   };
 
-  const handleConfirmDisable = () => {
-    setPosts(
-      posts.map((post) =>
-        post.id === selectedPost.id ? { ...post, status: "Đã ẩn" } : post
-      )
-    );
+  const handleConfirmDisable = async () => {
+    try {
+      const updatedStatus =
+        selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+      await postService.changePostStatus(selectedPost.postId, updatedStatus);
+
+      setPosts(
+        posts.map((post) =>
+          post.postId === selectedPost.id
+            ? { ...post, status: updatedStatus }
+            : post
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     setShowDisablePopup(false);
     setSelectedPost(null);
   };
@@ -236,20 +216,20 @@ function GPostPage() {
       <div className="gpost-articles-grid">
         {filteredPost.map((article) => (
           <div
-            key={article.id}
+            key={article.postId}
             className="gpost-article-card"
             onClick={() => handlePostClick(article)}
           >
             <div className="gpost-article-image">
               <img
-                src={article.image || "/placeholder.svg"}
+                src={article.thumbNail || "/placeholder.svg"}
                 alt={article.title}
               />
               {/* <button className="gpost-bookmark-btn">⋯</button> */}
             </div>
             <div className="gpost-article-content">
               <h3 className="gpost-article-title">{article.title}</h3>
-              <p className="gpost-article-description">{article.description}</p>
+              <p className="gpost-article-description">{article.content}</p>
               <div className="gpost-article-meta">
                 <span className="gpost-status">{article.status}</span>
                 <div className="gpost-rating">
@@ -284,7 +264,7 @@ function GPostPage() {
       </div>
       {/* Post Detail Popup */}
       <GPostDetailModal
-        post={selectedPost}
+        postId={selectedPost.postId}
         isOpen={showDetailPopup}
         onClose={() => setShowDetailPopup(false)}
         onEdit={handleEdit}
@@ -306,6 +286,7 @@ function GPostPage() {
       />
       {/* Disable Post Popup */}
       <GDisableConfirmModal
+        post={selectedPost}
         isOpen={showDisablePopup}
         onClose={() => setShowDisablePopup(false)}
         onConfirm={handleConfirmDisable}

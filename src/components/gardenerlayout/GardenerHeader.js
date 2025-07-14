@@ -8,6 +8,8 @@ import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import GNotificationIcon from "../../pages/GardenerPage/Notification/GNotificationIcon";
+import httpService from "../../pages/services/apiServices/httpService";
+import notificationService from "../../pages/services/apiServices/notificationService";
 
 function GardenerHeader({
   placement,
@@ -113,6 +115,24 @@ function GardenerHeader({
     },
   ];
 
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accountId = localStorage.getItem("account_id");
+        const result = await notificationService.getAccountNotification(
+          accountId
+        );
+        setNotifications(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div
@@ -125,7 +145,7 @@ function GardenerHeader({
         }}
       >
         {/* <BellOutlined /> */}
-        <GNotificationIcon notifications={sampleNotifications} />
+        <GNotificationIcon notifications={notifications} />
       </div>
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>

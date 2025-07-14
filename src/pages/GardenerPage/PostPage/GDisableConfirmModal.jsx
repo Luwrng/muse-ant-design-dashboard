@@ -1,7 +1,7 @@
 import React from "react";
 import "./GDisableConfirmModal.css";
 
-function GDisableConfirmModal({ isOpen, onClose, onConfirm }) {
+function GDisableConfirmModal({ post, isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
   return (
@@ -26,9 +26,12 @@ function GDisableConfirmModal({ isOpen, onClose, onConfirm }) {
             </svg>
           </div>
 
-          <h3 className="gpdconfirm-title">Xác nhận ẩn bài viết</h3>
+          <h3 className="gpdconfirm-title">
+            Xác nhận {post.status === "ACTIVE" ? "tắt" : "bật"} bài viết
+          </h3>
           <p className="gpdconfirm-message">
-            Bạn có muốn ẩn bài viết này không?
+            Bạn có muốn {post.status === "ACTIVE" ? "tắt" : "bật"} bài viết này
+            không?
           </p>
 
           <div className="gpdconfirm-actions">
@@ -42,7 +45,7 @@ function GDisableConfirmModal({ isOpen, onClose, onConfirm }) {
               className="gpdconfirm-btn gpdconfirm-btn-confirm"
               onClick={onConfirm}
             >
-              Ẩn
+              {post.status === "ACTIVE" ? "Tắt" : "Bật"}
             </button>
           </div>
         </div>

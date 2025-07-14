@@ -13,9 +13,9 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
     }
   }, [post]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onUpdate({ ...post, title, description: content });
+    await onUpdate({ ...post, title, description: content });
     onClose();
   };
 
@@ -31,7 +31,7 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="gpupdate-form">
+        <form onSubmit={(e) => handleSubmit(e)} className="gpupdate-form">
           <div className="gpupdate-field">
             <label className="gpupdate-label">Tiêu đề</label>
             <input

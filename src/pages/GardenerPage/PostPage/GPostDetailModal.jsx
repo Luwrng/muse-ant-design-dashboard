@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import "./GPostDetailModal.css";
+import postService from "../../services/apiServices/postService";
 
-function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
+function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentPost, setCurrentPost] = useState();
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const result = await postService.getPostDetail(postId);
+        setCurrentPost(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPost();
+  }, [postId]);
 
   if (!isOpen) return null;
 
@@ -26,14 +41,15 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
                 {/* Video slide */}
-                {post?.video && (
+                {currentPost?.video && (
                   <div className="gpdetail-media-slide">
                     <video
-                      src={post.video}
+                      src={currentPost.video.mediumUrl}
                       className="gpdetail-media-item"
                       controls={false}
                       poster={
-                        post?.image || "/placeholder.svg?height=300&width=400"
+                        currentPost?.thumbNail?.mediumUrl ||
+                        "/placeholder.svg?height=300&width=400"
                       }
                     />
                     <div className="gpdetail-play-button">
@@ -56,11 +72,14 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                 )}
 
                 {/* Image slides */}
-                {post?.images?.map((image, index) => (
+                {currentPost?.images?.map((image, index) => (
                   <div key={index} className="gpdetail-media-slide">
                     <img
-                      src={image || "/placeholder.svg?height=300&width=400"}
-                      alt={`${post?.title} - Image ${index + 1}`}
+                      src={
+                        image.mediumUrl ||
+                        "/placeholder.svg?height=300&width=400"
+                      }
+                      alt={`${currentPost?.title} - ${index + 1}`}
                       className="gpdetail-media-item"
                     />
                   </div>
@@ -68,15 +87,15 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
               </div>
 
               {/* Navigation arrows */}
-              {(post?.images?.length > 0 || post?.video) && (
+              {(currentPost?.images?.length > 0 || currentPost?.video) && (
                 <>
                   <button
                     className="gpdetail-nav-arrow gpdetail-nav-prev"
                     onClick={() =>
                       setCurrentSlide((prev) =>
                         prev === 0
-                          ? (post?.images?.length || 0) +
-                            (post?.video ? 1 : 0) -
+                          ? (currentPost?.images?.length || 0) +
+                            (currentPost?.video ? 1 : 0) -
                             1
                           : prev - 1
                       )
@@ -89,7 +108,9 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                     onClick={() =>
                       setCurrentSlide((prev) =>
                         prev ===
-                        (post?.images?.length || 0) + (post?.video ? 1 : 0) - 1
+                        (currentPost?.images?.length || 0) +
+                          (currentPost?.video ? 1 : 0) -
+                          1
                           ? 0
                           : prev + 1
                       )
@@ -103,7 +124,9 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
               {/* Dots indicator */}
               <div className="gpdetail-dots-container">
                 {Array.from({
-                  length: (post?.images?.length || 0) + (post?.video ? 1 : 0),
+                  length:
+                    (currentPost?.images?.length || 0) +
+                    (currentPost?.video ? 1 : 0),
                 }).map((_, index) => (
                   <button
                     key={index}
@@ -118,17 +141,17 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
           </div>
 
           <div className="gpdetail-info-section">
-            <h3 className="gpdetail-post-title">{post?.title}</h3>
-            <p className="gpdetail-description">{post?.description}</p>
+            <h3 className="gpdetail-post-title">{currentPost?.title}</h3>
+            <p className="gpdetail-description">{currentPost?.content}</p>
 
             <div className="gpdetail-meta">
               <div className="gpdetail-status">
                 <span
                   className={`gpdetail-status-badge ${
-                    post?.status === "Đang bán" ? "active" : "inactive"
+                    currentPost?.status === "ACTIVE" ? "active" : "inactive"
                   }`}
                 >
-                  {post?.status}
+                  {currentPost?.status}
                 </span>
               </div>
 
@@ -138,18 +161,20 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                     <span
                       key={i}
                       className={`gpdetail-star ${
-                        i < (post?.rating || 0) ? "filled" : ""
+                        i < (currentPost?.rating || 0) ? "filled" : ""
                       }`}
                     >
                       ★
                     </span>
                   ))}
                 </div>
-                <span className="gpdetail-rating-value">{post?.rating}</span>
+                <span className="gpdetail-rating-value">
+                  {currentPost?.rating}
+                </span>
               </div>
 
               <div className="gpdetail-date">
-                <span>Ngày tạo: {post?.createdDate}</span>
+                <span>Ngày tạo: {currentPost?.createdAt}</span>
               </div>
             </div>
 
@@ -166,7 +191,7 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                       Tên sản phẩm:
                     </span>
                     <span className="gpdetail-product-info-value">
-                      {post?.productName || "Cà chua cherry đỏ"}
+                      {currentPost?.productData.productName}
                     </span>
                   </div>
 
@@ -175,7 +200,7 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                       Giá bán:
                     </span>
                     <span className="gpdetail-product-info-value gpdetail-price">
-                      {post?.price || "50,000đ/kg"}
+                      {currentPost?.productData?.price}
                     </span>
                   </div>
 
@@ -184,7 +209,7 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                       Đơn vị bán:
                     </span>
                     <span className="gpdetail-product-info-value">
-                      {post?.unit || "kg"}
+                      {currentPost?.productData?.weightUnit}
                     </span>
                   </div>
 
@@ -193,7 +218,7 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                       Ngày thu hoạch:
                     </span>
                     <span className="gpdetail-product-info-value">
-                      {post?.harvestDate || "01/01/2025"}
+                      {currentPost?.harvestDate}
                     </span>
                   </div>
 
@@ -202,7 +227,7 @@ function GPostDetailModal({ post, isOpen, onClose, onEdit, onDisable }) {
                       Danh mục:
                     </span>
                     <span className="gpdetail-product-info-value">
-                      {post?.category || "Rau củ quả"}
+                      {currentPost?.productData?.productCategory}
                     </span>
                   </div>
                 </div>

@@ -8,9 +8,9 @@ import PErrorModal from "./ErrorModal/PErrorModal";
 import PSuccessModal from "./SuccessModal/PSuccessModal";
 
 import "./ProductPage.css";
+import productService from "../../services/apiServices/productService";
 
 function GardenerProductPage() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -27,71 +27,46 @@ function GardenerProductPage() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const products = [
-    {
-      id: 1,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 2,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 3,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 4,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 5,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 6,
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      status: "Đang bán",
-      image: "/placeholder.svg?height=200&width=300",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
 
-  const totalPages = 10;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await productService.getGardenerProducts(
+          gardenerId,
+          currentPage,
+          10,
+          "Status"
+        );
+
+        setProducts(result.items);
+        setTotalPages(result.totalPages);
+        setTotalResults(result.total);
+      } catch (err) {
+        console.log(err);
+        //Add modal later
+      }
+    };
+
+    fetchProducts();
+  }, [currentPage]);
 
   // Filter products based on active filter
   const filteredProducts = products.filter((product) => {
     if (activeFilter === "all") return true;
-    if (activeFilter === "available") return product.status === "Đang bán";
-    if (activeFilter === "out-of-stock") return product.status === "Hết hàng";
+    if (activeFilter === "available") return product.status === "ACTIVE";
+    if (activeFilter === "out-of-stock") return product.status === "INACTIVE";
     return true;
   });
 
   // Get counts for each filter
   const getFilterCounts = () => {
-    const available = products.filter((p) => p.status === "Đang bán").length;
-    const outOfStock = products.filter((p) => p.status === "Hết hàng").length;
+    const available = products.filter((p) => p.status === "ACTIVE").length;
+    const outOfStock = products.filter((p) => p.status === "INACTIVE").length;
     return {
       all: products.length,
       available,
@@ -238,7 +213,7 @@ function GardenerProductPage() {
 
       setSuccessData({
         title: "Cập nhật giá thành công",
-        message: `Giá sản phẩm "${selectedProduct.name}" đã được cập nhật.`,
+        message: `Giá sản phẩm "${selectedProduct.productName}" đã được cập nhật.`,
       });
       setShowSuccess(true);
     } catch (error) {
@@ -276,7 +251,7 @@ function GardenerProductPage() {
 
       setSuccessData({
         title: "Thay đổi trạng thái thành công",
-        message: `Sản phẩm "${selectedProduct.name}" đã được ${actionText}.`,
+        message: `Sản phẩm "${selectedProduct.productName}" đã được ${actionText}.`,
       });
       setShowSuccess(true);
     } catch (error) {
@@ -363,24 +338,26 @@ function GardenerProductPage() {
         {/* Product Grid */}
         <div className="gproduct-product-grid">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="gproduct-product-card">
+            <div key={product.productId} className="gproduct-product-card">
               <div className="gproduct-product-image">
                 <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
+                  // src={product.image || "/placeholder.svg"} remove later
+                  alt={product.productName}
                 />
                 <button
                   className="gproduct-more-actions-button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenDropdown(
-                      openDropdown === product.id ? null : product.id
+                      openDropdown === product.productId
+                        ? null
+                        : product.productId
                     );
                   }}
                 >
                   ⋯
                 </button>
-                {openDropdown === product.id && (
+                {openDropdown === product.productId && (
                   <div className="gproduct-dropdown-menu">
                     <button
                       className="gproduct-dropdown-item"
@@ -407,10 +384,10 @@ function GardenerProductPage() {
                 className="gproduct-product-content"
                 onClick={() => handleProductClick(product)}
               >
-                <h3 className="gproduct-product-name">{product.name}</h3>
+                <h3 className="gproduct-product-name">{product.productName}</h3>
                 <div className="gproduct-product-info">
                   <span className="gproduct-product-category">
-                    {product.category}
+                    {product.productCategory}
                   </span>
                   <span
                     className={`gproduct-status-badge ${
@@ -422,7 +399,8 @@ function GardenerProductPage() {
                 </div>
                 <div className="gproduct-product-footer">
                   <span className="gproduct-product-price">
-                    {new Intl.NumberFormat("vi-VN").format(product.price)}đ /kg
+                    {new Intl.NumberFormat("vi-VN").format(product.price)}đ /
+                    {product.weightUnit}
                   </span>
                 </div>
               </div>

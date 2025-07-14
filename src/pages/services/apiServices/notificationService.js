@@ -1,12 +1,20 @@
 import httpService from "./httpService";
 
-const endpoint = "";
+const accountEndpoint = "/accounts";
+const notiEndpoint = "/notifications";
 
 //Get, update status
-const getAccountNotification = async () => {};
+const getAccountNotification = async (accountId) => {
+  return await httpService.get(`${accountEndpoint}/${accountId}/notifications`);
+};
 
-const updaNotificationStatus = async () => {};
+const updaNotificationStatus = async (notiId) => {
+  return await httpService.patch(`${notiEndpoint}/${notiId}/read`);
+};
 
-const notificationService = {};
+const notificationService = {
+  getAccountNotification,
+  updaNotificationStatus,
+};
 
 export default notificationService;

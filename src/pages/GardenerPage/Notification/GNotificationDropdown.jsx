@@ -32,7 +32,7 @@ function GNotificationDropdown({ notifications, onClose }) {
         ) : (
           notifications.map((notification) => (
             <GNotificationItem
-              key={notification.id}
+              key={notification.notificationId}
               notification={notification}
             />
           ))

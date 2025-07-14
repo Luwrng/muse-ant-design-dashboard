@@ -1,11 +1,12 @@
 import React from "react";
+import certificateService from "../../../services/apiServices/certificateService";
 import { useState } from "react";
 import "./GAddCertificate.css";
 
 function GAddCertificate({ onClose, onAdd }) {
   const [formData, setFormData] = useState({
     name: "",
-    issuedBy: "",
+    issuingAuthority: "",
     issueDate: "",
     expiryDate: "",
     imageUrl: "",
@@ -26,6 +27,15 @@ function GAddCertificate({ onClose, onAdd }) {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleCreateSubmit = async () => {
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      await certificateService.createCertificate(gardenerId, formData);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -53,12 +63,12 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="issuedBy">Issued By</label>
+            <label htmlFor="issuingAuthority">Issued By</label>
             <input
               type="text"
-              id="issuedBy"
-              name="issuedBy"
-              value={formData.issuedBy}
+              id="issuingAuthority"
+              name="issuingAuthority"
+              value={formData.issuingAuthority}
               onChange={handleChange}
               required
             />
@@ -121,7 +131,7 @@ function GAddCertificate({ onClose, onAdd }) {
             <button
               type="button"
               className="gaddcertificate-btn-secondary"
-              onClick={onClose}
+              onClick={handleCreateSubmit}
             >
               Cancel
             </button>

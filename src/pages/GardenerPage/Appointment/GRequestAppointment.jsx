@@ -57,7 +57,7 @@ function GRequestAppointment({
             <div className="garequest-detail-row">
               <span className="garequest-detail-label">Số điện thoại:</span>
               <span className="garequest-detail-value">
-                {appointment.phone}
+                {appointment.phoneNumber}
               </span>
             </div>
             <div className="garequest-detail-row">
@@ -74,7 +74,9 @@ function GRequestAppointment({
             </div>
             <div className="garequest-detail-row">
               <span className="garequest-detail-label">Loại cuộc hẹn:</span>
-              <span className="garequest-detail-value">{appointment.type}</span>
+              <span className="garequest-detail-value">
+                {appointment.appointmentType}
+              </span>
             </div>
             <div className="garequest-detail-row">
               <span className="garequest-detail-label">Chủ đề:</span>

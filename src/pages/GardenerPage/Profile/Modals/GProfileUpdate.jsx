@@ -1,6 +1,7 @@
 import { useState } from "react";
 import React from "react";
 import "./GProfileUpdate.css";
+import accountService from "../../../services/apiServices/accountService";
 
 function GProfileUpdate({ profile, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
@@ -25,6 +26,15 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleUpdateSubmit = async () => {
+    try {
+      const accountId = localStorage.getItem("account_id");
+      await accountService.updateProfile(accountId, formData);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -84,7 +94,7 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
             <button
               type="button"
               className="gupdateprofile-btn-secondary"
-              onClick={onClose}
+              onClick={handleUpdateSubmit}
             >
               Cancel
             </button>

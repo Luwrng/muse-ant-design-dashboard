@@ -1,18 +1,39 @@
 import httpService from "./httpService";
 
-const endpoint = "";
+const gardenerEndpoint = "/gardener";
+const postEndpoint = "/posts";
 
 //Get, Create, Update
-const getGardenerPosts = async (gardenerId) => {};
+const getGardenerPosts = async (gardenerId, page, size, sortField) => {
+  return await httpService.get(`${gardenerEndpoint}/${gardenerId}/posts`, {
+    params: { page, size, sortField },
+  });
+};
 
-const getPostDetail = async (postId) => {};
+const getPostDetail = async (postId) => {
+  return await httpService.get(`${postEndpoint}/${postId}`);
+};
 
-const createPost = async (gardenerId, data) => {};
+const createPost = async (gardenerId, data) => {
+  return await httpService.get(`${gardenerEndpoint}/${gardenerId}/posts`, data);
+};
 
-const updatePost = async (postId, data) => {};
+const updatePost = async (postId, data) => {
+  return await httpService.patch(`${postEndpoint}/${postId}`, data);
+};
 
-const changePostStatus = async (postId, stautus) => {};
+const changePostStatus = async (postId, status) => {
+  return await httpService.patch(`${postEndpoint}/${postId}/status`, {
+    params: { status },
+  });
+};
 
-const postService = {};
+const postService = {
+  getGardenerPosts,
+  getPostDetail,
+  createPost,
+  updatePost,
+  changePostStatus,
+};
 
 export default postService;

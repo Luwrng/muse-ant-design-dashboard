@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { DeleteFilled } from "@ant-design/icons";
 import { FaPenToSquare } from "react-icons/fa6";
@@ -9,49 +9,14 @@ import LoadingOverlay from "./LoadingPopup/LoadingOverlay";
 import ErrorModal from "./ErrorModal/ErrorModal";
 import SuccessModal from "./SuccessModal/GSuccessModal";
 import "./GProductCategory.css";
+import productService from "../../services/apiServices/productService";
 
 function GProductCategory() {
-  const [categories] = useState([
-    {
-      id: 1,
-      name: "Rau lá xanh",
-      description:
-        "Các loại rau lá xanh tươi ngon như cải bó xôi, cải ngọt, rau muống",
-    },
-    {
-      id: 2,
-      name: "Củ quả",
-      description: "Củ cải, khoai tây, cà rốt và các loại củ quả khác",
-    },
-    {
-      id: 3,
-      name: "Quả mọng",
-      description: "Cà chua, dưa chuột, ớt và các loại quả mọng",
-    },
-    {
-      id: 4,
-      name: "Thảo mộc",
-      description: "Húng quế, ngò, tía tô và các loại thảo mộc gia vị",
-    },
-    {
-      id: 5,
-      name: "Rau gia vị",
-      description: "Hành, tỏi, gừng và các loại rau gia vị khác",
-    },
-    {
-      id: 6,
-      name: "Rau quả",
-      description: "Bí đỏ, bí ngô, mướp và các loại rau quả",
-    },
-    {
-      id: 7,
-      name: "Rau quả",
-      description: "Bí đỏ, bí ngô, mướp và các loại rau quả",
-    },
-  ]);
-
+  const [categories, setCategories] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalResults = categories.length;
+  const [totalResults, setTotalResults] = useState(0);
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -61,6 +26,27 @@ function GProductCategory() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await productService.getGardenerProductCategories(
+          gardenerId,
+          currentPage,
+          10
+        );
+
+        setCategories(result.items);
+        setTotalPages(result.totalPages);
+        setTotalResults(result.total);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchCategory();
+  }, [currentPage]);
 
   const handleDelete = (id) => {
     const category = categories.find((cat) => cat.id === id);
@@ -87,18 +73,20 @@ function GProductCategory() {
   const handleSubmitCategory = async (categoryData) => {
     console.log("Creating category:", categoryData);
     setIsLoading(true);
-    // Send Api here
-    //->>>
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      await productService.createProductCategory(gardenerId, categoryData);
+      setSuccessMessage(
+        `Danh mục "${categoryData.name}" đã được tạo thành công!`
+      );
+      setShowSuccessModal(true);
+      setShowCreateModal(false);
+    } catch (err) {
+      console.log(err);
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
-
-    //Set an if-else condition here for catching response
-    setSuccessMessage(
-      `Danh mục "${categoryData.name}" đã được tạo thành công!`
-    );
-    setShowSuccessModal(true);
-    setShowCreateModal(false);
   };
 
   const handlePageChange = (page) => {
@@ -110,21 +98,19 @@ function GProductCategory() {
     setIsLoading(true);
     setShowDeleteModal(false);
 
-    // Simulate API call with random constraint violation
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Temp call api later
-    const hasRelatedProducts = true;
-
-    if (hasRelatedProducts) {
-      setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể xóa!");
-      setShowErrorModal(true);
-    } else {
+    try {
+      await productService.deleteProductCategory(
+        selectedCategory.productCategoryId
+      );
       console.log("Category deleted successfully:", selectedCategory);
       setSuccessMessage(
         `Danh mục "${selectedCategory.name}" đã được xóa thành công!`
       );
       setShowSuccessModal(true);
+    } catch (err) {
+      console.log(err);
+      setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể xóa!");
+      setShowErrorModal(true);
     }
 
     setIsLoading(false);
@@ -136,21 +122,19 @@ function GProductCategory() {
     setIsLoading(true);
     setShowEditModal(false);
 
-    // Simulate API call with random constraint violation
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      await productService.updateProductCategory(
+        categoryData.id,
+        categoryData.formData
+      );
 
-    // Simulate backend constraint (randomly decide if category has products)
-    const hasRelatedProducts = true;
-
-    if (hasRelatedProducts) {
+      console.log("Category updated successfully:", categoryData);
+      setSuccessMessage(`Danh mục đã được sửa thành công!`);
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.log(err);
       setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể sửa!");
       setShowErrorModal(true);
-    } else {
-      console.log("Category updated successfully:", categoryData);
-      setSuccessMessage(
-        `Danh mục "${selectedCategory.name}" đã được xóa thành công!`
-      );
-      setShowSuccessModal(true);
     }
 
     setIsLoading(false);
@@ -228,9 +212,12 @@ function GProductCategory() {
           </tbody>
         </table>
       </div>
+
+      {/* Paginate Part */}
       <div className="gpcategory-pagination">
         <div className="gpcategory-pagination-info">
-          Hiển thị từ 1 đến {totalResults} trong tổng số {totalResults} kết quả
+          Hiển thị từ 1 đến {totalResults > 10 ? 10 : totalResults} trong tổng
+          số {totalResults} kết quả
         </div>
         <div className="gpcategory-pagination-controls">
           <button
@@ -269,6 +256,7 @@ function GProductCategory() {
           </button>
         </div>
       </div>
+
       {/* Show create popup */}
       {showCreateModal && (
         <GCreateProductCategory
