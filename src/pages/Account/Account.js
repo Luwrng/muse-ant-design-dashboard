@@ -27,153 +27,16 @@ import {
   faTimes,
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Account.css";
 import approveColumns from "./approveColumns";
-// Images
-import face from "../../assets/images/face-1.jpg";
-import face2 from "../../assets/images/face-2.jpg";
-import face3 from "../../assets/images/face-3.jpg";
-import face4 from "../../assets/images/face-4.jpg";
-import face5 from "../../assets/images/face-5.jpeg";
-import face6 from "../../assets/images/face-6.jpeg";
 import mauGiayChuDoanhNghiep from "../../assets/images/mauGiayChuDoanhNghiep.jpg";
 import SearchButton from "../../components/button/SearchButton";
 import DetailButton from "../../components/button/DetailButton";
-
-
+import { cleanfood } from "../../api_admin";
+const defaultAvatar = "https://ui-avatars.com/api/?name=User";
 
 const { Title } = Typography;
-
-const initialData = [{
-  key: "1",
-  AccountId: "acc001",
-  Password: "******",
-  Email: "michael@mail.com",
-  PhoneNumber: "0123456789",
-  Gender: "Male",
-  Avatar: face2,
-  IsVerified: false,
-  Status: "Pending", // Chờ duyệt
-  CreatedAt: "2023-01-10",
-  UpdatedAt: "2023-05-15",
-  RoleId: "guest",
-  Name: "Michael John",
-  ViewCertificate: mauGiayChuDoanhNghiep,
-},
-{
-  key: "2",
-  AccountId: "acc002",
-  Password: "******",
-  Email: "alexa@mail.com",
-  PhoneNumber: "0987654321",
-  Gender: "Female",
-  Avatar: face3,
-  IsVerified: false,
-  Status: "Inactive", // Đã bị từ chối hoặc ngưng hoạt động
-  CreatedAt: "2022-11-05",
-  UpdatedAt: "2023-04-20",
-  RoleId: "gardener",
-  Name: "Alexa Liras",
-  ViewCertificate: "",
-
-},
-{
-  key: "3",
-  AccountId: "acc003",
-  Password: "******",
-  Email: "laure@mail.com",
-  PhoneNumber: "0912345678",
-  Gender: "Female",
-  Avatar: face,
-  IsVerified: false,
-  Status: "Pending",
-  CreatedAt: "2023-02-15",
-  UpdatedAt: "2023-05-20",
-  RoleId: "guest",
-  Name: "Laure Perrier",
-  ViewCertificate: "",
-},
-{
-  key: "4",
-  AccountId: "acc004",
-  Password: "******",
-  Email: "miriam@mail.com",
-  PhoneNumber: "0932123456",
-  Gender: "Female",
-  Avatar: face4,
-  IsVerified: true,
-  Status: "Active", // Đã được duyệt
-  CreatedAt: "2023-01-25",
-  UpdatedAt: "2023-05-18",
-  RoleId: "gardener",
-  Name: "Miriam Eric",
-  ViewCertificate: "",
-},
-{
-  key: "5",
-  AccountId: "acc005",
-  Password: "******",
-  Email: "richard@mail.com",
-  PhoneNumber: "0909876543",
-  Gender: "Male",
-  Avatar: face5,
-  IsVerified: false,
-  Status: "Inactive",
-  CreatedAt: "2022-12-01",
-  UpdatedAt: "2023-04-01",
-  RoleId: "guest",
-  Name: "Richard Gran",
-  ViewCertificate: "",
-},
-{
-  key: "6",
-  AccountId: "acc006",
-  Password: "******",
-  Email: "john@mail.com",
-  PhoneNumber: "0976543210",
-  Gender: "Male",
-  Avatar: face6,
-  IsVerified: false,
-  Status: "Inactive",
-  CreatedAt: "2022-10-20",
-  UpdatedAt: "2023-03-10",
-  RoleId: "gardener",
-  Name: "John Levi",
-  ViewCertificate: "",
-},
-{
-  key: "7",
-  AccountId: "acc007",
-  Password: "******",
-  Email: "sarah@mail.com",
-  PhoneNumber: "0911222333",
-  Gender: "Female",
-  Avatar: face2,
-  IsVerified: false,
-  Status: "Pending",
-  CreatedAt: "2023-03-05",
-  UpdatedAt: "2023-05-22",
-  RoleId: "guest",
-  Name: "Sarah Connor",
-  ViewCertificate: "",
-},
-{
-  key: "8",
-  AccountId: "acc008",
-  Password: "******",
-  Email: "peter@mail.com",
-  PhoneNumber: "0922333444",
-  Gender: "Male",
-  Avatar: face3,
-  IsVerified: true,
-  Status: "Active",
-  CreatedAt: "2023-02-28",
-  UpdatedAt: "2023-05-19",
-  RoleId: "gardener",
-  Name: "Peter Parker",
-  ViewCertificate: "",
-},];
 
 const formProps = {
   name: "file",
@@ -204,7 +67,7 @@ function Account() {
     visible: false,
     recordKey: null,
   });
-  const [statusData, setStatusData] = useState(initialData);
+
   const [approveModalInfo, setApproveModalInfo] = useState({
     visible: false,
     recordKey: null,
@@ -212,13 +75,11 @@ function Account() {
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [searchText, setSearchText] = useState("");   
+  const [searchText, setSearchText] = useState("");
   const openRejectModal = (record) => {
     setSelectedRecord(record);
     setIsRejectModalOpen(true);
-
   };
-
   const handleConfirmReject = () => {
     if (!rejectReason.trim()) {
       message.warning("Vui lòng nhập lý do từ chối.");
@@ -227,8 +88,6 @@ function Account() {
     handleReject(selectedRecord, rejectReason); // bạn tự định nghĩa thêm logic xử lý
     setIsRejectModalOpen(false);
   };
-
-
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
 
@@ -279,6 +138,54 @@ function Account() {
     setSelectedUser(null);
   };
 
+  const [statusData, setStatusData] = useState([]);
+  const [gardeners, setGardeners] = useState([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+  const [user, setUser] = useState({});
+
+  const handleShowDetail = async (id) => {
+    const data = await cleanfood.admin.getAccountById(id);
+    setUser(data);
+  };
+
+  useEffect(() => {
+    fetchGardeners(); 
+  }, []);
+  const fetchGardeners = (page = 1, size = 10) => {
+    cleanfood.gardener.getAll(page, size)
+      .then((data) => {
+        const formattedData = data.items.map((item) => ({
+          key: item.accountId,
+          Name: item.name,
+          Email: item.email,
+          PhoneNumber: item.phoneNumber,
+          Gender: item.gender || "Không xác định",
+          Avatar: item.avatar === "None" ? defaultAvatar : item.avatar,
+          Status: item.status,
+          RoleId: item.roleName?.toLowerCase(),
+          IsVerified: item.isVerified,
+          CreatedAt: item.createdAt ? new Date(item.createdAt).toLocaleDateString("vi-VN") : "---",
+          UpdatedAt: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString("vi-VN") : "---",
+          Address: item.addresses?.[0] || "---",
+        }));
+
+        setStatusData(formattedData);
+        setPagination({
+          current: data.page,
+          pageSize: data.size,
+          total: data.total,
+        });
+      })
+      .catch((err) => {
+        console.error("Lỗi lấy danh sách gardener:", err);
+      });
+  };
+
 
   const gardenerColumns = [
     {
@@ -323,7 +230,7 @@ function Account() {
             ? "Đang hoạt động"
             : status === "Inactive"
               ? "Ngưng hoạt động"
-              : status; 
+              : status;
 
         return (
           <>
@@ -338,9 +245,7 @@ function Account() {
                 width: 100,
                 textAlign: "center",
                 padding: "6px 8px",
-
-
-                color: status === "Active" ? "#1890ff" : "#999",
+                color: status === "Active" ? "#52c41a" : "#ff4d4f",
                 transition: "all 0.3s ease",
                 userSelect: "none",
               }}
@@ -389,11 +294,11 @@ function Account() {
             onClick={() => showUserDetails(record)}
             icon={faEye}
             title="Xem chi tiết"
-          style={{
-            fontSize: "16px",
-            color: "#1890ff",
-            cursor: "pointer",
-          }}
+            style={{
+              fontSize: "16px",
+              color: "#1890ff",
+              cursor: "pointer",
+            }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
@@ -422,7 +327,7 @@ function Account() {
                     SiSi
                   />
                 </Space>
-              } 
+              }
             >
               <Tabs defaultActiveKey="1">
 
@@ -489,7 +394,7 @@ function Account() {
 
 
 
-      
+
       {/* modal thông tin cá nhân */}
       <Modal
         title={null}
@@ -506,7 +411,6 @@ function Account() {
             <div style={{ ...cardStyle, width: 400 }}>
               <h3 style={{ textAlign: "center" }}>Thông tin tài khoản</h3>
               <p>
-
                 <Avatar
                   src={selectedUser?.Avatar}
                   size={100}
@@ -517,11 +421,13 @@ function Account() {
               <p><strong>Email:</strong> {selectedUser?.Email}</p>
               <p><strong>Điện thoại:</strong> {selectedUser?.PhoneNumber}</p>
               <p><strong>Giới tính:</strong> {selectedUser?.Gender}</p>
-              <p><strong>Địa chỉ:</strong> {selectedUser?.Address}</p>
+              <p><strong>Địa chỉ:</strong>
+                {selectedUser?.Address
+                  ? `${selectedUser.Address.addressLine}, ${selectedUser.Address.province}, ${selectedUser.Address.country}`
+                  : "---"}
+              </p>
               <p><strong>Trạng thái:</strong> {selectedUser?.Status}</p>
-
               <p><strong>Ngày tạo:</strong> {selectedUser?.CreatedAt}</p>
-              
               <p><strong>Ngày cập nhật:</strong> {selectedUser?.UpdatedAt}</p>
               <p>
                 <strong>Xác thực:</strong>{" "}
@@ -536,7 +442,6 @@ function Account() {
               </p>
             </div>
           </div>
-
           {/* Cột phải - Hình ảnh giấy chứng nhận */}
           <div style={{ width: 400 }}>
             <div style={cardStyle}>

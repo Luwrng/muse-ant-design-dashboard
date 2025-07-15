@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -16,11 +16,17 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import SearchButton from "../components/button/SearchButton";
+import { cleanfood } from "../api_admin";
 
 const Orders = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [data, setData] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const showOrderDetails = (order) => {
     setSelectedOrder(order);
     setIsModalVisible(true);
@@ -52,6 +58,34 @@ const Orders = () => {
         return "default";
     }
   };
+
+  const fetchOrders = async (page = 1, size = 10, search = "") => {
+    try {
+      const res = await cleanfood.admin.getServicePackageOrders({ page, size, search });
+
+      const formatted = res.items.map((item, index) => ({
+        key: index,
+        servicePackageOrderId: item.servicePackageOrderId?.random || "",
+        gardenerId: item.gardenerId?.random || "",
+        servicePackageId: item.servicePackageId?.random || "",
+        totalAmount: item.totalAmount || 0,
+        status: item.status,
+        createdAt: item.createdAt?.split("T")[0] || "",
+      }));
+
+      setData(formatted);
+      setTotal(res.total || 0);
+      setCurrentPage(res.page || page);
+      setPageSize(res.size || size);
+    } catch (error) {
+      console.error("Lỗi fetchOrders:", error);
+      message.error("Không thể tải danh sách đơn mua gói dịch vụ.");
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders(currentPage, pageSize, searchText);
+  }, [currentPage, pageSize, searchText]);
 
   const columns = [
     {
@@ -86,7 +120,6 @@ const Orders = () => {
       align: "center",
       render: (status) => (
         <Tag color={getStatusColor(status)}>{status}</Tag>
-
       ),
     },
     {
@@ -114,40 +147,8 @@ const Orders = () => {
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             />
           </Tooltip>
-
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      servicePackageOrderId: "ORD001",
-      gardenerId: "GDN001",
-      servicePackageId: "PKG001",
-      totalAmount: 150000,
-      status: "Pending",
-      createdAt: "2025-06-15",
-    },
-    {
-
-      key: "2",
-      servicePackageOrderId: "ORD002",
-      gardenerId: "GDN002",
-      servicePackageId: "PKG002",
-      totalAmount: 300000,
-      status: "Cancelled",
-      createdAt: "2025-06-14",
-    },
-    {
-      key: "3",
-      servicePackageOrderId: "ORD003",
-      gardenerId: "GDN003",
-      servicePackageId: "PKG003",
-      totalAmount: 450000,
-      status: "Completed",
-      createdAt: "2025-06-13",
     },
   ];
 
@@ -176,7 +177,13 @@ const Orders = () => {
                   dataSource={data}
                   pagination={{
                     position: ["bottomCenter", "bottomRight"],
-                    pageSize: 10,
+                    pageSize,
+                    total,
+                    current: currentPage,
+                    onChange: (page, size) => {
+                      setCurrentPage(page);
+                      setPageSize(size);
+                    },
                   }}
                 />
               </div>
@@ -194,9 +201,10 @@ const Orders = () => {
             Đóng
           </Button>,
         ]}
+        width={700}
       >
         {selectedOrder && (
-          <Descriptions bordered column={1}>
+          <Descriptions bordered column={1} size="small">
             <Descriptions.Item label="Mã Đơn">
               {selectedOrder.servicePackageOrderId}
             </Descriptions.Item>

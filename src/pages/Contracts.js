@@ -1,37 +1,9 @@
-import { Table, Tag, Modal, Button, Typography, Space, Card } from "antd";
-import { useState } from "react";
+import { Table, Tag, Modal, Button, Typography, Space, Card, message } from "antd";
+import { useEffect, useState } from "react";
 import SearchButton from "../components/button/SearchButton";
+import { cleanfood } from "../api_admin";
 
 const { Title, Paragraph } = Typography;
-
-const data = [
-  {
-    subscriptionId: "SUB001",
-    packageId: "PKG001",
-    packageName: "Gói cơ bản đăng bài",
-    gardenerId: "GDN001",
-    customerName: "Nguyễn Văn A",
-    phone: "0912345678",
-    status: "Active",
-    subscriptionType: "POST_LIMIT",
-    createdAt: "2025-06-08T10:00:00Z",
-    startDate: "2025-06-10",
-    endDate: "2025-07-10",
-  },
-  {
-    subscriptionId: "SUB002",
-    packageId: "PKG002",
-    packageName: "Gói nâng cao ưu tiên",
-    gardenerId: "GDN002",
-    customerName: "Trần Thị B",
-    phone: "0987654321",
-    status: "Active",
-    subscriptionType: "PRIORITY_POST",
-    createdAt: "2025-06-07T15:30:00Z",
-    startDate: "2025-06-09",
-    endDate: "2025-06-16",
-  },
-];
 
 const columns = [
   {
@@ -42,26 +14,20 @@ const columns = [
   },
   {
     title: "Tên khách hàng",
-    dataIndex: "customerName",
-    key: "customerName",
+    dataIndex: "gardenerName",
+    key: "gardenerName",
     align: "center",
   },
   {
     title: "SĐT",
-    dataIndex: "phone",
-    key: "phone",
+    dataIndex: "gardenerPhone",
+    key: "gardenerPhone",
     align: "center",
   },
   {
     title: "Mã người dùng",
     dataIndex: "gardenerId",
     key: "gardenerId",
-    align: "center",
-  },
-  {
-    title: "Tên gói dịch vụ",
-    dataIndex: "packageName",
-    key: "packageName",
     align: "center",
   },
   {
@@ -112,13 +78,42 @@ const columns = [
 const ContractTable = () => {
   const [visible, setVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [dataSource, setDataSource] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+  const [total, setTotal] = useState(0);
 
   const showModal = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
-  const filteredData = data.filter((item) =>
-    item.customerName.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const fetchContracts = async (page = 1, size = 6, search = "") => {
+    try {
+      const res = await cleanfood.admin.getContract({ page, size, search });
+      const formatted = res.items.map((item) => ({
+        key: item.subscriptionId?.random || item.subscriptionId,
+        subscriptionId: item.subscriptionId?.random || item.subscriptionId,
+        gardenerName: item.gardenerName,
+        gardenerPhone: item.gardenerPhone,
+        gardenerId: item.gardenerId?.random || item.gardenerId,
+        subscriptionType: item.subscriptionType,
+        startDate: item.startDate?.slice(0, 10),
+        endDate: item.endDate?.slice(0, 10),
+        status: item.status,
+      }));
+
+      setDataSource(formatted);
+      setTotal(res.total || 0);
+      setCurrentPage(res.page || page);
+      setPageSize(res.size || size);
+    } catch (error) {
+      console.error("Lỗi khi fetch hợp đồng:", error);
+      message.error("Không thể tải danh sách hợp đồng.");
+    }
+  };
+
+  useEffect(() => {
+    fetchContracts(currentPage, pageSize, searchText);
+  }, [currentPage, pageSize, searchText]);
 
   return (
     <>
@@ -138,10 +133,16 @@ const ContractTable = () => {
       >
         <Table
           columns={columns}
-          dataSource={filteredData}
+          dataSource={dataSource}
           pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: total,
             position: ["bottomCenter", "bottomRight"],
-            pageSize: 6,
+            onChange: (page, size) => {
+              setCurrentPage(page);
+              setPageSize(size);
+            },
           }}
         />
       </Card>
