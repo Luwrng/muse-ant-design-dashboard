@@ -200,17 +200,6 @@ import { Layout, Menu, Button, Row, Col, Typography, Form, Input } from "antd";
 import signinbg from "../assets/images/img-signin.jpg";
 import styled from "styled-components";
 import authenticateService from "./services/apiServices/authenticateService";
-import {
-  Layout,
-  Menu,
-  Button,
-  Row,
-  Col,
-  Typography,
-  Form,
-  Input,
-} from "antd";
-import signinbg from "../assets/images/img-signin.jpg";
 import CloudinaryUpload from "../cloudinary/CloudinaryUpload";
 
 const { Title } = Typography;

@@ -178,7 +178,7 @@ const ServicesPackage = () => {
       console.error(error);
     }
   };
-  const { Text } = Typography;
+  // const { Text } = Typography;
 
 
   const columns = [
@@ -260,6 +260,7 @@ const ServicesPackage = () => {
 
         </Space>
       ),
+    }];
 
   const showModal = (record) => {
     setSelectedPackage(record);
