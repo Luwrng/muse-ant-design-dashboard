@@ -10,12 +10,6 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
     avatar: profile.avatar,
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdate({ ...profile, ...formData });
-    onClose();
-  };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,10 +23,13 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
     }
   };
 
-  const handleUpdateSubmit = async () => {
+  const handleUpdateSubmit = async (e) => {
     try {
+      e.preventDefault();
       const accountId = localStorage.getItem("account_id");
       await accountService.updateProfile(accountId, formData);
+      onUpdate({ ...profile, ...formData });
+      onClose();
     } catch (err) {
       console.log(err);
     }
@@ -45,12 +42,12 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
           <button className="gupdateprofile-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Update Profile</h2>
+          <h2>Cập nhật hồ sơ</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="gupdateprofile-popup-form">
+        <form onSubmit={handleUpdateSubmit} className="gupdateprofile-popup-form">
           <div className="gupdateprofile-form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Tên</label>
             <input
               type="text"
               id="name"
@@ -62,23 +59,23 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateprofile-form-group">
-            <label htmlFor="gender">Gender</label>
+            <label htmlFor="gender">Giới tính</label>
             <select
               id="gender"
               name="gender"
               value={formData.gender}
               onChange={handleChange}
             >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
             </select>
           </div>
 
           <div className="gupdateprofile-form-group">
-            <label htmlFor="avatar">Avatar Image URL</label>
+            <label htmlFor="avatar">Avatar</label>
             <input
-              type="url"
+              type="text"
               id="avatar"
               name="avatar"
               value={formData.avatar}

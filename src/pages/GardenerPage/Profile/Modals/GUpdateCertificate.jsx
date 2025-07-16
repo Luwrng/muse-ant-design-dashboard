@@ -6,16 +6,11 @@ import certificateService from "../../../services/apiServices/certificateService
 function GUpdateCertificate({ certificate, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
     name: certificate.name,
-    issuingAuthority: certificate.issuedBy,
-    issueDate: certificate.issueDate,
-    expiryDate: certificate.expiryDate,
+    issuingAuthority: certificate.issuingAuthority,
+    issueDate: new Date(certificate.issueDate).toISOString().split("T")[0],
+    expiryDate: new Date(certificate.expiryDate).toISOString().split("T")[0],
     status: certificate.status,
   });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdate({ ...certificate, ...formData });
-  };
 
   const handleChange = (e) => {
     setFormData({
@@ -30,13 +25,14 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
     }
   };
 
-  const handleUpdateSubmit = async () => {
+  const handleUpdateSubmit = async (e) => {
     try {
+      e.preventDefault();
       await certificateService.updateCertificate(
         certificate.certificateId,
         formData
       );
-      onClose();
+      onUpdate({ ...certificate, ...formData });
     } catch (err) {
       console.log(err);
     }
@@ -52,12 +48,12 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           <button className="gupdatecertificate-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Update Certificate</h2>
+          <h2>Cập nhật chứng chỉ</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="gupdatecertificate-popup-form">
+        <form onSubmit={handleUpdateSubmit} className="gupdatecertificate-popup-form">
           <div className="gupdatecertificate-form-group">
-            <label htmlFor="name">Certificate Name</label>
+            <label htmlFor="name">Tên chứng chỉ</label>
             <input
               type="text"
               id="name"
@@ -69,7 +65,7 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           </div>
 
           <div className="gupdatecertificate-form-group">
-            <label htmlFor="issuingAuthority">Issued By</label>
+            <label htmlFor="issuingAuthority">Cấp bởi</label>
             <input
               type="text"
               id="issuingAuthority"
@@ -81,7 +77,7 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           </div>
 
           <div className="gupdatecertificate-form-group">
-            <label htmlFor="issueDate">Issue Date</label>
+            <label htmlFor="issueDate">Ngày cấp</label>
             <input
               type="date"
               id="issueDate"
@@ -93,7 +89,7 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           </div>
 
           <div className="gupdatecertificate-form-group">
-            <label htmlFor="expiryDate">Expiry Date</label>
+            <label htmlFor="expiryDate">Ngày hết hạn</label>
             <input
               type="date"
               id="expiryDate"

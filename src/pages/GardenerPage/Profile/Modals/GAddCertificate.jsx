@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import certificateService from "../../../services/apiServices/certificateService";
 import { useState } from "react";
+import axios from "axios";
 import "./GAddCertificate.css";
 
 function GAddCertificate({ onClose, onAdd }) {
@@ -10,19 +11,39 @@ function GAddCertificate({ onClose, onAdd }) {
     issueDate: "",
     expiryDate: "",
     imageUrl: "",
+    status: "ACTIVE"
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAdd(formData);
-  };
+  const [file, setFile] = useState();
+  const [previewUrl, setPreviewUrl] = useState('');
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onAdd(formData);
+  // };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
+
+  const handleFileChange = (e) => {
+    const chosenFile = e.target.files[0];
+    if(!chosenFile) return;
+
+    setFile(chosenFile);
+    // const objectUrl = URL.createObjectURL(chosenFile);
+    // setPreviewUrl(objectUrl);
+  }
+
+//   // Cleanup object URLs
+// useEffect(() => {
+//   return () => {
+//     if (previewUrl) URL.revokeObjectURL(previewUrl);
+//   };
+// }, [previewUrl]);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -30,10 +51,27 @@ function GAddCertificate({ onClose, onAdd }) {
     }
   };
 
-  const handleCreateSubmit = async () => {
+  const handleCreateSubmit = async (e) => {
     try {
+       e.preventDefault();
+      const fileData = new FormData();
+      fileData.append('file', file); // This will work
+      fileData.append('upload_preset', 'clean_food_viet');
+      
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
+        fileData
+      );
+      
+      const updatedFormData = formData;
+      updatedFormData.imageUrl = res.data.url;
+      console.log(updatedFormData.status)
+
       const gardenerId = localStorage.getItem("account_id");
-      await certificateService.createCertificate(gardenerId, formData);
+      await certificateService.createCertificate(gardenerId, updatedFormData);
+
+      console.log(updatedFormData.status)
+      onAdd(formData);
     } catch (err) {
       console.log(err);
     }
@@ -46,12 +84,12 @@ function GAddCertificate({ onClose, onAdd }) {
           <button className="gaddcertificate-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Add Certificate</h2>
+          <h2>Thêm chứng chỉ</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="gaddcertificate-popup-form">
+        <form onSubmit={handleCreateSubmit} className="gaddcertificate-popup-form">
           <div className="gaddcertificate-form-group">
-            <label htmlFor="name">Certificate Name</label>
+            <label htmlFor="name">Tên chứng chỉ</label>
             <input
               type="text"
               id="name"
@@ -63,7 +101,7 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="issuingAuthority">Issued By</label>
+            <label htmlFor="issuingAuthority">Cấp bởi</label>
             <input
               type="text"
               id="issuingAuthority"
@@ -75,7 +113,7 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="issueDate">Issue Date</label>
+            <label htmlFor="issueDate">Ngày cấp</label>
             <input
               type="date"
               id="issueDate"
@@ -87,7 +125,7 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="expiryDate">Expiry Date</label>
+            <label htmlFor="expiryDate">Ngày hết hạn</label>
             <input
               type="date"
               id="expiryDate"
@@ -99,41 +137,41 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="status">Status</label>
+            <label htmlFor="status">Trạng thái</label>
             <select
               id="status"
               name="status"
               value={formData.status}
               onChange={handleChange}
             >
-              <option value="Active">Active</option>
-              <option value="Expired">Expired</option>
-              <option value="Pending">Pending</option>
+              <option value="ACTIVE">Active</option>
+              <option value="EXPIRED">Expired</option>
+              <option value="PENDING">Pending</option>
             </select>
           </div>
 
           <div className="gaddcertificate-form-group">
-            <label htmlFor="imageUrl">Image URL</label>
+            <label htmlFor="imageUrl">Hình ảnh</label>
             <input
-              type="url"
-              id="imageUrl"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              placeholder="https://example.com/certificate.jpg"
+              type="file"
+              id="file"
+              name="file"
+              accept="image/*"
+              onChange={handleFileChange}
             />
+            {/* {previewUrl && <img src={previewUrl} alt="Preview" style={{width: "100%"}}/> } */}
           </div>
 
           <div className="gaddcertificate-popup-actions">
             <button type="submit" className="gaddcertificate-btn-primary">
-              Add
+              Thêm
             </button>
             <button
               type="button"
               className="gaddcertificate-btn-secondary"
               onClick={handleCreateSubmit}
             >
-              Cancel
+              Hủy
             </button>
           </div>
         </form>

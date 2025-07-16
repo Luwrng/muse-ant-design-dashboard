@@ -30,11 +30,12 @@ function GCreateAddress({ onClose, onAdd }) {
     }
   };
 
-  const onCreateSubmit = async () => {
+  const onCreateSubmit = async (e) => {
     try {
+      e.preventDefault();
       const accountId = localStorage.getItem("account_id");
       await addressService.createAddress(accountId, formData);
-      onClose();
+      onAdd(formData);
     } catch (err) {
       console.log(err);
     }
@@ -47,12 +48,12 @@ function GCreateAddress({ onClose, onAdd }) {
           <button className="gcreateaddress-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Create Address</h2>
+          <h2>Tạo địa chỉ mới</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="gcreateaddress-popup-form">
+        <form onSubmit={onCreateSubmit} className="gcreateaddress-popup-form">
           <div className="gcreateaddress-form-group">
-            <label htmlFor="addressLine">Address Line</label>
+            <label htmlFor="addressLine">Địa chỉ</label>
             <input
               type="text"
               id="addressLine"
@@ -64,7 +65,7 @@ function GCreateAddress({ onClose, onAdd }) {
           </div>
 
           <div className="gcreateaddress-form-group">
-            <label htmlFor="city">City</label>
+            <label htmlFor="city">Thành phố</label>
             <input
               type="text"
               id="city"
@@ -76,7 +77,7 @@ function GCreateAddress({ onClose, onAdd }) {
           </div>
 
           <div className="gcreateaddress-form-group">
-            <label htmlFor="province">Province</label>
+            <label htmlFor="province">Tỉnh</label>
             <input
               type="text"
               id="province"
@@ -88,7 +89,7 @@ function GCreateAddress({ onClose, onAdd }) {
           </div>
 
           <div className="gcreateaddress-form-group">
-            <label htmlFor="country">Country</label>
+            <label htmlFor="country">Quốc Gia</label>
             <input
               type="text"
               id="country"
@@ -100,7 +101,7 @@ function GCreateAddress({ onClose, onAdd }) {
           </div>
 
           <div className="gcreateaddress-form-group">
-            <label htmlFor="postalCode">Postal Code</label>
+            <label htmlFor="postalCode">Mã bưu chính</label>
             <input
               type="text"
               id="postalCode"
@@ -113,14 +114,14 @@ function GCreateAddress({ onClose, onAdd }) {
 
           <div className="gcreateaddress-popup-actions">
             <button type="submit" className="gcreateaddress-btn-primary">
-              Add
+              Tạo
             </button>
             <button
               type="button"
               className="gcreateaddress-btn-secondary"
-              onClick={onCreateSubmit}
+              onClick={onClose}
             >
-              Cancel
+              Hủy
             </button>
           </div>
         </form>
