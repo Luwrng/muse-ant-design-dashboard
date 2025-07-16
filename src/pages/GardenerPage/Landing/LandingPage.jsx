@@ -107,7 +107,7 @@ function GardenerLandingPage() {
           },
           {
             ServicePackageId: "01HQXYZ123456789ABCDEI",
-            PackageName: "Plus",
+            PackageName: "Plus+",
             Description:
               "Nâng cao năng suất và tính sáng tạo với quyền truy cập mở rộng",
             Price: 20.0,
@@ -191,18 +191,15 @@ function GardenerLandingPage() {
             </div>
             <nav className="glanding-nav md:flex items-center space-x-8">
               <div className="glanding-link-div">
-                <a href="/gardener/dashboard" className="glanding-a-link">
-                  Tính năng
+                <a href="/sign-in" className="glanding-a-link">
+                  Đăng nhập
                 </a>
               </div>
               <div className="glanding-link-div">
-                <a href="/gardener/service-package" className="glanding-a-link">
-                  Gói dịch vụ
+                <a href="/sign-up" className="glanding-a-link">
+                  Đăng ký
                 </a>
               </div>
-              {/* <button className="glanding-nav-button bg-white text-emerald-500 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50">
-                Tham gia chợ
-              </button> */}
             </nav>
           </div>
         </div>
@@ -225,7 +222,7 @@ function GardenerLandingPage() {
                 ứng minh bạch, có thể truy xuất nguồn gốc.
               </p>
               <div className="glanding-hero-buttons flex flex-col sm:flex-row gap-4">
-                <button
+                {/* <button
                   className="glanding-btn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50"
                   onClick={() => history.push("/gardener/product")}
                 >
@@ -236,7 +233,7 @@ function GardenerLandingPage() {
                   onClick={() => history.push("/gardener/post")}
                 >
                   Quản lý bài đăng
-                </button>
+                </button> */}
               </div>
               <div className="glanding-hero-features flex items-center gap-8 mt-8 text-sm">
                 <div className="glanding-hero-feature flex items-center gap-2">

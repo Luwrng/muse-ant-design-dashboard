@@ -99,6 +99,7 @@
 }
 
 .gnotipopup-status.read {
+  width: 3.2rem;
   background-color: #d1fae5;
   color: #065f46;
 }

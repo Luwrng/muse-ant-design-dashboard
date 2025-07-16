@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { PlusIcon, SearchIcon, MoreHorizontalIcon } from "lucide-react";
 import ProductDetailPage from "./ProductDetailPage";
 import CreateProductPage from "./CreateProductPage";
 import ProductChangeStatus from "./ProductChangeStatus";
@@ -11,7 +12,10 @@ import "./ProductPage.css";
 import productService from "../../services/apiServices/productService";
 
 function GardenerProductPage() {
+  const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [openDropdownId, setOpenDropdownId] = useState(null); // State to manage open dropdown
+
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -31,6 +35,57 @@ function GardenerProductPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+
+  const mockProducts = [
+    {
+      id: "1",
+      name: "Rau cải",
+      category: "Rau củ",
+      price: 50000,
+      weightUnit: "kg",
+      status: "selling",
+    },
+    {
+      id: "2",
+      name: "Cà chua",
+      category: "Rau củ",
+      price: 35000,
+      weightUnit: "kg",
+      status: "selling",
+    },
+    {
+      id: "3",
+      name: "Khoai tây",
+      category: "Rau củ",
+      price: 25000,
+      weightUnit: "kg",
+      status: "out_of_stock",
+    },
+    {
+      id: "4",
+      name: "Bắp cải",
+      category: "Rau củ",
+      price: 40000,
+      weightUnit: "kg",
+      status: "selling",
+    },
+    {
+      id: "5",
+      name: "Hành tây",
+      category: "Rau củ",
+      price: 15000,
+      weightUnit: "kg",
+      status: "selling",
+    },
+    {
+      id: "6",
+      name: "Tỏi",
+      category: "Gia vị",
+      price: 60000,
+      weightUnit: "kg",
+      status: "out_of_stock",
+    },
+  ];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,20 +110,23 @@ function GardenerProductPage() {
     fetchProducts();
   }, [currentPage]);
 
-  // Filter products based on active filter
-  const filteredProducts = products.filter((product) => {
-    if (activeFilter === "all") return true;
-    if (activeFilter === "available") return product.status === "ACTIVE";
-    if (activeFilter === "out-of-stock") return product.status === "INACTIVE";
-    return true;
+  //Filter products based on active filter
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesTab = activeTab === "all" || product.status === activeTab;
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return matchesTab && matchesSearch;
   });
 
   // Get counts for each filter
   const getFilterCounts = () => {
-    const available = products.filter((p) => p.status === "ACTIVE").length;
-    const outOfStock = products.filter((p) => p.status === "INACTIVE").length;
+    const available = mockProducts.filter((p) => p.status === "ACTIVE").length;
+    const outOfStock = mockProducts.filter(
+      (p) => p.status === "INACTIVE"
+    ).length;
     return {
-      all: products.length,
+      all: mockProducts.length,
       available,
       outOfStock,
     };
@@ -76,6 +134,21 @@ function GardenerProductPage() {
 
   const filterCounts = getFilterCounts();
 
+  // Close dropdown when clicking outside
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdownId(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
+  //#region In code icon
   const SearchIcon = () => (
     <svg
       className="gproduct-icon gproduct-search-icon"
@@ -108,21 +181,21 @@ function GardenerProductPage() {
     </svg>
   );
 
-  const FilterIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.586a1 1 0  0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707V17l-4 4v-6.586a1 1 0 0 0-.293-.707L3.293 7.293A1 1 0 0 1 3 6.586V4Z"
-      />
-    </svg>
-  );
+  // const FilterIcon = () => (
+  //   <svg
+  //     className="gproduct-icon"
+  //     fill="none"
+  //     stroke="currentColor"
+  //     viewBox="0 0 24 24"
+  //   >
+  //     <path
+  //       strokeLinecap="round"
+  //       strokeLinejoin="round"
+  //       strokeWidth={2}
+  //       d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.586a1 1 0  0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707V17l-4 4v-6.586a1 1 0 0 0-.293-.707L3.293 7.293A1 1 0 0 1 3 6.586V4Z"
+  //     />
+  //   </svg>
+  // );
 
   const ChevronLeftIcon = () => (
     <svg
@@ -155,6 +228,7 @@ function GardenerProductPage() {
       />
     </svg>
   );
+  //#endregion
 
   // View Product Detail
   const handleProductClick = (product) => {
@@ -213,7 +287,7 @@ function GardenerProductPage() {
 
       setSuccessData({
         title: "Cập nhật giá thành công",
-        message: `Giá sản phẩm "${selectedProduct.productName}" đã được cập nhật.`,
+        message: `Giá sản phẩm "${selectedProduct.name}" đã được cập nhật.`,
       });
       setShowSuccess(true);
     } catch (error) {
@@ -251,7 +325,7 @@ function GardenerProductPage() {
 
       setSuccessData({
         title: "Thay đổi trạng thái thành công",
-        message: `Sản phẩm "${selectedProduct.productName}" đã được ${actionText}.`,
+        message: `Sản phẩm "${selectedProduct.name}" đã được ${actionText}.`,
       });
       setShowSuccess(true);
     } catch (error) {
@@ -272,227 +346,226 @@ function GardenerProductPage() {
 
   return (
     <div className="gproduct-container">
-      <div className="gproduct-max-width">
-        {/* Header */}
-        <div className="gproduct-header">
-          <div className="gproduct-header-content">
-            <h1>Quản lý sản phẩm</h1>
-          </div>
+      <div className="gproduct-header-top">
+        <h1 className="gproduct-title">Quản lý sản phẩm</h1>
+        <button
+          className="gproduct-button gproduct-add-button"
+          onClick={handleCreateProduct}
+        >
+          <PlusIcon className="gproduct-icon" />
+          Tạo sản phẩm
+        </button>
+      </div>
+
+      <div className="gproduct-header-bottom">
+        <div className="gproduct-tabs-list">
           <button
-            className="gproduct-create-button"
-            onClick={handleCreateProduct}
+            className={`gproduct-tab-trigger ${
+              activeTab === "all" ? "gproduct-tab-trigger-active" : ""
+            }`}
+            onClick={() => setActiveTab("all")}
           >
-            <PlusIcon />
-            Tạo sản phẩm
+            Tất cả ({mockProducts.length})
+          </button>
+          <button
+            className={`gproduct-tab-trigger ${
+              activeTab === "selling" ? "gproduct-tab-trigger-active" : ""
+            }`}
+            onClick={() => setActiveTab("selling")}
+          >
+            Đang bán (
+            {mockProducts.filter((p) => p.status === "selling").length})
+          </button>
+          <button
+            className={`gproduct-tab-trigger ${
+              activeTab === "out_of_stock" ? "gproduct-tab-trigger-active" : ""
+            }`}
+            onClick={() => setActiveTab("out_of_stock")}
+          >
+            Hết hàng (
+            {mockProducts.filter((p) => p.status === "out_of_stock").length})
           </button>
         </div>
-
-        {/* Search and Filter */}
-        {/* Filter Tabs and Search */}
-        <div className="gproduct-filter-tabs-container">
-          <div className="gproduct-filter-tabs">
-            <button
-              className={`gproduct-filter-tab ${
-                activeFilter === "all" ? "active" : ""
-              }`}
-              onClick={() => setActiveFilter("all")}
-            >
-              Tất cả ({filterCounts.all})
-            </button>
-            <button
-              className={`gproduct-filter-tab ${
-                activeFilter === "available" ? "active" : ""
-              }`}
-              onClick={() => setActiveFilter("available")}
-            >
-              Đang bán ({filterCounts.available})
-            </button>
-            <button
-              className={`gproduct-filter-tab ${
-                activeFilter === "out-of-stock" ? "active" : ""
-              }`}
-              onClick={() => setActiveFilter("out-of-stock")}
-            >
-              Hết hàng ({filterCounts.outOfStock})
-            </button>
-          </div>
-
-          <div className="gproduct-search-filter-section">
-            <div className="gproduct-search-container">
-              <SearchIcon />
-              <input
-                type="text"
-                placeholder="Tìm kiếm bài viết..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="gproduct-search-input"
-              />
-            </div>
-            {/* <button className="gproduct-filter-button">
-              <FilterIcon />
-              Bộ lọc
-            </button> */}
-          </div>
+        <div className="gproduct-search-container">
+          <SearchIcon className="gproduct-search-icon" />
+          <input
+            type="search"
+            placeholder="Tìm kiếm sản phẩm..."
+            className="gproduct-input gproduct-search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-
-        {/* Product Grid */}
-        <div className="gproduct-product-grid">
-          {filteredProducts.map((product) => (
-            <div key={product.productId} className="gproduct-product-card">
-              <div className="gproduct-product-image">
-                <img
-                  // src={product.image || "/placeholder.svg"} remove later
-                  alt={product.productName}
-                />
-                <button
-                  className="gproduct-more-actions-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenDropdown(
-                      openDropdown === product.productId
-                        ? null
-                        : product.productId
-                    );
-                  }}
-                >
-                  ⋯
-                </button>
-                {openDropdown === product.productId && (
-                  <div className="gproduct-dropdown-menu">
-                    <button
-                      className="gproduct-dropdown-item"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleUpdatePrice(product);
-                      }}
-                    >
-                      Chỉnh sửa giá
-                    </button>
-                    <button
-                      className="gproduct-dropdown-item"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleChangeStatus(product, "hide");
-                      }}
-                    >
-                      Ẩn sản phẩm
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div
-                className="gproduct-product-content"
-                onClick={() => handleProductClick(product)}
-              >
-                <h3 className="gproduct-product-name">{product.productName}</h3>
-                <div className="gproduct-product-info">
-                  <span className="gproduct-product-category">
-                    {product.productCategory}
-                  </span>
-                  <span
-                    className={`gproduct-status-badge ${
-                      product.status === "Hết hàng" ? "out-of-stock" : ""
-                    }`}
-                  >
-                    {product.status}
-                  </span>
-                </div>
-                <div className="gproduct-product-footer">
-                  <span className="gproduct-product-price">
-                    {new Intl.NumberFormat("vi-VN").format(product.price)}đ /
-                    {product.weightUnit}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <div className="gproduct-pagination-container">
-          <p className="gproduct-pagination-info">
-            Hiển thị từ 1 đến {filteredProducts.length} trong tổng số{" "}
-            {filteredProducts.length} kết quả
-          </p>
-          <div className="gproduct-pagination-controls">
-            <button
-              className="gproduct-pagination-button"
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeftIcon />
-            </button>
-
-            {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-              <button
-                key={index}
-                className={`gproduct-pagination-button ${
-                  currentPage === page ? "active" : ""
-                }`}
-                onClick={() => typeof page === "number" && setCurrentPage(page)}
-                disabled={page === "..."}
-              >
-                {page}
-              </button>
-            ))}
-
-            <button
-              className="gproduct-pagination-button"
-              onClick={() =>
-                setCurrentPage(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRightIcon />
-            </button>
-          </div>
-        </div>
-
-        {/* Product Detail */}
-        <ProductDetailPage
-          product={selectedProduct}
-          isOpen={isDetailModalOpen}
-          onClose={handleCloseDetail}
-          onUpdatePrice={handleUpdatePrice}
-          onChangeStatus={handleChangeStatus}
-        />
-
-        {/* Update Price Popup */}
-        <UpdateProductPrice
-          product={selectedProduct}
-          isOpen={showUpdatePrice}
-          onClose={() => setShowUpdatePrice(false)}
-          onSubmit={handlePriceSubmit}
-        />
-
-        {/* Update Product Status */}
-        <ProductChangeStatus
-          product={selectedProduct}
-          isOpen={showConfirmStatus}
-          onClose={() => setShowConfirmStatus(false)}
-          onConfirm={handleStatusConfirm}
-          action={statusAction}
-        />
-
-        {/* Loading Page */}
-        <LoadingPage isOpen={isLoading} />
-
-        {/* Success Popup */}
-        <PSuccessModal
-          isOpen={showSuccess}
-          title={successData.title}
-          message={successData.message}
-          onClose={() => setShowSuccess(false)}
-        />
-
-        {/* Error Popup */}
-        <PErrorModal
-          isOpen={showError}
-          title={errorData.title}
-          message={errorData.message}
-          onClose={() => setShowError(false)}
-        />
       </div>
+
+      <div className="gproduct-table-wrapper">
+        <table className="gproduct-table">
+          <thead className="gproduct-table-header">
+            <tr className="gproduct-table-row">
+              <th className="gproduct-table-head">Tên sản phẩm</th>
+              <th className="gproduct-table-head">Danh mục</th>
+              <th className="gproduct-table-head">Giá</th>
+              <th className="gproduct-table-head">Đơn vị khối lượng</th>
+              <th className="gproduct-table-head">Trạng thái</th>
+              <th className="gproduct-table-head gproduct-action-header">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="gproduct-table-body">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <tr key={product.id} className="gproduct-table-row">
+                  <td className="gproduct-table-cell gproduct-cell-name">
+                    {product.name}
+                  </td>
+                  <td className="gproduct-table-cell">{product.category}</td>
+                  <td className="gproduct-table-cell">
+                    {product.price.toLocaleString("vi-VN")} VND
+                  </td>
+                  <td className="gproduct-table-cell">{product.weightUnit}</td>
+                  <td className="gproduct-table-cell">
+                    <span
+                      className={`gproduct-status-badge ${
+                        product.status === "selling"
+                          ? "gproduct-status-selling"
+                          : "gproduct-status-out-of-stock"
+                      }`}
+                    >
+                      {product.status === "ACTIVE" ? "Đang bán" : "Hết hàng"}
+                    </span>
+                  </td>
+                  <td className="gproduct-table-cell gproduct-action-cell">
+                    <div
+                      className="gproduct-dropdown-menu"
+                      ref={openDropdownId === product.id ? dropdownRef : null}
+                    >
+                      <button
+                        className="gproduct-button gproduct-action-trigger"
+                        onClick={() =>
+                          setOpenDropdownId(
+                            openDropdownId === product.id ? null : product.id
+                          )
+                        }
+                        aria-haspopup="true"
+                        aria-expanded={openDropdownId === product.id}
+                      >
+                        <MoreHorizontalIcon className="gproduct-icon" />
+                        <span className="sr-only">Open menu</span>
+                      </button>
+                      {openDropdownId === product.id && (
+                        <div className="gproduct-dropdown-content">
+                          <button
+                            className="gproduct-dropdown-item"
+                            onClick={() => handleProductClick(product)}
+                          >
+                            Xem chi tiết
+                          </button>
+                          <button
+                            className="gproduct-dropdown-item"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUpdatePrice(product);
+                            }}
+                          >
+                            Sửa giá
+                          </button>
+                          <button
+                            className="gproduct-dropdown-item"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleChangeStatus(product, "hide");
+                            }}
+                          >
+                            Đổi trạng thái
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="gproduct-table-row">
+                <td
+                  colSpan={6}
+                  className="gproduct-table-cell gproduct-no-products"
+                >
+                  No products found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="gproduct-pagination-info">
+        <span>
+          Hiển thị {filteredProducts.length > 0 ? 1 : 0} từ{" "}
+          {filteredProducts.length} đến tổng số {mockProducts.length} kết quả
+        </span>
+        <div className="gproduct-pagination-buttons">
+          <button className="gproduct-button gproduct-pagination-button">
+            {"<"}
+          </button>
+          <button className="gproduct-button gproduct-pagination-button">
+            1
+          </button>
+          <button className="gproduct-button gproduct-pagination-button">
+            2
+          </button>
+          <button className="gproduct-button gproduct-pagination-button">
+            3
+          </button>
+          <button className="gproduct-button gproduct-pagination-button">
+            {">"}
+          </button>
+        </div>
+      </div>
+      {/* Product Detail */}
+      <ProductDetailPage
+        product={selectedProduct}
+        isOpen={isDetailModalOpen}
+        onClose={handleCloseDetail}
+        onUpdatePrice={handleUpdatePrice}
+        onChangeStatus={handleChangeStatus}
+      />
+
+      {/* Update Price Popup */}
+      <UpdateProductPrice
+        product={selectedProduct}
+        isOpen={showUpdatePrice}
+        onClose={() => setShowUpdatePrice(false)}
+        onSubmit={handlePriceSubmit}
+      />
+
+      {/* Update Product Status */}
+      <ProductChangeStatus
+        product={selectedProduct}
+        isOpen={showConfirmStatus}
+        onClose={() => setShowConfirmStatus(false)}
+        onConfirm={handleStatusConfirm}
+        action={statusAction}
+      />
+
+      {/* Loading Page */}
+      <LoadingPage isOpen={isLoading} />
+
+      {/* Success Popup */}
+      <PSuccessModal
+        isOpen={showSuccess}
+        title={successData.title}
+        message={successData.message}
+        onClose={() => setShowSuccess(false)}
+      />
+
+      {/* Error Popup */}
+      <PErrorModal
+        isOpen={showError}
+        title={errorData.title}
+        message={errorData.message}
+        onClose={() => setShowError(false)}
+      />
     </div>
   );
 }

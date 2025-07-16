@@ -47,6 +47,7 @@ import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage"
 import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage";
 import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
 import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
+import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
@@ -61,8 +62,10 @@ function App() {
         <Route path="/sign-up" exact component={SignUpPage} />
         <Route path="/sign-in" exact component={SignIn} />
 
+        {/* General routes */}
+        <Route path="/landing" component={GardenerLandingPage} />
+
         {/* Gardener routes */}
-        <Route path="/gardener/landing" component={GardenerLandingPage} />
         <Route path="/gardener/service-package" component={GServicePackage} />
 
         <Route
@@ -86,6 +89,7 @@ function App() {
                 />
                 <Route path="/gardener/message" component={GChatPage} />
                 <Route path="/gardener/profile" component={GProfilePage} />
+                <Route path="/gardener/dashboard" component={GDashboard} />
               </Switch>
             </GardenerMain>
           )}
@@ -120,7 +124,7 @@ function App() {
             component={ActivePackageCustomers}
           />
         </Main>
-        <Redirect from="*" to="/dashboard" />
+        <Redirect from="*" to="/landing" />
       </Switch>
     </div>
   );

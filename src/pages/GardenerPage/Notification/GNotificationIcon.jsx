@@ -47,6 +47,7 @@ function GNotificationIcon({ notifications = [] }) {
       {isDropdownOpen && (
         <GNotificationDropdown
           notifications={notifications}
+          unreadCount={unreadCount}
           onClose={() => setIsDropdownOpen(false)}
         />
       )}

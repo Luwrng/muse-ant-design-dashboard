@@ -9,7 +9,7 @@ const getAccountNotification = async (accountId) => {
 };
 
 const updaNotificationStatus = async (notiId) => {
-  return await httpService.patch(`${notiEndpoint}/${notiId}/read`);
+  return await httpService.patch(`${notiEndpoint}/${notiId}`);
 };
 
 const notificationService = {

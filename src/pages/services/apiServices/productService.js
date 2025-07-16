@@ -42,11 +42,11 @@ const createProductCategory = async (gardenerId, data) => {
 };
 
 const updateProductCategory = async (categoryId, data) => {
-  return await httpService.get(`${productCateEndpoint}/${categoryId}`, data);
+  return await httpService.patch(`${productCateEndpoint}/${categoryId}`, data);
 };
 
 const deleteProductCategory = async (categoryId) => {
-  return await httpService.get(`${productCateEndpoint}/${categoryId}`);
+  return await httpService.delete(`${productCateEndpoint}/${categoryId}`);
 };
 
 const productService = {

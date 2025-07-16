@@ -19,8 +19,8 @@ function GPostPage() {
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [showDisablePopup, setShowDisablePopup] = useState(false);
 
+  // const [filterPosts, setFilterPosts] = useState([]);
   const [posts, setPosts] = useState([]);
-
   const [productList, setProducts] = useState([]);
 
   const [totalPages, setTotalPages] = useState(0);
@@ -59,10 +59,12 @@ function GPostPage() {
     { id: "banned", label: "BANNED" },
   ];
 
-  const filteredPost =
+  const validPosts = Array.isArray(posts) ? posts : [];
+
+  const filteredPosts =
     activeFilter === "ACTIVE"
-      ? posts
-      : posts.filter((post) => post.status === activeFilter);
+      ? validPosts
+      : validPosts.filter((post) => post.status === activeFilter);
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
@@ -214,33 +216,36 @@ function GPostPage() {
       </div>
 
       <div className="gpost-articles-grid">
-        {filteredPost.map((article) => (
-          <div
-            key={article.postId}
-            className="gpost-article-card"
-            onClick={() => handlePostClick(article)}
-          >
-            <div className="gpost-article-image">
-              <img
-                src={article.thumbNail || "/placeholder.svg"}
-                alt={article.title}
-              />
-              {/* <button className="gpost-bookmark-btn">⋯</button> */}
-            </div>
-            <div className="gpost-article-content">
-              <h3 className="gpost-article-title">{article.title}</h3>
-              <p className="gpost-article-description">{article.content}</p>
-              <div className="gpost-article-meta">
-                <span className="gpost-status">{article.status}</span>
-                <div className="gpost-rating">
-                  {renderStars(article.rating)}
-                  <span className="gpost-rating-value">{article.rating}</span>
+        {Array.isArray(filteredPosts) &&
+          filteredPosts.map((article) => (
+            <div
+              key={article.postId}
+              className="gpost-article-card"
+              onClick={() => handlePostClick(article)}
+            >
+              <div className="gpost-article-image">
+                <img
+                  src={article.thumbNail || "/placeholder.svg"}
+                  alt={article.title}
+                />
+                {/* <button className="gpost-bookmark-btn">⋯</button> */}
+              </div>
+              <div className="gpost-article-content">
+                <h3 className="gpost-article-title">{article.title}</h3>
+                <p className="gpost-article-description">{article.content}</p>
+                <div className="gpost-article-meta">
+                  <span className="gpost-status">{article.status}</span>
+                  <div className="gpost-rating">
+                    {renderStars(article.rating)}
+                    <span className="gpost-rating-value">{article.rating}</span>
+                  </div>
+                </div>
+                <div className="gpost-article-date">
+                  Ngày tạo: {article.createdAt}
                 </div>
               </div>
-              <div className="gpost-article-date">Ngày tạo: {article.date}</div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="gpost-pagination">
@@ -263,13 +268,15 @@ function GPostPage() {
         </div>
       </div>
       {/* Post Detail Popup */}
-      <GPostDetailModal
-        postId={selectedPost.postId}
-        isOpen={showDetailPopup}
-        onClose={() => setShowDetailPopup(false)}
-        onEdit={handleEdit}
-        onDisable={handleDisable}
-      />
+      {selectedPost && (
+        <GPostDetailModal
+          postId={selectedPost.postId}
+          isOpen={showDetailPopup}
+          onClose={() => setShowDetailPopup(false)}
+          onEdit={handleEdit}
+          onDisable={handleDisable}
+        />
+      )}
       {/* Create Post Popup */}
       <GCreatePostModal
         isOpen={showCreatePopup}

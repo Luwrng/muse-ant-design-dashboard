@@ -3,7 +3,7 @@ import { useRef, useEffect } from "react";
 import GNotificationItem from "./GNotificationItem";
 import "./GNotificationDropdown.css";
 
-function GNotificationDropdown({ notifications, onClose }) {
+function GNotificationDropdown({ notifications, unreadCount, onClose }) {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function GNotificationDropdown({ notifications, onClose }) {
           notifications.map((notification) => (
             <GNotificationItem
               key={notification.notificationId}
+              unreadCount={unreadCount}
               notification={notification}
             />
           ))

@@ -19,7 +19,7 @@ function GEditProductCategory({ category, onClose, onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name.trim()) {
-      onSubmit({ ...formData, id: category.id });
+      onSubmit({ ...formData, id: category.productCategoryId });
       setFormData({ name: "", description: "" });
     }
   };

@@ -49,14 +49,14 @@ function GProductCategory() {
   }, [currentPage]);
 
   const handleDelete = (id) => {
-    const category = categories.find((cat) => cat.id === id);
+    const category = categories.find((cat) => cat.productCategoryId === id);
     setSelectedCategory(category);
     setShowDeleteModal(true);
   };
 
   //Temp
   const handleEdit = (id) => {
-    const category = categories.find((cat) => cat.id === id);
+    const category = categories.find((cat) => cat.productCategoryId === id);
     setSelectedCategory(category);
     setShowEditModal(true);
   };
@@ -81,11 +81,18 @@ function GProductCategory() {
       );
       setShowSuccessModal(true);
       setShowCreateModal(false);
+
+      const result = await productService.getGardenerProductCategories(
+        gardenerId,
+        currentPage,
+        10
+      );
+      setCategories(result.items);
     } catch (err) {
       console.log(err);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
   };
 
@@ -107,6 +114,14 @@ function GProductCategory() {
         `Danh mục "${selectedCategory.name}" đã được xóa thành công!`
       );
       setShowSuccessModal(true);
+
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await productService.getGardenerProductCategories(
+        gardenerId,
+        currentPage,
+        10
+      );
+      setCategories(result.items);
     } catch (err) {
       console.log(err);
       setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể xóa!");
@@ -123,14 +138,19 @@ function GProductCategory() {
     setShowEditModal(false);
 
     try {
-      await productService.updateProductCategory(
-        categoryData.id,
-        categoryData.formData
-      );
+      await productService.updateProductCategory(categoryData.id, categoryData);
 
       console.log("Category updated successfully:", categoryData);
       setSuccessMessage(`Danh mục đã được sửa thành công!`);
       setShowSuccessModal(true);
+
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await productService.getGardenerProductCategories(
+        gardenerId,
+        currentPage,
+        10
+      );
+      setCategories(result.items);
     } catch (err) {
       console.log(err);
       setErrorMessage("Danh mục đang sử dụng cho các sản phẩm, không thể sửa!");
@@ -178,11 +198,13 @@ function GProductCategory() {
           </thead>
           <tbody>
             {categories.map((category) => (
-              <tr key={category.id}>
-                <td>{category.id}</td>
+              <tr key={category.productCategoryId}>
+                <td>{category.productCategoryId}</td>
                 <td className="gpcategory-category-name">{category.name}</td>
                 <td className="gpcategory-category-description">
-                  {category.description}
+                  <div className="gpcategory-category-description-text">
+                    {category.description}
+                  </div>
                 </td>
                 <td className="gpcategory-actions">
                   {/*<button
@@ -194,14 +216,14 @@ function GProductCategory() {
                   </button> */}
                   <button
                     className="gpcategory-action-btn gpcategory-edit-btn"
-                    onClick={() => handleEdit(category.id)}
+                    onClick={() => handleEdit(category.productCategoryId)}
                     title="Chỉnh sửa"
                   >
                     <FaPenToSquare />
                   </button>
                   <button
                     className="gpcategory-action-btn gpcategory-delete-btn"
-                    onClick={() => handleDelete(category.id)}
+                    onClick={() => handleDelete(category.productCategoryId)}
                     title="Xóa danh mục"
                   >
                     <DeleteFilled />

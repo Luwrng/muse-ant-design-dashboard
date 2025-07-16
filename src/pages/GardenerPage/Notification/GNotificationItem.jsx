@@ -4,7 +4,7 @@ import GNotificationPopup from "./GNotificationPopup";
 import "./GNotificationItem.css";
 import notificationService from "../../services/apiServices/notificationService";
 
-function GNotificationItem({ notification }) {
+function GNotificationItem({ notification, unreadCount }) {
   const [showPopup, setShowPopup] = useState(false);
 
   const handleNotificationClick = async (e) => {
@@ -12,6 +12,9 @@ function GNotificationItem({ notification }) {
       await notificationService.updaNotificationStatus(
         notification.notificationId
       );
+
+      notification.isRead = true;
+      unreadCount -= 1;
     } catch (err) {
       console.log(err);
     }

@@ -1,4 +1,5 @@
 import React from "react";
+import { StarIcon } from "lucide-react";
 import "./ProductDetailPage.css";
 
 function ProductDetailPage({
@@ -15,6 +16,49 @@ function ProductDetailPage({
       onClose();
     }
   };
+
+  const mockReviews = [
+    {
+      id: "r1",
+      reviewerName: "Nguyễn Văn A",
+      reviewerAvatar: "/placeholder.svg?height=40&width=40",
+      comment: "Sản phẩm rất tươi ngon, giao hàng nhanh chóng. Rất hài lòng!",
+      rating: 5,
+      createdAt: "2024-07-10",
+    },
+    {
+      id: "r2",
+      reviewerName: "Trần Thị B",
+      reviewerAvatar: "/placeholder.svg?height=40&width=40",
+      comment: "Chất lượng tốt, nhưng giá hơi cao so với thị trường.",
+      rating: 4,
+      createdAt: "2024-07-08",
+    },
+    {
+      id: "r3",
+      reviewerName: "Lê Văn C",
+      reviewerAvatar: "/placeholder.svg?height=40&width=40",
+      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+      rating: 3,
+      createdAt: "2024-07-05",
+    },
+    {
+      id: "r4",
+      reviewerName: "Lê Văn C",
+      reviewerAvatar: "/placeholder.svg?height=40&width=40",
+      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+      rating: 3,
+      createdAt: "2024-07-05",
+    },
+    {
+      id: "r5",
+      reviewerName: "Lê Văn C",
+      reviewerAvatar: "/placeholder.svg?height=40&width=40",
+      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+      rating: 3,
+      createdAt: "2024-07-05",
+    },
+  ];
 
   const BackIcon = () => (
     <svg
@@ -73,17 +117,8 @@ function ProductDetailPage({
         </div>
 
         <div className="gpd-modal-body">
-          <div className="gpd-product-image-section">
-            <div className="gpd-product-image">
-              <img
-                src={product.image || "/placeholder.svg"}
-                alt={product.name}
-              />
-            </div>
-          </div>
-
           <div className="gpd-product-info-section">
-            <h1 className="gpd-product-title">Cà chua cherry đỏ</h1>
+            <h1 className="gpd-product-title">{product.name}</h1>
 
             <div className="gpd-product-id-section">
               <span className="gpd-product-id-title">Id: </span>
@@ -98,7 +133,7 @@ function ProductDetailPage({
               <div className="gpd-price">
                 {new Intl.NumberFormat("vi-VN").format(product.price)}đ
               </div>
-              <div className="gpd-price-unit">Đơn vị: Kilogram</div>
+              <div className="gpd-price-unit">Đơn vị: {product.weightUnit}</div>
             </div>
 
             <div className="gpd-info-section">
@@ -106,23 +141,64 @@ function ProductDetailPage({
                 <div className="gpd-info-label">Danh mục:</div>
                 <div className="gpd-category-tag">
                   <TagIcon />
-                  Rau củ quả tươi {/*Change to product value */}
+                  {product.categoryName}
                 </div>
               </div>
 
               <div className="gpd-date-info">
                 <div className="gpd-date-item">
                   <span className="gpd-date-label">Ngày tạo: </span>
-                  <span className="gpd-date-value">01/01/2025</span>
+                  <span className="gpd-date-value">{product.createdAt}</span>
                   {/*Change to product value */}
                 </div>
                 <div className="gpd-date-item">
                   <span className="gpd-date-label">Ngày cập nhật:</span>
-                  <span className="gpd-date-value">01/01/2025</span>
+                  <span className="gpd-date-value">{product.updatedAt}</span>
                   {/*Change to product value */}
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Review Section */}
+          <div className="gpd-reviews-section">
+            <h2 className="gpd-reviews-title">Đánh giá từ người bán lẻ</h2>
+            {mockReviews.length > 0 ? (
+              <div className="gpd-reviews-list">
+                {mockReviews.map((review) => (
+                  <div key={review.id} className="gpd-review-item">
+                    <div className="gpd-reviewer-header">
+                      <div className="gpd-reviewer-avatar-container">
+                        <img
+                          src={review.reviewerAvatar || "/placeholder.svg"}
+                          alt={`Avatar of ${review.reviewerName}`}
+                          className="gpd-reviewer-avatar"
+                        />
+                      </div>
+                      <div className="gpd-reviewer-name">
+                        {review.reviewerName}
+                      </div>
+                    </div>
+                    <p className="gpd-review-comment">{review.comment}</p>
+                    <div className="gpd-review-rating">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon
+                          key={i}
+                          className={`gpd-star-icon ${
+                            i < review.rating
+                              ? "gpd-star-filled"
+                              : "gpd-star-empty"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <div className="gpd-review-date">{review.createdAt}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="gpd-no-reviews">Chưa có đánh giá nào.</p>
+            )}
           </div>
         </div>
       </div>

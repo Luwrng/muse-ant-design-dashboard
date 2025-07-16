@@ -85,15 +85,6 @@ function GardenerSidenav() {
             <span>Tin Nhắn</span>
           </NavLink>
         </Menu.Item>
-
-        {/* Quản lý phản hồi */}
-        <Menu.Item key="feedback">
-          <NavLink to="/gardener/feedback">
-            <FontAwesomeIcon icon={faCommentAlt} />
-            <span>Danh Sách Phản Hồi</span>
-          </NavLink>
-        </Menu.Item>
-
         <Menu.Divider />
 
         <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">
