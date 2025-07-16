@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -16,15 +16,49 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faFileDownload } from "@fortawesome/free-solid-svg-icons";
 import { SearchOutlined } from "@ant-design/icons";
+import { cleanfood } from "../api_admin"; // Đường dẫn chứa getReports API
 
 const { Title } = Typography;
 
 function ReportList() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [dataSource, setDataSource] = useState(data);
+  const [dataSource, setDataSource] = useState([]);
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
+  const [searchText, setSearchText] = useState("");
+
+  // Gọi API lấy danh sách báo cáo
+  const fetchReports = async (page = 1, size = 10, search = "") => {
+    setLoading(true);
+    try {
+      const res = await cleanfood.admin.getReports({ page, size, search });
+      setDataSource(res.items);
+      setPagination({
+        current: page,
+        pageSize: size,
+        total: res.total || res.items.length,
+      });
+    } catch (err) {
+      console.error("Lỗi khi fetch reports:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const handleTableChange = (pagination) => {
+    fetchReports(pagination.current, pagination.pageSize, searchText);
+  };
+
+  const handleSearch = () => {
+    fetchReports(1, pagination.pageSize, searchText);
+  };
 
   const showReportDetails = (record) => {
     setSelectedReport(record);
@@ -65,12 +99,6 @@ function ReportList() {
       dataIndex: "ReportType",
       key: "reportType",
       width: 120,
-      filters: [
-        { text: "Lỗi", value: "Bug" },
-        { text: "Tính năng", value: "Feature" },
-        { text: "Hỗ trợ", value: "Support" },
-      ],
-      onFilter: (value, record) => record.ReportType === value,
     },
     {
       title: "Tiêu đề",
@@ -108,12 +136,6 @@ function ReportList() {
         }
         return <Tag color={mau}>{mucDo}</Tag>;
       },
-      filters: [
-        { text: "Cao", value: "Cao" },
-        { text: "Trung bình", value: "Trung bình" },
-        { text: "Thấp", value: "Thấp" },
-      ],
-      onFilter: (value, record) => record.Severity === value,
     },
     {
       title: "Người báo cáo",
@@ -133,8 +155,6 @@ function ReportList() {
             icon={faEye}
             onClick={() => showReportDetails(record)}
             style={{ fontSize: "16px", color: "#1890ff", cursor: "pointer" }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
         </Space>
       ),
@@ -171,13 +191,6 @@ function ReportList() {
           </Tag>
         );
       },
-      filters: [
-        { text: "Chưa sửa", value: "Open" },
-        { text: "Đang sửa", value: "In Progress" },
-        { text: "Đã sửa", value: "Resolved" },
-
-      ],
-      onFilter: (value, record) => record.Status === value,
     },
   ];
 
@@ -195,11 +208,14 @@ function ReportList() {
                     <Title level={5}>Danh sách báo cáo</Title>
                   </Col>
                   <Col>
-                    <Input
-                      className="header-search"
-                      style={{ width: "200px", borderRadius: "10px", height: "50px" }}
+                    <Input.Search
+                      allowClear
+                      enterButton={<SearchOutlined />}
                       placeholder="Tìm kiếm báo cáo..."
-                      prefix={<SearchOutlined />}
+                      style={{ width: 250 }}
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onSearch={handleSearch}
                     />
                   </Col>
                 </Row>
@@ -210,7 +226,14 @@ function ReportList() {
                   columns={columns}
                   dataSource={dataSource}
                   rowKey="ReportId"
-                  pagination={{ position: ["bottomCenter", "right"], pageSize: 10 }}
+                  pagination={{
+                    current: pagination.current,
+                    pageSize: pagination.pageSize,
+                    total: pagination.total,
+                    position: ["bottomCenter", "right"],
+                  }}
+                  loading={loading}
+                  onChange={handleTableChange}
                   className="ant-border-space"
                   scroll={{ x: 1500 }}
                 />
@@ -220,6 +243,7 @@ function ReportList() {
         </Row>
       </div>
 
+      {/* Modal chi tiết báo cáo */}
       <Modal
         title={`Chi tiết báo cáo #${selectedReport?.ReportId || ""}`}
         open={isModalVisible}
@@ -262,6 +286,8 @@ function ReportList() {
           </Descriptions>
         )}
       </Modal>
+
+      {/* Modal cập nhật trạng thái */}
       <Modal
         open={statusModalVisible}
         title="Cập nhật trạng thái"
@@ -286,94 +312,3 @@ function ReportList() {
 }
 
 export default ReportList;
-
-const data = [
-  {
-    ReportId: 1,
-    ReportType: "Bug",
-    Subject: "Lỗi khi khởi động ứng dụng",
-    Description: "Ứng dụng bị crash ngay sau khi mở trên Windows 10.",
-    Severity: "Cao",
-    Status: "Open",
-    CreatedAt: "2024-03-20T10:30:00",
-    UpdatedAt: "2024-03-20T11:45:00",
-    AccountId: "ACC001",
-  },
-  {
-    ReportId: 2,
-    ReportType: "Feature",
-    Subject: "Yêu cầu thêm chức năng xuất Excel",
-    Description: "Người dùng muốn có thể xuất danh sách đơn hàng ra file Excel.",
-    Severity: "Trung bình",
-    Status: "In Progress",
-    CreatedAt: "2024-03-21T09:15:00",
-    UpdatedAt: "2024-03-22T08:00:00",
-    AccountId: "ACC002",
-  },
-  {
-    ReportId: 3,
-    ReportType: "Support",
-    Subject: "Không thể đổi mật khẩu",
-    Description: "Trang đổi mật khẩu không phản hồi khi nhấn nút lưu.",
-    Severity: "Thấp",
-    Status: "Resolved",
-    CreatedAt: "2024-03-22T14:00:00",
-    UpdatedAt: "2024-03-23T09:30:00",
-    AccountId: "ACC003",
-  },
-  {
-    ReportId: 4,
-    ReportType: "Bug",
-    Subject: "Sai định dạng ngày trong báo cáo",
-    Description: "Ngày hiển thị theo định dạng MM/DD/YYYY thay vì DD/MM/YYYY.",
-    Severity: "Trung bình",
-    Status: "Closed",
-    CreatedAt: "2024-03-25T12:20:00",
-    UpdatedAt: "2024-03-26T10:10:00",
-    AccountId: "ACC004",
-  },
-  {
-    ReportId: 5,
-    ReportType: "Bug",
-    Subject: "Không thể upload ảnh đại diện",
-    Description: "Gặp lỗi khi chọn file ảnh có dung lượng lớn hơn 2MB.",
-    Severity: "Cao",
-    Status: "Open",
-    CreatedAt: "2024-03-28T10:10:00",
-    UpdatedAt: "2024-03-29T13:05:00",
-    AccountId: "ACC005",
-  },
-  {
-    ReportId: 6,
-    ReportType: "Feature",
-    Subject: "Thêm tính năng thông báo qua email",
-    Description: "Người dùng muốn nhận email khi có thay đổi trạng thái đơn hàng.",
-    Severity: "Thấp",
-    Status: "In Progress",
-    CreatedAt: "2024-03-30T11:00:00",
-    UpdatedAt: "2024-04-01T09:00:00",
-    AccountId: "ACC006",
-  },
-  {
-    ReportId: 7,
-    ReportType: "Support",
-    Subject: "Không nhận được mã OTP",
-    Description: "Không nhận được mã OTP qua SMS khi đăng nhập.",
-    Severity: "Cao",
-    Status: "Resolved",
-    CreatedAt: "2024-04-02T16:45:00",
-    UpdatedAt: "2024-04-03T10:20:00",
-    AccountId: "ACC007",
-  },
-  {
-    ReportId: 8,
-    ReportType: "Bug",
-    Subject: "Giao diện bị vỡ trên mobile",
-    Description: "Một số thành phần bị tràn màn hình trên iPhone 12.",
-    Severity: "Trung bình",
-    Status: "Open",
-    CreatedAt: "2024-04-04T08:30:00",
-    UpdatedAt: "2024-04-04T08:30:00",
-    AccountId: "ACC008",
-  },
-];

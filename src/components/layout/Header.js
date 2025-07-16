@@ -57,6 +57,7 @@ function Header({
     productcategory: "Danh Mục Sản Phẩm",
     "subscription-contracts": "Danh sách gói đăng kí",
     "subscription-orders": "Danh sách đơn mua gói dịch vụ",
+    "active-package-customers": "Danh sách khách hàng đang sửa dụng gói",
     notifications: "Thông Báo",
     "reports-list": "Danh Sách Báo Cáo",
     "reported-posts": "Bài Viết Bị Báo Cáo",
@@ -95,7 +96,7 @@ function Header({
               className="ant-page-header-heading-title"
               style={{ textTransform: "capitalize" }}
             >
-              {pageTitle}
+              {/* {pageTitle} */}
             </span>
           </div>
         </Col>

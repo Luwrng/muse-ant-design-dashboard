@@ -31,7 +31,7 @@ import Contracts from "./pages/Contracts";
 import Orders from "./pages/Orders";
 import Revenue from "./pages/Revenue";
 import Services from "./pages/services/Services";
-import Services_add from "./pages/services/Services_add";
+import Packages_add from "./pages/servicespackage/Package_add";
 import NotificationPage from "./pages/Notification";
 import StatisticsPage from "./pages/StatisticsPage";
 import ActivePackageCustomers from "./pages/ActivePackageCustomers";
@@ -51,8 +51,6 @@ import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
-
-//Test
 
 function App() {
   return (
@@ -111,7 +109,11 @@ function App() {
             component={GardenerVerification}
           />
           <Route path="/statistics" component={StatisticsPage} />
-          <Route exact path="/services/Services_add" component={Services_add} />
+          <Route
+            exact
+            path="/servicespackage/Packages_add"
+            component={Packages_add}
+          />
           <Route exact path="/notifications" component={NotificationPage} />
           <Route exact path="/subscription-contracts" component={Contracts} />
           <Route exact path="/subscription-orders" component={Orders} />
@@ -123,6 +125,8 @@ function App() {
             path="/active-package-customers"
             component={ActivePackageCustomers}
           />
+
+          <Redirect from="*" to="/dashboard" />
         </Main>
         <Redirect from="*" to="/landing" />
       </Switch>

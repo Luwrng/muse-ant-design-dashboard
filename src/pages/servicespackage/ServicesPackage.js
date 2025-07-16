@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -20,25 +20,166 @@ import {
   faPenToSquare,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+
 import DetailButton from "../../components/button/DetailButton";
 import EditButton from "../../components/button/EditButton";
 import DeleteButton from "../../components/button/DeleteButton";
 import SearchButton from "../../components/button/SearchButton";
-import { Typography } from "antd";
+import AddButton from "../../components/button/AddButton";
+import Package_add from "./Package_add";
+import { cleanfood } from "../../api_admin";
 
 const ServicesPackage = () => {
+  // State chứa danh sách các gói dịch vụ (hiển thị trong bảng)
+  const [dataSource, setDataSource] = useState([]);
+
+  // State chứa dữ liệu chi tiết từng gói (dùng trong modal và form thêm)
+  const [packageList, setPackageList] = useState([]);
+
+  // State hiển thị modal chi tiết gói
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // State hiển thị modal thêm dịch vụ
+  const [addServiceModalVisible, setAddServiceModalVisible] = useState(false);
+
+  // Gói đang được chọn để hiển thị chi tiết
   const [selectedPackage, setSelectedPackage] = useState(null);
+
+  // State cho ô tìm kiếm
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [total, setTotal] = useState(0);
   const [searchText, setSearchText] = useState("");
+
+  // ✅ Gọi API lấy danh sách gói dịch vụ
+  const fetchService = async (page = 1, size = 10, search = "") => {
+    try {
+      const res = await cleanfood.admin.getPackage({ page, size, search });
+
+      const formatted = res.items.map((item) => ({
+        key: item.servicePackageId,
+        name: item.packageName,
+        description: item.description,
+        price: item.price,
+        duration: item.duration,
+        status: item.status.toLowerCase(),
+        services: item.features.map((f) => f.serviceFeatureName),
+      }));
+
+      setDataSource(formatted);
+      setTotal(res.total || 0);
+      setCurrentPage(res.page || page);
+      setPageSize(res.size || size);
+    } catch (error) {
+      console.error("Lỗi khi fetch gói dịch vụ:", error);
+      message.error("Không thể tải danh sách gói dịch vụ.");
+    }
+  };
+  useEffect(() => {
+    fetchService(currentPage, pageSize, searchText);
+  }, [currentPage, pageSize, searchText]);
+
+
+
+
+
+
+  // Vô hiệu hóa gói dịch vụ (tạm dừng bán)
+  const handleDisablePackage = (record) => {
+    Modal.confirm({
+      title: "Xác nhận vô hiệu hóa",
+      content: `Bạn có chắc chắn muốn tạm dừng gói dịch vụ "${record.name}"?`,
+      okText: "Vô hiệu hóa",
+      cancelText: "Hủy",
+      centered: true,
+      onOk: async () => {
+        try {
+          await cleanfood.admin.disableServicePackage(record);
+          message.success("Đã tạm dừng gói dịch vụ.");
+          fetchPackage(); // reload lại danh sách sau khi cập nhật
+        } catch (error) {
+          console.error("Lỗi khi vô hiệu hóa:", error);
+          message.error("Không thể vô hiệu hóa gói dịch vụ.");
+        }
+      },
+    });
+  };
+
+
+  // Gọi API để lấy danh sách gói dịch vụ (gọi lại sau khi tạo/kích hoạt)
+  const fetchServicePackage = async () => {
+    try {
+      const response = await cleanfood.admin.getPackage();
+      const packages = response.items.map((pkg) => ({
+        key: pkg.packageId,
+        name: pkg.packageName,
+        status: pkg.status,
+      }));
+      setPackageList(packages);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách gói:", error);
+      message.error("Không thể tải danh sách gói dịch vụ.");
+    }
+  };
+
+  // Gọi API và format dữ liệu bảng + dữ liệu cho modal/form
+  const fetchPackage = async () => {
+    try {
+      const res = await cleanfood.admin.getPackage();
+      const data = res.items || [];
+
+      const formattedData = data.map((item) => ({
+        key: item.servicePackageId,
+        name: item.packageName,
+        description: item.description,
+        price: item.price,
+        duration: item.duration,
+        status: item.status.toLowerCase(), // convert về chữ thường
+        services: item.features.map((feature) => feature.serviceFeatureName),
+      }));
+
+      const formattedForModal = data.map((pkg) => ({
+        key: pkg.servicePackageId,
+        name: pkg.packageName,
+        description: pkg.description,
+        packages: pkg.features.map((feature) => ({
+          key: feature.serviceFeatureId,
+          name: feature.serviceFeatureName,
+          description: feature.description,
+        })),
+      }));
+
+      setPackageList(formattedForModal);
+      setPackageList(formattedForModal);
+    } catch (error) {
+      console.error("Lỗi khi fetchPackage:", error);
+      message.error("Không thể tải danh sách gói dịch vụ");
+    }
+  };
+
+
+  // Mở modal chi tiết gói
   const showPackageDetails = (pkg) => {
     setSelectedPackage(pkg);
     setIsModalVisible(true);
   };
 
-  const handleEdit = (pkg) => {
-    message.info("Chức năng đang được phát triển");
+  // Xử lý khi submit form thêm gói dịch vụ mới
+  const handleAddService = async (values) => {
+    try {
+      await cleanfood.admin.createPackage(values);
+      message.success("Thêm gói dịch vụ thành công!");
+      setAddServiceModalVisible(false);
+      fetchPackage();
+    } catch (error) {
+      message.error("Thêm gói dịch vụ thất bại!");
+      console.error(error);
+    }
   };
   const { Text } = Typography;
+
 
   const columns = [
     {
@@ -54,42 +195,71 @@ const ServicesPackage = () => {
     {
       title: "Giá",
       dataIndex: "price",
-      key: "price",
-      render: (price) => `${Number(price).toLocaleString()} đ`,
+      render: (p) => `${Number(p).toLocaleString()} đ`,
       align: "center",
+      sorter: (a, b) => a.price - b.price,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Thời Hạn",
       dataIndex: "duration",
-      key: "duration",
-      render: (duration) => `${duration} ngày `,
+      render: (d) => `${d} ngày`,
       align: "center",
     },
     {
       title: "Trạng Thái",
       dataIndex: "status",
-      key: "status",
       align: "center",
       render: (status) => (
         <Tag color={status === "active" ? "success" : "error"}>
-          {status === "active" ? "Đang Bán" : "Ngừng Bán"}
+          {status === "active" ? "Hoạt động" : "Ngừng họat động"}
         </Tag>
       ),
     },
-
     {
       title: "Thao Tác",
       key: "action",
       align: "center",
       render: (_, record) => (
         <Space size="middle">
+          {/* Nút xem chi tiết */}
           <DetailButton onClick={() => showPackageDetails(record)} />
-          <EditButton onClick={() => showModal(record)} />
-          <DeleteButton record={record} tooltip="Xóa" />
+
+ {/* Nút kích hoạt gói dịch vụ */}
+          <EditButton
+            tooltip="Kích hoạt gói"
+            onClick={() => {
+              Modal.confirm({
+                title: "Xác nhận kích hoạt",
+                content: `Bạn có chắc chắn muốn kích hoạt lại gói dịch vụ "${record.name}" không?`,
+                okText: "Kích hoạt",
+                cancelText: "Hủy",
+                centered: true,
+                onOk: async () => {
+                  try {
+                    await cleanfood.admin.activateServicePackage(record);
+                    message.success("Gói dịch vụ đã được kích hoạt!");
+                    fetchServicePackage();
+                  } catch (error) {
+                    console.error("Lỗi khi kích hoạt:", error);
+                    message.error("Kích hoạt thất bại!");
+                  }
+                },
+              });
+            }}
+          />
+
+          {/* Nút xóa (hoặc vô hiệu hóa) */}
+          <DeleteButton
+            record={record}
+            // tooltip="Vô hiệu hóa gói dịch vụ"
+            type="package"
+            onDeleteSuccess={fetchPackage}
+          />
+
+
         </Space>
       ),
-    },
-  ];
 
   const showModal = (record) => {
     setSelectedPackage(record);
@@ -155,34 +325,61 @@ const ServicesPackage = () => {
               title="Quản Lý Gói Dịch Vụ"
               extra={
                 <Space>
+                  {/* Ô tìm kiếm */}
                   <SearchButton
                     placeholder="Tìm kiếm gói dịch vụ..."
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                   />
                   <Button type="primary">Thêm Gói Mới</Button>
+                  {/* Nút thêm mới */}
+                  {/*<AddButton onClick={() => setAddServiceModalVisible(true)} />*/}
                 </Space>
               }
             >
-              <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  dataSource={data}
-                  pagination={{
-                    position: ["bottomCenter", "bottomRight"],
-                    total: data.length,
-                    pageSize: 5,
-                  }}
+              <Table
+                columns={columns}
+                dataSource={dataSource}
+                pagination={{
+                  current: currentPage,
+                  pageSize: pageSize,
+                  total: total,
+                  position: ["bottomCenter", "bottomRight"],
+                  onChange: (page, size) => {
+                    setCurrentPage(page);
+                    setPageSize(size);
+
+                  },
+                }}
+              />
+
+
+
+
+              {/* Modal thêm dịch vụ */}
+              <Modal
+                open={addServiceModalVisible}
+                onCancel={() => setAddServiceModalVisible(false)}
+                footer={null}
+                title="Thêm Dịch Vụ Mới"
+                width={800}
+                destroyOnClose
+              >
+                <Package_add
+                  onSubmit={handleAddService}
+                  onCancel={() => setAddServiceModalVisible(false)}
+                  dat={packageList}
                 />
-              </div>
+              </Modal>
             </Card>
           </Col>
         </Row>
       </div>
 
+      {/* Modal Chi tiết gói dịch vụ */}
       <Modal
         title="Chi Tiết Gói Dịch Vụ"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <Button key="back" onClick={() => setIsModalVisible(false)}>
