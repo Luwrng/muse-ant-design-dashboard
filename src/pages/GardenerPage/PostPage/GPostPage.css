@@ -1,0 +1,347 @@
+.gpost-article-management {
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.gpost-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.2rem;
+  /* border-bottom: 1px solid #e9ecef; */
+}
+
+.gpost-title-section h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 5px 0;
+}
+
+.gpost-subtitle {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}
+
+.gpost-header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.gpost-search-container {
+  position: relative;
+}
+
+.gpost-create-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.gpost-create-btn:hover {
+  background-color: #218838;
+}
+
+.gpost-tabs-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Filter Tabs */
+.gpost-filter-tabs {
+  display: flex;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.gpost-filter-tabs-options{
+  display: flex;
+  gap: 32px;
+}
+
+.gpost-filter-tab {
+  padding: 12px 0;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.gpost-filter-tab:hover {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.gpost-filter-tab.active {
+  background-color: #fafafa;
+  color: white;
+  border-color: #28a745;
+  color: #666;
+}
+
+.gpost-filter-tab.active::after{
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #28a745;
+}
+
+.gpost-search-filter-tabs{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.gpost-sort-options {
+  display: flex;
+  color: #6c757d;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #e9e7e7;
+  border: none;
+  border-radius: 0.4rem;
+  max-width: 5rem;
+}
+
+.gpost-sort-options:hover{
+  background-color: #c4c4c4;
+}
+
+.gpost-search-input {
+  display: flex;
+  padding: 10px 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.gpost-search-input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+}
+
+.gpost-articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.gpost-article-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.gpost-article-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.gpost-article-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.gpost-article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gpost-bookmark-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #6c757d;
+  z-index: 10;
+}
+
+.gpost-article-content {
+  padding: 20px;
+}
+
+.gpost-article-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gpost-article-description {
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gpost-article-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.gpost-status {
+  color: #28a745;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.gpost-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gpost-star {
+  color: #ffc107;
+  font-size: 14px;
+}
+
+.gpost-star:not(.gpost-filled) {
+  color: #dee2e6;
+}
+
+.gpost-rating-value {
+  font-size: 13px;
+  color: #495057;
+  margin-left: 4px;
+}
+
+.gpost-article-date {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.gpost-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.gpost-pagination-info {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.gpost-pagination-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.gpost-pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #495057;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.gpost-pagination-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.gpost-pagination-btn.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .gpost-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .gpost-header-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .gpost-search-input {
+    width: 100%;
+  }
+
+  .gpost-tabs-container {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .gpost-tabs {
+    flex-wrap: wrap;
+  }
+
+  .gpost-articles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gpost-pagination {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

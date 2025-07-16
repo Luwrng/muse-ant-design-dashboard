@@ -1,0 +1,295 @@
+.godetail-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.godetail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.godetail-back-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.godetail-back-btn:hover {
+  color: #333;
+}
+
+.godetail-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.godetail-create-delivery-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.godetail-create-delivery-btn:hover {
+  background: #218838;
+}
+
+.godetail-dropdown {
+  position: relative;
+}
+
+.godetail-menu-btn {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.godetail-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 20;
+}
+
+.godetail-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.godetail-dropdown-item:hover {
+  background: #f8f9fa;
+}
+
+.godetail-content {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.godetail-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.godetail-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.godetail-status {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.godetail-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.godetail-status-delivering {
+  background: #cce5ff;
+  color: #0066cc;
+}
+
+.godetail-status-completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.godetail-info {
+  margin-bottom: 32px;
+}
+
+.godetail-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.godetail-customer {
+  font-weight: 500;
+  color: #333 !important;
+}
+
+.godetail-total {
+  font-weight: 500;
+  color: #333 !important;
+}
+
+.godetail-products-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.godetail-product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+}
+
+.godetail-product-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.godetail-product-checkbox {
+  margin-top: 4px;
+}
+
+.godetail-product-info {
+  flex: 1;
+}
+
+.godetail-product-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.godetail-product-price {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.godetail-quantity-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.godetail-quantity-input label {
+  font-size: 14px;
+  color: #333;
+}
+
+.godetail-quantity-input input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.godetail-quantity-input input.godetail-error {
+  border-color: #dc3545;
+}
+
+.godetail-quantity-limit {
+  font-size: 14px;
+  color: #666;
+}
+
+.godetail-error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.godetail-product-right {
+  text-align: right;
+}
+
+.godetail-quantity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.godetail-quantity-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.godetail-quantity-remaining {
+  font-size: 14px;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.godetail-delivery-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.godetail-create-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.godetail-create-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.godetail-cancel-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}

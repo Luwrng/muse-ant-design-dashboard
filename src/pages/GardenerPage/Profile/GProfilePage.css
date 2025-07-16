@@ -1,0 +1,293 @@
+.gprofile-profile {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #efefef;
+}
+
+.gprofile-profile h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.gprofile-tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 30px;
+}
+
+.gprofile-tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.gprofile-tab.active {
+  color: #22c55e;
+  border-bottom-color: #22c55e;
+}
+
+.gprofile-tab:hover {
+  color: #22c55e;
+}
+
+.gprofile-profile-section {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.gprofile-avatar-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.gprofile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.gprofile-avatar-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.gprofile-profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gprofile-detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.gprofile-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.gprofile-detail-item label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.gprofile-detail-item span {
+  color: #333;
+  font-size: 16px;
+}
+
+.gprofile-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.gprofile-status.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.gprofile-status.verified {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.gprofile-status.unverified {
+  background: #dcfce7;
+  color: #e33618;
+}
+
+.gprofile-addresses-section {
+  margin-bottom: 30px;
+}
+
+.gprofile-addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.gprofile-addresses-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.gprofile-add-address-btn {
+  background: none;
+  border: none;
+  color: #22c55e;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.gprofile-add-address-btn:hover {
+  text-decoration: underline;
+}
+
+.gprofile-addresses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gprofile-address-item {
+  background: #f9f9f9;
+  padding: 15px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.gprofile-address-item:hover {
+  background: #f0f0f0;
+}
+
+.gprofile-address-number {
+  font-weight: 600;
+  color: #666;
+  min-width: 50px;
+}
+
+.gprofile-address-line {
+  color: #333;
+}
+
+.gprofile-action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.gprofile-btn-primary {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.gprofile-btn-primary:hover {
+  background: #16a34a;
+}
+
+.gprofile-btn-secondary {
+  background: white;
+  color: #666;
+  border: 1px solid #d0d0d0;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gprofile-btn-secondary:hover {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.gprofile-certificate-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.gprofile-certificate-dropdown {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 16px;
+  background: white;
+}
+
+.gprofile-certificate-details {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.gprofile-certificate-info {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.gprofile-certificate-text {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gprofile-certificate-image {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gprofile-certificate-image label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.gprofile-certificate-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.gprofile-update-cert-btn {
+  align-self: flex-end;
+}
+
+@media (max-width: 768px) {
+  .gprofile-detail-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .gprofile-certificate-info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .gprofile-action-buttons {
+    flex-direction: column;
+  }
+}

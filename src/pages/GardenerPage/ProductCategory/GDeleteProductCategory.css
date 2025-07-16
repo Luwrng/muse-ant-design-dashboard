@@ -1,0 +1,137 @@
+.gpcdelete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.gpcdelete-delete-modal-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.gpcdelete-delete-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.gpcdelete-delete-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  padding-bottom: 16px;
+}
+
+.gpcdelete-delete-modal-content {
+  padding: 0 24px;
+  text-align: center;
+}
+
+.gpcdelete-warning-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.gpcdelete-delete-message {
+  font-size: 16px;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+.gpcdelete-delete-message strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.gpcdelete-delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.gpcdelete-delete-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.gpcdelete-delete-btn:hover {
+  background-color: #dc2626;
+}
+
+.gpcdelete-cancel-btn{
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.gpcdelete-cancel-btn:hover{
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.gpcdelete-close-btn{
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.gpcdelete-close-btn:hover{
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .gpcdelete-delete-modal-container {
+    max-width: 100%;
+    margin: 10px;
+  }
+
+  .gpcdelete-delete-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .gpcdelete-cancel-btn,
+  .gpcdelete-delete-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

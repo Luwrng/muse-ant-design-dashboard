@@ -1,0 +1,277 @@
+.gorder-management {
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #fafafa;
+  min-height: 100vh;
+}
+
+.gorder-page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 32px;
+}
+
+/* Filter Tabs */
+.gorder-filter-tabs {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gorder-filter-tab {
+  padding: 12px 0;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.gorder-filter-tab:hover {
+  color: #28a745;
+}
+
+.gorder-filter-tab.gorder-active {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.gorder-filter-tab.gorder-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #28a745;
+}
+
+/* Table */
+.gorder-table-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+}
+
+.gorder-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.gorder-table-header {
+  background: #f8f9fa;
+}
+
+.gorder-th {
+  padding: 16px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gorder-th:last-child {
+  border-right: none;
+}
+
+.gorder-th:nth-child(1) {
+  width: 60px;
+}
+.gorder-th:nth-child(2) {
+  width: 150px;
+}
+.gorder-th:nth-child(3) {
+  width: 120px;
+}
+.gorder-th:nth-child(4) {
+  width: 140px;
+}
+.gorder-th:nth-child(5) {
+  width: 140px;
+}
+.gorder-th:nth-child(6) {
+  width: 120px;
+}
+.gorder-th:nth-child(7) {
+  width: 3.6rem;
+}
+
+.gorder-table-row {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.gorder-table-row:hover {
+  background-color: #f8f9fa;
+}
+
+.gorder-table-row:last-child {
+  border-bottom: none;
+}
+
+.gorder-td {
+  padding: 16px 12px;
+  font-size: 1rem;
+  color: #333;
+  vertical-align: middle;
+  border-right: 1px solid #f0f0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gorder-td:last-child {
+  border-right: none;
+}
+
+/* Status Badges */
+.gorder-status {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.gorder-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.gorder-status-delivering {
+  background: #cce5ff;
+  color: #0066cc;
+}
+
+.gorder-status-completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Actions */
+.gorder-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gorder-action-btn {
+  padding: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  font-size: 16px;
+}
+
+.gorder-action-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.gorder-view-btn {
+  color: #007bff;
+}
+
+.gorder-delete-btn {
+  color: #dc3545;
+}
+
+/* Pagination */
+.gorder-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  background-color: #ffffff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.gorder-pagination-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.gorder-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gorder-pagination-btn {
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.gorder-pagination-btn:hover:not(:disabled) {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.gorder-pagination-btn.gorder-active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.gorder-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gorder-management {
+    padding: 16px;
+  }
+
+  .gorder-table-container {
+    overflow-x: auto;
+  }
+
+  .gorder-table {
+    min-width: 800px;
+  }
+
+  .gorder-pagination {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .gorder-filter-tabs {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+.gorder-hidden {
+  display: none;
+}

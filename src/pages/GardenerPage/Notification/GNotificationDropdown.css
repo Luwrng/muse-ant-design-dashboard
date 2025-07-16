@@ -1,0 +1,42 @@
+.gnotidropdown-notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 400px;
+  max-height: 500px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.gnotidropdown-notification-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.gnotidropdown-notification-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.gnotidropdown-notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.gnotidropdown-no-notifications {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.gnotidropdown-no-notifications p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}

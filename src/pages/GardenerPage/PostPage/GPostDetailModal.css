@@ -1,0 +1,359 @@
+.gpdetail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gpdetail-popup {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.gpdetail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gpdetail-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #111827;
+}
+
+.gpdetail-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.gpdetail-close:hover {
+  background-color: #f3f4f6;
+}
+
+.gpdetail-content {
+  padding: 24px;
+}
+
+.gpdetail-media-section {
+  margin-bottom: 24px;
+}
+
+.gpdetail-media-slider {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+}
+
+.gpdetail-media-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.gpdetail-media-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gpdetail-media-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gpdetail-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.gpdetail-play-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.gpdetail-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.gpdetail-nav-arrow:hover {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.gpdetail-nav-prev {
+  left: 12px;
+}
+
+.gpdetail-nav-next {
+  right: 12px;
+}
+
+.gpdetail-dots-container {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.gpdetail-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gpdetail-dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+.gpdetail-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.gpdetail-post-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #111827;
+}
+
+.gpdetail-description {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.gpdetail-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gpdetail-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gpdetail-status-badge.active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.gpdetail-status-badge.inactive {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.gpdetail-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gpdetail-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.gpdetail-star {
+  color: #d1d5db;
+  font-size: 16px;
+}
+
+.gpdetail-star.filled {
+  color: #fbbf24;
+}
+
+.gpdetail-rating-value {
+  font-weight: 500;
+  color: #111827;
+}
+
+.gpdetail-date {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.gpdetail-product-section {
+  margin-top: 24px;
+}
+
+.gpdetail-product-info-card {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.gpdetail-product-info-header {
+  background-color: #dcfce7;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #bbf7d0;
+}
+
+.gpdetail-product-info-icon {
+  font-size: 18px;
+}
+
+.gpdetail-product-info-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.gpdetail-product-info-content {
+  padding: 20px;
+}
+
+.gpdetail-product-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gpdetail-product-info-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gpdetail-product-info-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.gpdetail-product-info-value {
+  font-weight: 600;
+  color: #111827;
+  font-size: 14px;
+  text-align: right;
+}
+
+.gpdetail-price {
+  color: #059669;
+  font-weight: 700;
+}
+
+.gpdetail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.gpdetail-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.gpdetail-btn-edit {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.gpdetail-btn-edit:hover {
+  background-color: #2563eb;
+}
+
+.gpdetail-btn-disable {
+  background-color: #ef4444;
+  color: white;
+}
+
+.gpdetail-btn-disable:hover {
+  background-color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .gpdetail-popup {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .gpdetail-actions {
+    flex-direction: column;
+  }
+
+  .gpdetail-btn {
+    width: 100%;
+  }
+
+  .gpdetail-product-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .gpdetail-product-info-value {
+    text-align: left;
+  }
+}
