@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StarIcon } from "lucide-react";
 import "./ProductDetailPage.css";
+import productService from "../../services/apiServices/productService";
 
 function ProductDetailPage({
   product,
@@ -9,6 +10,25 @@ function ProductDetailPage({
   onUpdatePrice,
   onChangeStatus,
 }) {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    if (!product || !product.productId) return;
+
+    const fetchReviews = async()=>{
+      try
+      {
+         const result = await productService.getProductReview(product.productId);
+         setReviews(result);
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+
+    fetchReviews();
+  },[product])
+
   if (!isOpen || !product) return null;
 
   const handleOverlayClick = (e) => {
@@ -17,48 +37,48 @@ function ProductDetailPage({
     }
   };
 
-  const mockReviews = [
-    {
-      id: "r1",
-      reviewerName: "Nguyễn Văn A",
-      reviewerAvatar: "/placeholder.svg?height=40&width=40",
-      comment: "Sản phẩm rất tươi ngon, giao hàng nhanh chóng. Rất hài lòng!",
-      rating: 5,
-      createdAt: "2024-07-10",
-    },
-    {
-      id: "r2",
-      reviewerName: "Trần Thị B",
-      reviewerAvatar: "/placeholder.svg?height=40&width=40",
-      comment: "Chất lượng tốt, nhưng giá hơi cao so với thị trường.",
-      rating: 4,
-      createdAt: "2024-07-08",
-    },
-    {
-      id: "r3",
-      reviewerName: "Lê Văn C",
-      reviewerAvatar: "/placeholder.svg?height=40&width=40",
-      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-      rating: 3,
-      createdAt: "2024-07-05",
-    },
-    {
-      id: "r4",
-      reviewerName: "Lê Văn C",
-      reviewerAvatar: "/placeholder.svg?height=40&width=40",
-      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-      rating: 3,
-      createdAt: "2024-07-05",
-    },
-    {
-      id: "r5",
-      reviewerName: "Lê Văn C",
-      reviewerAvatar: "/placeholder.svg?height=40&width=40",
-      comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-      rating: 3,
-      createdAt: "2024-07-05",
-    },
-  ];
+  // const mockReviews = [
+  //   {
+  //     id: "r1",
+  //     reviewerName: "Nguyễn Văn A",
+  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
+  //     comment: "Sản phẩm rất tươi ngon, giao hàng nhanh chóng. Rất hài lòng!",
+  //     rating: 5,
+  //     createdAt: "2024-07-10",
+  //   },
+  //   {
+  //     id: "r2",
+  //     reviewerName: "Trần Thị B",
+  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
+  //     comment: "Chất lượng tốt, nhưng giá hơi cao so với thị trường.",
+  //     rating: 4,
+  //     createdAt: "2024-07-08",
+  //   },
+  //   {
+  //     id: "r3",
+  //     reviewerName: "Lê Văn C",
+  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
+  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+  //     rating: 3,
+  //     createdAt: "2024-07-05",
+  //   },
+  //   {
+  //     id: "r4",
+  //     reviewerName: "Lê Văn C",
+  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
+  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+  //     rating: 3,
+  //     createdAt: "2024-07-05",
+  //   },
+  //   {
+  //     id: "r5",
+  //     reviewerName: "Lê Văn C",
+  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
+  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
+  //     rating: 3,
+  //     createdAt: "2024-07-05",
+  //   },
+  // ];
 
   const BackIcon = () => (
     <svg
@@ -118,11 +138,11 @@ function ProductDetailPage({
 
         <div className="gpd-modal-body">
           <div className="gpd-product-info-section">
-            <h1 className="gpd-product-title">{product.name}</h1>
+            <h1 className="gpd-product-title">{product.productName}</h1>
 
             <div className="gpd-product-id-section">
               <span className="gpd-product-id-title">Id: </span>
-              <span className="gpd-product-id-value">{product.id}</span>
+              <span className="gpd-product-id-value">{product.productId}</span>
             </div>
             <div className="gpd-product-status-section">
               <span className="gpd-status-badge">Status: </span>
@@ -131,7 +151,7 @@ function ProductDetailPage({
 
             <div className="gpd-price-section">
               <div className="gpd-price">
-                {new Intl.NumberFormat("vi-VN").format(product.price)}đ
+                {new Intl.NumberFormat("vi-VN").format(product.price)} {product.currency}
               </div>
               <div className="gpd-price-unit">Đơn vị: {product.weightUnit}</div>
             </div>
@@ -163,20 +183,20 @@ function ProductDetailPage({
           {/* Review Section */}
           <div className="gpd-reviews-section">
             <h2 className="gpd-reviews-title">Đánh giá từ người bán lẻ</h2>
-            {mockReviews.length > 0 ? (
+            {reviews.length > 0 ? (
               <div className="gpd-reviews-list">
-                {mockReviews.map((review) => (
-                  <div key={review.id} className="gpd-review-item">
+                {reviews.map((review) => (
+                  <div key={review.reviewId} className="gpd-review-item">
                     <div className="gpd-reviewer-header">
                       <div className="gpd-reviewer-avatar-container">
                         <img
-                          src={review.reviewerAvatar || "/placeholder.svg"}
-                          alt={`Avatar of ${review.reviewerName}`}
+                          src={review.avatar || "/placeholder.svg"}
+                          alt={`Avatar of ${review.name}`}
                           className="gpd-reviewer-avatar"
                         />
                       </div>
                       <div className="gpd-reviewer-name">
-                        {review.reviewerName}
+                        {review.name}
                       </div>
                     </div>
                     <p className="gpd-review-comment">{review.comment}</p>

@@ -13,13 +13,13 @@ function ProductChangeStatus({ product, isOpen, onClose, onConfirm, action }) {
   const getActionText = () => {
     switch (action) {
       case "hide":
-        return `ẩn sản phẩm "${product.name}"`;
+        return `ẩn sản phẩm "${product.productName}"`;
       case "show":
-        return `hiển thị sản phẩm "${product.name}"`;
+        return `hiển thị sản phẩm "${product.productName}"`;
       case "delete":
-        return `xóa sản phẩm "${product.name}"`;
+        return `xóa sản phẩm "${product.productName}"`;
       default:
-        return `thay đổi trạng thái sản phẩm "${product.name}"`;
+        return `thay đổi trạng thái sản phẩm "${product.productName}"`;
     }
   };
 

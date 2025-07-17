@@ -168,14 +168,22 @@ function GAppointmentPage() {
   useEffect(() => {
     const fetchPendingAppointment = async () => {
       try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await appointmentService.getAccountAppointments(
-          gardenerId,
-          "Status",
-          "PENDING"
-        );
+        if(activeTab === "wait-approve"){
+          const gardenerId = localStorage.getItem("account_id");
+          const result = await appointmentService.getAccountRequestedAppointments(
+            gardenerId,
+          );
+  
+          setPendingAppointments(result);
+        }
+        else if(activeTab === "schedule"){
+          const gardenerId = localStorage.getItem("account_id");
+          const result = await appointmentService.getAccountScheduledAppointments(
+            gardenerId
+          );
 
-        setPendingAppointments(result);
+          setScheduledAppointments(result);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -184,23 +192,7 @@ function GAppointmentPage() {
     fetchPendingAppointment();
   }, [activeTab]);
 
-  useEffect(() => {
-    const fetchScheduledAppointment = async () => {
-      try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await appointmentService.getAccountScheduledAppointments(
-          gardenerId
-        );
-
-        setScheduledAppointments(result);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchScheduledAppointment();
-  }, [activeTab]);
-
+  // #region Calendar functions
   // Function to get the start of the week (Monday)
   const getWeekStart = (date) => {
     const d = new Date(date);
@@ -287,6 +279,7 @@ function GAppointmentPage() {
   const weekStart = getWeekStart(currentWeekStart);
   const weekDays = getWeekDays(weekStart);
   const weekRange = getWeekRange(weekStart);
+  // #endregion
 
   const getStatusClass = (status) => {
     switch (status.toLowerCase()) {
@@ -451,7 +444,7 @@ function GAppointmentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {pendingAppointment.map((appointment) => (
+                  {Array.isArray(pendingAppointment) && pendingAppointment.map((appointment) => (
                     <tr
                       key={appointment.appointmentId}
                       className="gappointment-table-row"
@@ -459,13 +452,13 @@ function GAppointmentPage() {
                       <td>
                         <div className="gappointment-client-info">
                           <div className="gappointment-avatar">
-                            {appointment.name
+                            {appointment.retailerName
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </div>
                           <span className="gappointment-client-name">
-                            {appointment.name}
+                            {appointment.retailerName}
                           </span>
                         </div>
                       </td>
@@ -473,7 +466,7 @@ function GAppointmentPage() {
                         {appointment.phoneNumber}
                       </td>
                       <td className="gappointment-date-cell">
-                        {appointment.time} {appointment.date}
+                        {new Date(appointment.date).toISOString().split('T')[1].split('.')[0]} {new Date(appointment.appointmentDate).toISOString().split('T')[0]} 
                       </td>
                       <td className="gappointment-duration-cell">
                         {appointment.duration}
@@ -490,10 +483,10 @@ function GAppointmentPage() {
                         >
                           <EyeFilled />
                         </button>
-                        <button className="gappointment-approve-button">
+                        <button className="gappointment-approve-button" onClick={handleApprove}>
                           <CheckOutlined />
                         </button>
-                        <button className="gappointment-reject-button">
+                        <button className="gappointment-reject-button" onClick={handleReject}>
                           <CloseOutlined />
                         </button>
                       </td>
@@ -574,7 +567,7 @@ function GAppointmentPage() {
                           >
                             {isFirstSlot && (
                               <div
-                                className={`gappointment-appointment-block ${appointment.colorClass}`}
+                                className={`gappointment-appointment-block green`} //Change to check by status is better
                                 style={{
                                   height: `${
                                     getAppointmentHeight(appointment) * 50 - 4

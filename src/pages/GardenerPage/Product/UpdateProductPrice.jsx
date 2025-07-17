@@ -1,18 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./UpdateProductPrice.css";
 import { useState } from "react";
+import productService from "../../services/apiServices/productService";
 
 function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
   const [priceOption, setPriceOption] = useState("previous");
   const [newPrice, setNewPrice] = useState("");
-  const [selectedPreviousPrice, setSelectedPreviousPrice] = useState("");
+  const [selectedPreviousPrice, setSelectedPreviousPrice] = useState();
 
-  // Mock previous prices data - replace with real data
-  const previousPrices = [
-    { id: 1, price: "45.000đ/kg", date: "15/12/2024" },
-    { id: 2, price: "48.000đ/kg", date: "20/12/2024" },
-    { id: 3, price: "52.000đ/kg", date: "25/12/2024" },
-  ];
+  const [prices, setPrices] = useState([]);
+  useEffect(() => {
+    if (!product || !product.productId) return;
+
+    const fetchPrices = async ()=>{
+      const result = await productService.getProductPrices(product.productId);
+      setPrices(result);
+    }
+
+    fetchPrices();
+  }, [product])
+
+  // // Mock previous prices data - replace with real data
+  // const previousPrices = [
+  //   { id: 1, price: "45.000đ/kg", date: "15/12/2024" },
+  //   { id: 2, price: "48.000đ/kg", date: "20/12/2024" },
+  //   { id: 3, price: "52.000đ/kg", date: "25/12/2024" },
+  // ];
 
   if (!isOpen || !product) return null;
 
@@ -65,7 +78,7 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
             </div>
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">Tên sản phẩm:</span>
-              <span className="gppupdate-info-value">{product.name}</span>
+              <span className="gppupdate-info-value">{product.productName}</span>
             </div>
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">Giá hiện tại:</span>
@@ -96,9 +109,9 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
                   required
                 >
                   <option value="">Chọn giá...</option>
-                  {previousPrices.map((priceItem) => (
-                    <option key={priceItem.id} value={priceItem.price}>
-                      {priceItem.price} - {priceItem.date}
+                  {prices.map((priceItem) => (
+                    <option key={priceItem.productPriceId} value={priceItem.price}>
+                      {priceItem.price}{priceItem.currency}/{priceItem.weightUnit} - {priceItem.availabledDate}
                     </option>
                   ))}
                 </select>

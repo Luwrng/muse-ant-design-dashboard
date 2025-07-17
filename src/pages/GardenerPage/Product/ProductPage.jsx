@@ -36,56 +36,56 @@ function GardenerProductPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  const mockProducts = [
-    {
-      id: "1",
-      name: "Rau cải",
-      category: "Rau củ",
-      price: 50000,
-      weightUnit: "kg",
-      status: "selling",
-    },
-    {
-      id: "2",
-      name: "Cà chua",
-      category: "Rau củ",
-      price: 35000,
-      weightUnit: "kg",
-      status: "selling",
-    },
-    {
-      id: "3",
-      name: "Khoai tây",
-      category: "Rau củ",
-      price: 25000,
-      weightUnit: "kg",
-      status: "out_of_stock",
-    },
-    {
-      id: "4",
-      name: "Bắp cải",
-      category: "Rau củ",
-      price: 40000,
-      weightUnit: "kg",
-      status: "selling",
-    },
-    {
-      id: "5",
-      name: "Hành tây",
-      category: "Rau củ",
-      price: 15000,
-      weightUnit: "kg",
-      status: "selling",
-    },
-    {
-      id: "6",
-      name: "Tỏi",
-      category: "Gia vị",
-      price: 60000,
-      weightUnit: "kg",
-      status: "out_of_stock",
-    },
-  ];
+  // const mockProducts = [
+  //   {
+  //     id: "1",
+  //     name: "Rau cải",
+  //     category: "Rau củ",
+  //     price: 50000,
+  //     weightUnit: "kg",
+  //     status: "selling",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Cà chua",
+  //     category: "Rau củ",
+  //     price: 35000,
+  //     weightUnit: "kg",
+  //     status: "selling",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Khoai tây",
+  //     category: "Rau củ",
+  //     price: 25000,
+  //     weightUnit: "kg",
+  //     status: "out_of_stock",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Bắp cải",
+  //     category: "Rau củ",
+  //     price: 40000,
+  //     weightUnit: "kg",
+  //     status: "selling",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Hành tây",
+  //     category: "Rau củ",
+  //     price: 15000,
+  //     weightUnit: "kg",
+  //     status: "selling",
+  //   },
+  //   {
+  //     id: "6",
+  //     name: "Tỏi",
+  //     category: "Gia vị",
+  //     price: 60000,
+  //     weightUnit: "kg",
+  //     status: "out_of_stock",
+  //   },
+  // ];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -111,9 +111,9 @@ function GardenerProductPage() {
   }, [currentPage]);
 
   //Filter products based on active filter
-  const filteredProducts = mockProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchesTab = activeTab === "all" || product.status === activeTab;
-    const matchesSearch = product.name
+    const matchesSearch = product.productName
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     return matchesTab && matchesSearch;
@@ -121,12 +121,12 @@ function GardenerProductPage() {
 
   // Get counts for each filter
   const getFilterCounts = () => {
-    const available = mockProducts.filter((p) => p.status === "ACTIVE").length;
-    const outOfStock = mockProducts.filter(
+    const available = products.filter((p) => p.status === "ACTIVE").length;
+    const outOfStock = products.filter(
       (p) => p.status === "INACTIVE"
     ).length;
     return {
-      all: mockProducts.length,
+      all: products.length,
       available,
       outOfStock,
     };
@@ -287,7 +287,7 @@ function GardenerProductPage() {
 
       setSuccessData({
         title: "Cập nhật giá thành công",
-        message: `Giá sản phẩm "${selectedProduct.name}" đã được cập nhật.`,
+        message: `Giá sản phẩm "${selectedProduct.productName}" đã được cập nhật.`,
       });
       setShowSuccess(true);
     } catch (error) {
@@ -304,39 +304,48 @@ function GardenerProductPage() {
   const handleStatusConfirm = async () => {
     setShowConfirmStatus(false);
 
-    // Check constraints after user confirms
-    if (selectedProduct.status === "Đang bán" && statusAction === "hide") {
-      setErrorData({
-        title: "Không thể ẩn sản phẩm",
-        message: "Sản phẩm đang hoạt động không thể thay đổi trạng thái.",
-      });
-      setShowError(true);
-      return;
+    try{
+      const status = selectedProduct.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+      await productService.changeProductStatus(selectedProduct.productId, status); 
+    }
+    catch(err){
+      console.log(err);
     }
 
-    setIsLoading(true);
 
-    try {
-      // Simulate API call
-      //--->>>
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // // Check constraints after user confirmsw
+    // if (selectedProduct.status === "Đang bán" && statusAction === "hide") {
+    //   setErrorData({
+    //     title: "Không thể ẩn sản phẩm",
+    //     message: "Sản phẩm đang hoạt động không thể thay đổi trạng thái.",
+    //   });
+    //   setShowError(true);
+    //   return;
+    // }
 
-      const actionText = statusAction === "hide" ? "ẩn" : "hiển thị";
+    // setIsLoading(true);
 
-      setSuccessData({
-        title: "Thay đổi trạng thái thành công",
-        message: `Sản phẩm "${selectedProduct.name}" đã được ${actionText}.`,
-      });
-      setShowSuccess(true);
-    } catch (error) {
-      setErrorData({
-        title: "Lỗi thay đổi trạng thái",
-        message: "Có lỗi xảy ra khi thay đổi trạng thái sản phẩm.",
-      });
-      setShowError(true);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   // Simulate API call
+    //   //--->>>
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    //   const actionText = statusAction === "hide" ? "ẩn" : "hiển thị";
+
+    //   setSuccessData({
+    //     title: "Thay đổi trạng thái thành công",
+    //     message: `Sản phẩm "${selectedProduct.productName}" đã được ${actionText}.`,
+    //   });
+    //   setShowSuccess(true);
+    // } catch (error) {
+    //   setErrorData({
+    //     title: "Lỗi thay đổi trạng thái",
+    //     message: "Có lỗi xảy ra khi thay đổi trạng thái sản phẩm.",
+    //   });
+    //   setShowError(true);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   // Show create product page if showCreateProduct is true
@@ -365,7 +374,7 @@ function GardenerProductPage() {
             }`}
             onClick={() => setActiveTab("all")}
           >
-            Tất cả ({mockProducts.length})
+            Tất cả ({products.length})
           </button>
           <button
             className={`gproduct-tab-trigger ${
@@ -374,7 +383,7 @@ function GardenerProductPage() {
             onClick={() => setActiveTab("selling")}
           >
             Đang bán (
-            {mockProducts.filter((p) => p.status === "selling").length})
+            {products.filter((p) => p.status === "selling").length})
           </button>
           <button
             className={`gproduct-tab-trigger ${
@@ -383,7 +392,7 @@ function GardenerProductPage() {
             onClick={() => setActiveTab("out_of_stock")}
           >
             Hết hàng (
-            {mockProducts.filter((p) => p.status === "out_of_stock").length})
+            {products.filter((p) => p.status === "out_of_stock").length})
           </button>
         </div>
         <div className="gproduct-search-container">
@@ -415,13 +424,13 @@ function GardenerProductPage() {
           <tbody className="gproduct-table-body">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <tr key={product.id} className="gproduct-table-row">
+                <tr key={product.productId} className="gproduct-table-row">
                   <td className="gproduct-table-cell gproduct-cell-name">
-                    {product.name}
+                    {product.productName}
                   </td>
-                  <td className="gproduct-table-cell">{product.category}</td>
+                  <td className="gproduct-table-cell">{product.productCategory}</td>
                   <td className="gproduct-table-cell">
-                    {product.price.toLocaleString("vi-VN")} VND
+                    {product.price.toLocaleString("vi-VN")} {product.currency}
                   </td>
                   <td className="gproduct-table-cell">{product.weightUnit}</td>
                   <td className="gproduct-table-cell">
@@ -438,22 +447,22 @@ function GardenerProductPage() {
                   <td className="gproduct-table-cell gproduct-action-cell">
                     <div
                       className="gproduct-dropdown-menu"
-                      ref={openDropdownId === product.id ? dropdownRef : null}
+                      ref={openDropdownId === product.productId ? dropdownRef : null}
                     >
                       <button
                         className="gproduct-button gproduct-action-trigger"
                         onClick={() =>
                           setOpenDropdownId(
-                            openDropdownId === product.id ? null : product.id
+                            openDropdownId === product.productId ? null : product.productId
                           )
                         }
                         aria-haspopup="true"
-                        aria-expanded={openDropdownId === product.id}
+                        aria-expanded={openDropdownId === product.productId}
                       >
                         <MoreHorizontalIcon className="gproduct-icon" />
                         <span className="sr-only">Open menu</span>
                       </button>
-                      {openDropdownId === product.id && (
+                      {openDropdownId === product.productId && (
                         <div className="gproduct-dropdown-content">
                           <button
                             className="gproduct-dropdown-item"
@@ -502,7 +511,7 @@ function GardenerProductPage() {
       <div className="gproduct-pagination-info">
         <span>
           Hiển thị {filteredProducts.length > 0 ? 1 : 0} từ{" "}
-          {filteredProducts.length} đến tổng số {mockProducts.length} kết quả
+          {filteredProducts.length} đến tổng số {products.length} kết quả
         </span>
         <div className="gproduct-pagination-buttons">
           <button className="gproduct-button gproduct-pagination-button">
