@@ -12,11 +12,6 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
     postalCode: address.postalCode,
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdate({ ...address, ...formData });
-  };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,10 +25,11 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
     }
   };
 
-  const onUpdateSubmit = async () => {
+  const onUpdateSubmit = async (e) => {
     try {
       await addressService.updateAddress(address.addressId, formData);
-      onClose();
+      e.preventDefault();
+      onUpdate({ ...address, ...formData });
     } catch (err) {
       console.log(err);
     }
@@ -46,12 +42,12 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           <button className="gupdateaddress-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Update Address</h2>
+          <h2>Cập nhật địa chỉ Address</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="gupdateaddress-popup-form">
+        <form onSubmit={onUpdateSubmit} className="gupdateaddress-popup-form">
           <div className="gupdateaddress-form-group">
-            <label htmlFor="addressLine">Address Line</label>
+            <label htmlFor="addressLine">Địa chỉ</label>
             <input
               type="text"
               id="addressLine"
@@ -63,7 +59,7 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateaddress-form-group">
-            <label htmlFor="city">City</label>
+            <label htmlFor="city">Thành phố</label>
             <input
               type="text"
               id="city"
@@ -75,7 +71,7 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateaddress-form-group">
-            <label htmlFor="province">Province</label>
+            <label htmlFor="province">Tỉnh</label>
             <input
               type="text"
               id="province"
@@ -87,7 +83,7 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateaddress-form-group">
-            <label htmlFor="country">Country</label>
+            <label htmlFor="country">Quốc gia</label>
             <input
               type="text"
               id="country"
@@ -99,7 +95,7 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateaddress-form-group">
-            <label htmlFor="postalCode">Postal Code</label>
+            <label htmlFor="postalCode">Mã bưu chính</label>
             <input
               type="text"
               id="postalCode"
@@ -112,14 +108,14 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
 
           <div className="gupdateaddress-popup-actions">
             <button type="submit" className="gupdateaddress-btn-primary">
-              Update
+              Cập nhật
             </button>
             <button
               type="button"
               className="gupdateaddress-btn-secondary"
-              onClick={onUpdateSubmit}
+              onClick={onClose}
             >
-              Cancel
+              Hủy
             </button>
           </div>
         </form>

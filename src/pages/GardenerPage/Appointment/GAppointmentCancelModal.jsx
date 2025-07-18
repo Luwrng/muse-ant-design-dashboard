@@ -7,13 +7,31 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
 
   if (!isOpen || !appointment) return null;
 
+  function getFormattedStartAndEndTime(isoDate, durationMinutes) {
+  const start = new Date(isoDate);
+  const end = new Date(start.getTime() + durationMinutes * 60000);
+
+  const formatTime = (date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+    return {
+      startTime: formatTime(start),
+      endTime: formatTime(end)
+    };
+  } 
+  const { startTime, endTime } = getFormattedStartAndEndTime(appointment.appointmentDate, appointment.duration);
+
+
   const handleConfirm = async () => {
     await onConfirm(appointment, reason);
-    setReason(""); // Reset reason after confirm
+    setReason(""); 
   };
 
   const handleClose = () => {
-    setReason(""); // Reset reason when closing
+    setReason("");
     onClose();
   };
 
@@ -45,7 +63,7 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
             </h4>
             <p className="gacancel-appointment-time">
               {/* Add a function for calculating the endTime of the appointment */}
-              {appointment.startTime} - {appointment.endTime}
+              {startTime} - {endTime}
             </p>
           </div>
 

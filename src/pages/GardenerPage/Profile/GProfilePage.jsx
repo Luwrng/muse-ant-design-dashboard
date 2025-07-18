@@ -74,7 +74,7 @@ function GProfilePage() {
           className={`gprofile-tab ${activeTab === "account" ? "active" : ""}`}
           onClick={() => setActiveTab("account")}
         >
-          Account Information
+          Thông tin cá nhân
         </button>
         <button
           className={`gprofile-tab ${
@@ -82,11 +82,12 @@ function GProfilePage() {
           }`}
           onClick={() => setActiveTab("certificates")}
         >
-          Certificates
+          Chứng chỉ
         </button>
       </div>
 
-      {activeTab === "account" && (
+
+      {profile && activeTab === "account" && (
         <div className="gprofile-account-tab">
           <div className="gprofile-profile-section">
             <div className="gprofile-avatar-section">
@@ -105,18 +106,18 @@ function GProfilePage() {
                   <span>{profile.email}</span>
                 </div>
                 <div className="gprofile-detail-item">
-                  <label>Phone Number</label>
+                  <label>Số điện thoại</label>
                   <span>{profile.phoneNumber}</span>
                 </div>
               </div>
 
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
-                  <label>Gender</label>
+                  <label>Giới tính</label>
                   <span>{profile.gender}</span>
                 </div>
                 <div className="gprofile-detail-item">
-                  <label>Status</label>
+                  <label>Trạng thái</label>
                   <span className="gprofile-status active">
                     {profile.status}
                   </span>
@@ -125,7 +126,7 @@ function GProfilePage() {
 
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
-                  <label>Verification Status</label>
+                  <label>Tình trạng xác thực</label>
                   <span
                     className={`gprofile-status ${
                       profile.isVerified ? "verified" : "unverified"
@@ -135,14 +136,14 @@ function GProfilePage() {
                   </span>
                 </div>
                 <div className="gprofile-detail-item">
-                  <label>Created Date</label>
+                  <label>Ngày tạo</label>
                   <span>{profile.createdAt}</span>
                 </div>
               </div>
 
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
-                  <label>Last Updated</label>
+                  <label>Lần cập nhật gần nhất</label>
                   <span>{profile.updatedAt}</span>
                 </div>
               </div>
@@ -151,19 +152,19 @@ function GProfilePage() {
 
           <div className="gprofile-addresses-section">
             <div className="gprofile-addresses-header">
-              <h3>Addresses</h3>
+              <h3>Địa chỉ</h3>
               <button
                 className="gprofile-add-address-btn"
                 onClick={() => setShowCreateAddress(true)}
               >
-                + Add Address
+                + Thêm địa chỉ
               </button>
             </div>
 
             <div className="gprofile-addresses-list">
               {addresses.map((address, index) => (
                 <div
-                  key={address.id}
+                  key={address.addressId}
                   className="gprofile-address-item"
                   onClick={() => handleAddressClick(address)}
                 >
@@ -183,19 +184,19 @@ function GProfilePage() {
               className="gprofile-btn-primary"
               onClick={() => setShowUpdateProfile(true)}
             >
-              Update Profile
+              Cập nhật hồ sơ
             </button>
             <button
               className="gprofile-btn-secondary"
               onClick={() => setShowChangePassword(true)}
             >
-              Change Password
+              Đổi mật khẩu
             </button>
           </div>
         </div>
       )}
 
-      {activeTab === "certificates" && (
+      {profile && activeTab === "certificates" && (
         <div className="gprofile-certificates-tab">
           <div className="gprofile-certificate-header">
             <select
@@ -203,9 +204,9 @@ function GProfilePage() {
               value={selectedCertificate}
               onChange={(e) => setSelectedCertificate(e.target.value)}
             >
-              <option value="">Select a certificate</option>
+              <option value="">Chọn chứng chỉ</option>
               {certificates.map((cert) => (
-                <option key={cert.id} value={cert.name}>
+                <option key={cert.certificateId} value={cert.name}>
                   {cert.name}
                 </option>
               ))}
@@ -214,7 +215,7 @@ function GProfilePage() {
               className="gprofile-btn-primary"
               onClick={() => setShowAddCertificate(true)}
             >
-              Add Certificate
+              Thêm chứng chỉ
             </button>
           </div>
 
@@ -223,30 +224,30 @@ function GProfilePage() {
               <div className="gprofile-certificate-info">
                 <div className="gprofile-certificate-text">
                   <div className="gprofile-detail-item">
-                    <label>Certificate Name</label>
+                    <label>Tên chứng chỉ</label>
                     <span>{selectedCertificateData.name}</span>
                   </div>
                   <div className="gprofile-detail-item">
-                    <label>Issued By</label>
+                    <label>Cấp bởi</label>
                     <span>{selectedCertificateData.issuingAuthority}</span>
                   </div>
                   <div className="gprofile-detail-item">
-                    <label>Issue Date</label>
+                    <label>Ngày cấp</label>
                     <span>{selectedCertificateData.issueDate}</span>
                   </div>
                   <div className="gprofile-detail-item">
-                    <label>Expiry Date</label>
+                    <label>Ngày hết hạn</label>
                     <span>{selectedCertificateData.expiryDate}</span>
                   </div>
                   <div className="gprofile-detail-item">
-                    <label>Status</label>
+                    <label>Trạng thái</label>
                     <span className="gprofile-status active">
                       {selectedCertificateData.status}
                     </span>
                   </div>
                 </div>
                 <div className="gprofile-certificate-image">
-                  <label>Certificate Image</label>
+                  <label>Ảnh chứng chỉ</label>
                   <img
                     src={selectedCertificateData.imageUrl || "/placeholder.svg"}
                     alt="Certificate"
@@ -257,7 +258,7 @@ function GProfilePage() {
                 className="gprofile-btn-primary gprofile-update-cert-btn"
                 onClick={() => setShowUpdateCertificate(true)}
               >
-                Update Certificate Information
+                Cập nhật chứng chỉ
               </button>
             </div>
           )}

@@ -15,38 +15,38 @@ function GAddressDetail({ address, onClose, onUpdate }) {
           <button className="gaddressdetail-back-btn" onClick={onClose}>
             ←
           </button>
-          <h2>Address Detail</h2>
+          <h2>Thông tin địa chỉ</h2>
         </div>
 
         <div className="gaddressdetail-popup-content">
           <div className="gaddressdetail-detail-group">
-            <label>Address Line</label>
+            <label>Địa chỉ</label>
             <span>{address.addressLine}</span>
           </div>
 
           <div className="gaddressdetail-detail-group">
-            <label>City</label>
+            <label>Thành phố</label>
             <span>{address.city}</span>
           </div>
 
           <div className="gaddressdetail-detail-group">
-            <label>Province</label>
+            <label>Tỉnh</label>
             <span>{address.province}</span>
           </div>
 
           <div className="gaddressdetail-detail-group">
-            <label>Country</label>
+            <label>Quốc gia</label>
             <span>{address.country}</span>
           </div>
 
           <div className="gaddressdetail-detail-group">
-            <label>Postal Code</label>
+            <label>Mã bưu chính</label>
             <span>{address.postalCode}</span>
           </div>
 
           <div className="gaddressdetail-popup-actions">
             <button className="gaddressdetail-btn-primary" onClick={onUpdate}>
-              Update Address
+              Cập nhật
             </button>
           </div>
         </div>

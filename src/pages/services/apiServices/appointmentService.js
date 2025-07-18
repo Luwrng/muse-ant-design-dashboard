@@ -9,9 +9,15 @@ const getAccountAppointments = async (accountId, filterField, filterValue) => {
   });
 };
 
+const getAccountRequestedAppointments = async (accountId) => {
+  return await httpService.get(
+    `${accountEndpoint}/${accountId}/appointments/requested`
+  );
+};
+
 const getAccountScheduledAppointments = async (accountId) => {
   return await httpService.get(
-    `${accountEndpoint}/${accountId}/appointments/schedules`
+    `${accountEndpoint}/${accountId}/appointments/scheduled`
   );
 };
 
@@ -35,6 +41,7 @@ const cancelAppointment = async (appointmentId, data) => {
 
 const appointmentService = {
   getAccountAppointments,
+  getAccountRequestedAppointments,
   getAccountScheduledAppointments,
   getAppointmentDetail,
   updateAppointment,

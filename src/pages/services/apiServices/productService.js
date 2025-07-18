@@ -11,14 +11,36 @@ const getGardenerProducts = async (gardenerId, page, size, sortField) => {
   });
 };
 
-const getProductDetail = async (productId) => {};
+const getProductDetail = async (productId) => {
+  return await httpService.get(`${gardenerEndpoint}/${productId}`);
+};
 
-const createProduct = async (gardenerId, data) => {};
+const createProduct = async (gardenerId, data) => {
+  return await httpService.post(
+    `${gardenerEndpoint}/${gardenerId}/products`,
+    data
+  );
+};
 
-const changeProductStatus = async (productId, status) => {};
+const changeProductStatus = async (productId, status) => {
+  return await httpService.patch(
+    `${productEndpoint}/${productId}`,
+    {},
+    {
+      params: { status },
+    }
+  );
+};
+
+//Reviews
+const getProductReview = async (productId) => {
+  return await httpService.get(`${productEndpoint}/${productId}/reviews`);
+};
 
 //Product Price
-const getProductPrices = async (productId) => {};
+const getProductPrices = async (productId) => {
+  return await httpService.get(`${productEndpoint}/${productId}/prices`);
+};
 
 const createProductPrice = async (productId, data) => {};
 
@@ -31,6 +53,12 @@ const getGardenerProductCategories = async (gardenerId, page, size) => {
     {
       params: { page, size },
     }
+  );
+};
+
+const getGardenerProductCategoriesList = async (gardenerId) => {
+  return await httpService.get(
+    `${gardenerEndpoint}/${gardenerId}/product-categories`
   );
 };
 
@@ -52,11 +80,18 @@ const deleteProductCategory = async (categoryId) => {
 const productService = {
   //Product
   getGardenerProducts,
+  changeProductStatus,
+  createProduct,
+
+  //Reviews
+  getProductReview,
 
   //Price
+  getProductPrices,
 
   //Category
   getGardenerProductCategories,
+  getGardenerProductCategoriesList,
   createProductCategory,
   updateProductCategory,
   deleteProductCategory,
