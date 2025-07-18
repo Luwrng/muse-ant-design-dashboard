@@ -15,19 +15,18 @@ function GOrderPage() {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      try{
-          const gardenerId = localStorage.getItem("account_id");
-          const result = await gardenerOrderService.getGardenerOrder(gardenerId);
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await gardenerOrderService.getGardenerOrder(gardenerId);
 
-          setOrders(result);
-      }
-      catch(err){
+        setOrders(result);
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
 
     fetchOrder();
-  }, [])
+  }, []);
 
   // Sample order data
   // const orders = [
@@ -150,32 +149,32 @@ function GOrderPage() {
             <tbody>
               {Array.isArray(filteredOrders) &&
                 filteredOrders.map((order) => (
-                <tr key={order.id} className="gorder-table-row">
-                  <td className="gorder-td">{order.id}</td>
-                  <td className="gorder-td">{order.store}</td>
-                  <td className="gorder-td">{order.total} ₫</td>
-                  <td className="gorder-td">{order.items}</td>
-                  <td className="gorder-td">{order.date}</td>
-                  <td className="gorder-td">
-                    <span
-                      className={`gorder-status gorder-status-${order.status}`}
-                    >
-                      {order.statusText}
-                    </span>
-                  </td>
-                  <td className="gorder-td">
-                    <div className="gorder-actions">
-                      <button
-                        className="gorder-action-btn gorder-view-btn"
-                        onClick={() => handleView(order.id)}
-                        title="Xem chi tiết"
+                  <tr key={order.id} className="gorder-table-row">
+                    <td className="gorder-td">{order.id}</td>
+                    <td className="gorder-td">{order.store}</td>
+                    <td className="gorder-td">{order.total} ₫</td>
+                    <td className="gorder-td">{order.items}</td>
+                    <td className="gorder-td">{order.date}</td>
+                    <td className="gorder-td">
+                      <span
+                        className={`gorder-status gorder-status-${order.status}`}
                       >
-                        <EyeFilled />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {order.statusText}
+                      </span>
+                    </td>
+                    <td className="gorder-td">
+                      <div className="gorder-actions">
+                        <button
+                          className="gorder-action-btn gorder-view-btn"
+                          onClick={() => handleView(order.id)}
+                          title="Xem chi tiết"
+                        >
+                          <EyeFilled />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

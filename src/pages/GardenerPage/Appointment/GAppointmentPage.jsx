@@ -168,19 +168,20 @@ function GAppointmentPage() {
   useEffect(() => {
     const fetchPendingAppointment = async () => {
       try {
-        if(activeTab === "wait-approve"){
+        if (activeTab === "wait-approve") {
           const gardenerId = localStorage.getItem("account_id");
-          const result = await appointmentService.getAccountRequestedAppointments(
-            gardenerId,
-          );
-  
-          setPendingAppointments(result);
-        }
-        else if(activeTab === "schedule"){
+          const result =
+            await appointmentService.getAccountRequestedAppointments(
+              gardenerId
+            );
+
+          setPendingAppointments(result.items);
+        } else if (activeTab === "schedule") {
           const gardenerId = localStorage.getItem("account_id");
-          const result = await appointmentService.getAccountScheduledAppointments(
-            gardenerId
-          );
+          const result =
+            await appointmentService.getAccountScheduledAppointments(
+              gardenerId
+            );
 
           setScheduledAppointments(result);
         }
@@ -444,54 +445,71 @@ function GAppointmentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(pendingAppointment) && pendingAppointment.map((appointment) => (
-                    <tr
-                      key={appointment.appointmentId}
-                      className="gappointment-table-row"
-                    >
-                      <td>
-                        <div className="gappointment-client-info">
-                          <div className="gappointment-avatar">
-                            {appointment.retailerName
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
+                  {Array.isArray(pendingAppointment) &&
+                    pendingAppointment.map((appointment) => (
+                      <tr
+                        key={appointment.appointmentId}
+                        className="gappointment-table-row"
+                      >
+                        <td>
+                          <div className="gappointment-client-info">
+                            <div className="gappointment-avatar">
+                              {appointment.retailerName
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                            <span className="gappointment-client-name">
+                              {appointment.retailerName}
+                            </span>
                           </div>
-                          <span className="gappointment-client-name">
-                            {appointment.retailerName}
+                        </td>
+                        <td className="gappointment-phone-cell">
+                          {appointment.phoneNumber}
+                        </td>
+                        <td className="gappointment-date-cell">
+                          {
+                            new Date(appointment.date)
+                              .toISOString()
+                              .split("T")[1]
+                              .split(".")[0]
+                          }{" "}
+                          {
+                            new Date(appointment.appointmentDate)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td className="gappointment-duration-cell">
+                          {appointment.duration}
+                        </td>
+                        <td>
+                          <span className="gappointment-type-badge">
+                            {appointment.appointmentType}
                           </span>
-                        </div>
-                      </td>
-                      <td className="gappointment-phone-cell">
-                        {appointment.phoneNumber}
-                      </td>
-                      <td className="gappointment-date-cell">
-                        {new Date(appointment.date).toISOString().split('T')[1].split('.')[0]} {new Date(appointment.appointmentDate).toISOString().split('T')[0]} 
-                      </td>
-                      <td className="gappointment-duration-cell">
-                        {appointment.duration}
-                      </td>
-                      <td>
-                        <span className="gappointment-type-badge">
-                          {appointment.appointmentType}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className="gappointment-view-button"
-                          onClick={() => openRequestModal(appointment)}
-                        >
-                          <EyeFilled />
-                        </button>
-                        <button className="gappointment-approve-button" onClick={handleApprove}>
-                          <CheckOutlined />
-                        </button>
-                        <button className="gappointment-reject-button" onClick={handleReject}>
-                          <CloseOutlined />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>
+                          <button
+                            className="gappointment-view-button"
+                            onClick={() => openRequestModal(appointment)}
+                          >
+                            <EyeFilled />
+                          </button>
+                          <button
+                            className="gappointment-approve-button"
+                            onClick={handleApprove}
+                          >
+                            <CheckOutlined />
+                          </button>
+                          <button
+                            className="gappointment-reject-button"
+                            onClick={handleReject}
+                          >
+                            <CloseOutlined />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

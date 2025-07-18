@@ -13,19 +13,21 @@ function GOrderDetail({ orderId, onBack }) {
 
   const [orderData, setOrderData] = useState([]);
   useEffect(() => {
-      const fetchOrderDeatil = async () => {
-        try{
-          const accountId = localStorage.getItem("account_id");
-          const result = gardenerOrderService.getGardenerOrderDetail(accountId, orderId);
-          setOrderData(result);
-        }
-        catch(err){
-          console.log(err);
-        }
+    const fetchOrderDeatil = async () => {
+      try {
+        const accountId = localStorage.getItem("account_id");
+        const result = gardenerOrderService.getGardenerOrderDetail(
+          accountId,
+          orderId
+        );
+        setOrderData(result);
+      } catch (err) {
+        console.log(err);
       }
+    };
 
-      fetchOrderDeatil();
-  },[orderId])
+    fetchOrderDeatil();
+  }, [orderId]);
 
   // Sample order data
   // const orderData = {
@@ -104,7 +106,9 @@ function GOrderDetail({ orderId, onBack }) {
   // const order = orderData[orderId] || orderData[1];
 
   const handleQuantityChange = (productId, value) => {
-    const product = orderData.orderDetails.find((p) => p.productId === productId);
+    const product = orderData.orderDetails.find(
+      (p) => p.productId === productId
+    );
     const quantity = Number.parseInt(value) || 0;
 
     if (quantity > product.remaining) {
@@ -130,12 +134,9 @@ function GOrderDetail({ orderId, onBack }) {
   };
 
   const handleCreateDelivery = async () => {
-
-    try{
-      
-    }
-    catch(err){
-      console.log(err)
+    try {
+    } catch (err) {
+      console.log(err);
     }
 
     console.log("Creating delivery with quantities:", deliveryQuantities);
@@ -186,82 +187,105 @@ function GOrderDetail({ orderId, onBack }) {
 
       <div className="godetail-content">
         <div className="godetail-title-section">
-          <h1 className="godetail-title">Chi tiết đơn hàng {orderData.orderId}</h1>
-          <span className={`godetail-status godetail-status-${orderData.status}`}>
+          <h1 className="godetail-title">
+            Chi tiết đơn hàng {orderData.orderId}
+          </h1>
+          <span
+            className={`godetail-status godetail-status-${orderData.status}`}
+          >
             {orderData.status}
           </span>
         </div>
 
         <div className="godetail-info">
-          <p className="godetail-customer">Khách hàng: {orderData.accountName}</p>
+          <p className="godetail-customer">
+            Khách hàng: {orderData.accountName}
+          </p>
           <p className="godetail-total">Tổng tiền: {orderData.totalAmount} ₫</p>
-          <p className="godetail-unit">Đơn vị khối lượng: {orderData.weightUnit}</p> {/*bring down to the list of product*/}
+          <p className="godetail-unit">
+            Đơn vị khối lượng: {orderData.weightUnit}
+          </p>{" "}
+          {/*bring down to the list of product*/}
           <p className="godetail-date">Ngày tạo: {orderData.createdAt}</p>
         </div>
 
         <div className="godetail-products">
           <h2 className="godetail-products-title">Danh sách sản phẩm</h2>
 
-          {orderData.orderDetails.map((detail) => (
-            <div key={detail.orderDetailId} className="godetail-product-item">
-              <div className="godetail-product-left">
-                {isCreatingDelivery && detail.remainDeliveredQuantity > 0 && (
-                  <input
-                    type="checkbox"
-                    className="godetail-product-checkbox"
-                    checked={deliveryQuantities[detail.orderDetailId] > 0}
-                    onChange={(e) => {
-                      if (!e.target.checked) {
-                        handleQuantityChange(detail.orderDetailId, 0);
-                      }
-                    }}
-                  />
-                )}
-                <div className="godetail-product-info">
-                  <h3 className="godetail-product-name">{detail.productName}</h3>
-                  <p className="godetail-product-price">{detail.price} ₫</p>
-
+          {Array.isArray(orderData.orderDetails) &&
+            orderData.orderDetails.map((detail) => (
+              <div key={detail.orderDetailId} className="godetail-product-item">
+                <div className="godetail-product-left">
                   {isCreatingDelivery && detail.remainDeliveredQuantity > 0 && (
-                    <div className="godetail-quantity-input">
-                      <label>Số lượng giao:</label>
-                      <input
-                        type="number"
-                        min="0"
-                        max={detail.remainDeliveredQuantity}
-                        value={deliveryQuantities[detail.orderDetailId] || ""}
-                        onChange={(e) =>
-                          handleQuantityChange(detail.orderDetailId, e.target.value)
+                    <input
+                      type="checkbox"
+                      className="godetail-product-checkbox"
+                      checked={deliveryQuantities[detail.orderDetailId] > 0}
+                      onChange={(e) => {
+                        if (!e.target.checked) {
+                          handleQuantityChange(detail.orderDetailId, 0);
                         }
-                        className={errors[detail.orderDetailIds] ? "godetail-error" : ""}
-                      />
-                      <span className="godetail-quantity-limit">
-                        / {detail.remainDeliveredQuantity}
-                      </span>
-                      {errors[detail.orderDetailId] && (
-                        <div className="godetail-error-message">
-                          {errors[detail.orderDetailId]}
+                      }}
+                    />
+                  )}
+                  <div className="godetail-product-info">
+                    <h3 className="godetail-product-name">
+                      {detail.productName}
+                    </h3>
+                    <p className="godetail-product-price">{detail.price} ₫</p>
+
+                    {isCreatingDelivery &&
+                      detail.remainDeliveredQuantity > 0 && (
+                        <div className="godetail-quantity-input">
+                          <label>Số lượng giao:</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max={detail.remainDeliveredQuantity}
+                            value={
+                              deliveryQuantities[detail.orderDetailId] || ""
+                            }
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                detail.orderDetailId,
+                                e.target.value
+                              )
+                            }
+                            className={
+                              errors[detail.orderDetailIds]
+                                ? "godetail-error"
+                                : ""
+                            }
+                          />
+                          <span className="godetail-quantity-limit">
+                            / {detail.remainDeliveredQuantity}
+                          </span>
+                          {errors[detail.orderDetailId] && (
+                            <div className="godetail-error-message">
+                              {errors[detail.orderDetailId]}
+                            </div>
+                          )}
                         </div>
                       )}
-                    </div>
-                  )}
+                  </div>
                 </div>
-              </div>
 
-              <div className="godetail-product-right">
-                <div className="godetail-quantity-info">
-                  <span className="godetail-quantity-label">
-                    Tổng: {detail.quantity}
-                  </span>
-                  <span className="godetail-quantity-label">
-                    Đã giao: {detail.quantity - detail.remainDeliveredQuantity}
-                  </span>
-                  <span className="godetail-quantity-remaining">
-                    Còn lại: {detail.remainDeliveredQuantity}
-                  </span>
+                <div className="godetail-product-right">
+                  <div className="godetail-quantity-info">
+                    <span className="godetail-quantity-label">
+                      Tổng: {detail.quantity}
+                    </span>
+                    <span className="godetail-quantity-label">
+                      Đã giao:{" "}
+                      {detail.quantity - detail.remainDeliveredQuantity}
+                    </span>
+                    <span className="godetail-quantity-remaining">
+                      Còn lại: {detail.remainDeliveredQuantity}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         {isCreatingDelivery && (

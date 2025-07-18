@@ -10,16 +10,15 @@ function GOrderDelivery({ orderId, onClose }) {
 
   useEffect(() => {
     const fetchOrderDelivery = async () => {
-      try{
+      try {
         const result = await gardenerOrderService.getOrderDeliveries(orderId);
-        setDeliveryData(result)
-      }
-      catch(err){
+        setDeliveryData(result);
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
 
-    fetchOrderDelivery()
+    fetchOrderDelivery();
   }, [orderId]);
 
   // Sample delivery data
@@ -106,32 +105,38 @@ function GOrderDelivery({ orderId, onClose }) {
           <div className="godelivery-products">
             <h2 className="godelivery-products-title">Danh sách sản phẩm</h2>
 
-            {deliveryData.products.map((detail) => (
-              <div key={detail.orderDeliveryDetailId} className="godelivery-product-item">
-                <div className="godelivery-product-left">
-                  <div className="godelivery-product-info">
-                    <h3 className="godelivery-product-name">{detail.productName}</h3>
-                    <p className="godelivery-product-price">
-                      {detail.price} ₫
-                    </p>
+            {Array.isArray(deliveryData.products) &&
+              deliveryData.products.map((detail) => (
+                <div
+                  key={detail.orderDeliveryDetailId}
+                  className="godelivery-product-item"
+                >
+                  <div className="godelivery-product-left">
+                    <div className="godelivery-product-info">
+                      <h3 className="godelivery-product-name">
+                        {detail.productName}
+                      </h3>
+                      <p className="godelivery-product-price">
+                        {detail.price} ₫
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="godelivery-product-right">
-                  <div className="godelivery-quantity-info">
-                    <span className="godelivery-quantity-label">
-                      Tổng: {detail.quantity}
-                    </span>
-                    <span className="godelivery-quantity-label">
-                      Đã giao: {detail.delivered}
-                    </span>
-                    <span className="godelivery-quantity-remaining">
-                      Còn lại: {detail.remaining}
-                    </span>
+                  <div className="godelivery-product-right">
+                    <div className="godelivery-quantity-info">
+                      <span className="godelivery-quantity-label">
+                        Tổng: {detail.quantity}
+                      </span>
+                      <span className="godelivery-quantity-label">
+                        Đã giao: {detail.delivered}
+                      </span>
+                      <span className="godelivery-quantity-remaining">
+                        Còn lại: {detail.remaining}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
