@@ -1,0 +1,114 @@
+.gpayhistorydetail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gpayhistorydetail-modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.gpayhistorydetail-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: #6c757d;
+  transition: color 0.2s ease-in-out;
+}
+
+.gpayhistorydetail-close-button:hover {
+  color: #333;
+}
+
+.gpayhistorydetail-close-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.gpayhistorydetail-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.gpayhistorydetail-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 500px) {
+  .gpayhistorydetail-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.gpayhistorydetail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.gpayhistorydetail-label {
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+}
+
+.gpayhistorydetail-value {
+  color: #333;
+  font-size: 16px;
+  word-break: break-word; /* Ensures long values wrap */
+}
+
+/* Status specific styling for modal */
+.gpayhistorydetail-status-refunded {
+  color: #2196f3; /* Blue */
+  font-weight: bold;
+}
+
+.gpayhistorydetail-status-pending {
+  color: #ffc107; /* Yellow */
+  font-weight: bold;
+}
+
+.gpayhistorydetail-status-failed {
+  color: #f44336; /* Red */
+  font-weight: bold;
+}
+
+.gpayhistorydetail-status-success {
+  color: #4caf50; /* Green */
+  font-weight: bold;
+}

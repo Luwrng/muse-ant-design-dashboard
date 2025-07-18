@@ -15,6 +15,7 @@ function GardenerProductPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null); // State to manage open dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -88,27 +89,27 @@ function GardenerProductPage() {
   // ];
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await productService.getGardenerProducts(
-          gardenerId,
-          currentPage,
-          10,
-          "Status"
-        );
-
-        setProducts(result.items);
-        setTotalPages(result.totalPages);
-        setTotalResults(result.total);
-      } catch (err) {
-        console.log(err);
-        //Add modal later
-      }
-    };
-
-    fetchProducts();
+    fetchProducts(currentPage);
   }, [currentPage]);
+
+  const fetchProducts = async (currentPage) => {
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await productService.getGardenerProducts(
+        gardenerId,
+        currentPage,
+        10,
+        "Status"
+      );
+
+      setProducts(result.items);
+      setTotalPages(result.totalPages);
+      setTotalResults(result.total);
+    } catch (err) {
+      console.log(err);
+      //Add modal later
+    }
+  };
 
   //Filter products based on active filter
   const filteredProducts = products.filter((product) => {
@@ -122,9 +123,7 @@ function GardenerProductPage() {
   // Get counts for each filter
   const getFilterCounts = () => {
     const available = products.filter((p) => p.status === "ACTIVE").length;
-    const outOfStock = products.filter(
-      (p) => p.status === "INACTIVE"
-    ).length;
+    const outOfStock = products.filter((p) => p.status === "INACTIVE").length;
     return {
       all: products.length,
       available,
@@ -232,6 +231,7 @@ function GardenerProductPage() {
 
   // View Product Detail
   const handleProductClick = (product) => {
+    setIsDropdownOpen(false);
     setSelectedProduct(product);
     setIsDetailModalOpen(true);
   };
@@ -247,6 +247,7 @@ function GardenerProductPage() {
   };
 
   const handleBackToManagement = () => {
+    fetchProducts();
     setShowCreateProduct(false);
   };
 
@@ -265,12 +266,14 @@ function GardenerProductPage() {
   }, []);
 
   const handleUpdatePrice = (product) => {
+    setIsDropdownOpen(false);
     setSelectedProduct(product);
     setShowUpdatePrice(true);
     setOpenDropdown(null);
   };
 
   const handleChangeStatus = (product, action) => {
+    setIsDropdownOpen(false);
     setSelectedProduct(product);
     setStatusAction(action);
     setShowConfirmStatus(true);
@@ -304,14 +307,16 @@ function GardenerProductPage() {
   const handleStatusConfirm = async () => {
     setShowConfirmStatus(false);
 
-    try{
-      const status = selectedProduct.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-      await productService.changeProductStatus(selectedProduct.productId, status); 
-    }
-    catch(err){
+    try {
+      const status =
+        selectedProduct.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+      await productService.changeProductStatus(
+        selectedProduct.productId,
+        status
+      );
+    } catch (err) {
       console.log(err);
     }
-
 
     // // Check constraints after user confirmsw
     // if (selectedProduct.status === "Đang bán" && statusAction === "hide") {
@@ -382,8 +387,7 @@ function GardenerProductPage() {
             }`}
             onClick={() => setActiveTab("selling")}
           >
-            Đang bán (
-            {products.filter((p) => p.status === "selling").length})
+            Đang bán ({products.filter((p) => p.status === "selling").length})
           </button>
           <button
             className={`gproduct-tab-trigger ${
@@ -428,7 +432,9 @@ function GardenerProductPage() {
                   <td className="gproduct-table-cell gproduct-cell-name">
                     {product.productName}
                   </td>
-                  <td className="gproduct-table-cell">{product.productCategory}</td>
+                  <td className="gproduct-table-cell">
+                    {product.productCategory}
+                  </td>
                   <td className="gproduct-table-cell">
                     {product.price.toLocaleString("vi-VN")} {product.currency}
                   </td>
@@ -436,60 +442,69 @@ function GardenerProductPage() {
                   <td className="gproduct-table-cell">
                     <span
                       className={`gproduct-status-badge ${
-                        product.status === "selling"
+                        product.status === "ACTIVE"
                           ? "gproduct-status-selling"
                           : "gproduct-status-out-of-stock"
                       }`}
                     >
-                      {product.status === "ACTIVE" ? "Đang bán" : "Hết hàng"}
+                      {/* {product.status === "ACTIVE" ? "Đang bán" : "Hết hàng"} */}
+                      {product.status}
                     </span>
                   </td>
                   <td className="gproduct-table-cell gproduct-action-cell">
                     <div
                       className="gproduct-dropdown-menu"
-                      ref={openDropdownId === product.productId ? dropdownRef : null}
+                      ref={
+                        openDropdownId === product.productId
+                          ? dropdownRef
+                          : null
+                      }
                     >
                       <button
                         className="gproduct-button gproduct-action-trigger"
-                        onClick={() =>
+                        onClick={() => {
                           setOpenDropdownId(
-                            openDropdownId === product.productId ? null : product.productId
-                          )
-                        }
+                            openDropdownId === product.productId
+                              ? null
+                              : product.productId
+                          );
+                          setIsDropdownOpen(true);
+                        }}
                         aria-haspopup="true"
                         aria-expanded={openDropdownId === product.productId}
                       >
                         <MoreHorizontalIcon className="gproduct-icon" />
                         <span className="sr-only">Open menu</span>
                       </button>
-                      {openDropdownId === product.productId && (
-                        <div className="gproduct-dropdown-content">
-                          <button
-                            className="gproduct-dropdown-item"
-                            onClick={() => handleProductClick(product)}
-                          >
-                            Xem chi tiết
-                          </button>
-                          <button
-                            className="gproduct-dropdown-item"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleUpdatePrice(product);
-                            }}
-                          >
-                            Sửa giá
-                          </button>
-                          <button
-                            className="gproduct-dropdown-item"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleChangeStatus(product, "hide");
-                            }}
-                          >
-                            Đổi trạng thái
-                          </button>
-                        </div>
-                      )}
+                      {openDropdownId === product.productId &&
+                        isDropdownOpen && (
+                          <div className="gproduct-dropdown-content">
+                            <button
+                              className="gproduct-dropdown-item"
+                              onClick={() => handleProductClick(product)}
+                            >
+                              Xem chi tiết
+                            </button>
+                            <button
+                              className="gproduct-dropdown-item"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUpdatePrice(product);
+                              }}
+                            >
+                              Sửa giá
+                            </button>
+                            <button
+                              className="gproduct-dropdown-item"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleChangeStatus(product, "hide");
+                              }}
+                            >
+                              Đổi trạng thái
+                            </button>
+                          </div>
+                        )}
                     </div>
                   </td>
                 </tr>

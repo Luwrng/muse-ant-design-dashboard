@@ -15,19 +15,17 @@ function ProductDetailPage({
   useEffect(() => {
     if (!product || !product.productId) return;
 
-    const fetchReviews = async()=>{
-      try
-      {
-         const result = await productService.getProductReview(product.productId);
-         setReviews(result);
-      }
-      catch(err){
+    const fetchReviews = async () => {
+      try {
+        const result = await productService.getProductReview(product.productId);
+        setReviews(result);
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
 
     fetchReviews();
-  },[product])
+  }, [product]);
 
   if (!isOpen || !product) return null;
 
@@ -151,7 +149,8 @@ function ProductDetailPage({
 
             <div className="gpd-price-section">
               <div className="gpd-price">
-                {new Intl.NumberFormat("vi-VN").format(product.price)} {product.currency}
+                {new Intl.NumberFormat("vi-VN").format(product.price)}{" "}
+                {product.currency}
               </div>
               <div className="gpd-price-unit">Đơn vị: {product.weightUnit}</div>
             </div>
@@ -161,19 +160,23 @@ function ProductDetailPage({
                 <div className="gpd-info-label">Danh mục:</div>
                 <div className="gpd-category-tag">
                   <TagIcon />
-                  {product.categoryName}
+                  {product.productCategory}
                 </div>
               </div>
 
               <div className="gpd-date-info">
                 <div className="gpd-date-item">
                   <span className="gpd-date-label">Ngày tạo: </span>
-                  <span className="gpd-date-value">{product.createdAt}</span>
+                  <span className="gpd-date-value">
+                    {new Date(product.createdAt).toISOString().split("T")[0]}
+                  </span>
                   {/*Change to product value */}
                 </div>
                 <div className="gpd-date-item">
                   <span className="gpd-date-label">Ngày cập nhật:</span>
-                  <span className="gpd-date-value">{product.updatedAt}</span>
+                  <span className="gpd-date-value">
+                    {new Date(product.updatedAt).toISOString().split("T")[0]}
+                  </span>
                   {/*Change to product value */}
                 </div>
               </div>
@@ -195,9 +198,7 @@ function ProductDetailPage({
                           className="gpd-reviewer-avatar"
                         />
                       </div>
-                      <div className="gpd-reviewer-name">
-                        {review.name}
-                      </div>
+                      <div className="gpd-reviewer-name">{review.name}</div>
                     </div>
                     <p className="gpd-review-comment">{review.comment}</p>
                     <div className="gpd-review-rating">

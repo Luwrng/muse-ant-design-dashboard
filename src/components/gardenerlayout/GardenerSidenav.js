@@ -7,15 +7,13 @@ import {
   faTableCellsLarge,
   faUser,
   faSignInAlt,
-  faUserPlus,
-  faFileInvoice,
   faClipboardList,
-  faTruck,
   faPenSquare,
   faSeedling,
   faCalendarAlt,
   faMessage,
-  faCommentAlt,
+  faCreditCard,
+  faClockRotateLeft
 } from "@fortawesome/free-solid-svg-icons";
 import "./GardenerSidenav.css";
 
@@ -83,6 +81,22 @@ function GardenerSidenav() {
           <NavLink to="/gardener/message">
             <FontAwesomeIcon icon={faMessage} />
             <span>Tin Nhắn</span>
+          </NavLink>
+        </Menu.Item>
+
+        {/* Quản lý tin nhắn */}
+        <Menu.Item key="package-payment">
+          <NavLink to="/gardener/package-payment">
+            <FontAwesomeIcon icon={faCreditCard} />
+            <span>Lịch sử thanh toán gói</span>
+          </NavLink>
+        </Menu.Item>
+
+        {/* Quản lý tin nhắn */}
+        <Menu.Item key="subscription-history">
+          <NavLink to="/gardener/subscription-history">
+            <FontAwesomeIcon icon={faClockRotateLeft} />
+            <span>Gói đã mua</span>
           </NavLink>
         </Menu.Item>
         <Menu.Divider />

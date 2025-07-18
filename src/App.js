@@ -48,6 +48,9 @@ import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage
 import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
 import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
 import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
+import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
+import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
+import GSubscriptionHistory from "./pages/GardenerPage/SubscriptionHistory/GSubscriptionHistory";
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
@@ -65,7 +68,8 @@ function App() {
 
         {/* Gardener routes */}
         <Route path="/gardener/service-package" component={GServicePackage} />
-
+        <Route path="/gardener/payment-result" component={PaymentResult} />
+      
         <Route
           path="/gardener"
           render={() => (
@@ -88,6 +92,8 @@ function App() {
                 <Route path="/gardener/message" component={GChatPage} />
                 <Route path="/gardener/profile" component={GProfilePage} />
                 <Route path="/gardener/dashboard" component={GDashboard} />
+                <Route path="/gardener/package-payment" component={GPackageOrderHistory} />
+                <Route path="/gardener/subscription-history" component={GSubscriptionHistory} />
               </Switch>
             </GardenerMain>
           )}

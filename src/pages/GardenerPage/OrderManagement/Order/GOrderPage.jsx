@@ -148,7 +148,8 @@ function GOrderPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((order) => (
+              {Array.isArray(filteredOrders) &&
+                filteredOrders.map((order) => (
                 <tr key={order.id} className="gorder-table-row">
                   <td className="gorder-td">{order.id}</td>
                   <td className="gorder-td">{order.store}</td>
