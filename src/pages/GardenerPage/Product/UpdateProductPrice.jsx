@@ -12,13 +12,13 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
   useEffect(() => {
     if (!product || !product.productId) return;
 
-    const fetchPrices = async ()=>{
+    const fetchPrices = async () => {
       const result = await productService.getProductPrices(product.productId);
       setPrices(result);
-    }
+    };
 
     fetchPrices();
-  }, [product])
+  }, [product]);
 
   // // Mock previous prices data - replace with real data
   // const previousPrices = [
@@ -78,7 +78,9 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
             </div>
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">Tên sản phẩm:</span>
-              <span className="gppupdate-info-value">{product.productName}</span>
+              <span className="gppupdate-info-value">
+                {product.productName}
+              </span>
             </div>
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">Giá hiện tại:</span>
@@ -110,8 +112,12 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
                 >
                   <option value="">Chọn giá...</option>
                   {prices.map((priceItem) => (
-                    <option key={priceItem.productPriceId} value={priceItem.price}>
-                      {priceItem.price}{priceItem.currency}/{priceItem.weightUnit} - {priceItem.availabledDate}
+                    <option
+                      key={priceItem.productPriceId}
+                      value={priceItem.price}
+                    >
+                      {priceItem.price}
+                      {priceItem.currency}/{priceItem.weightUnit}
                     </option>
                   ))}
                 </select>

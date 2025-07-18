@@ -76,7 +76,6 @@
 }
 
 .gpconfirm-confirm {
-  background-color: #dc2626;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -87,8 +86,20 @@
   transition: background-color 0.2s;
 }
 
-.gpconfirm-confirm:hover {
+.gpconfirm-confirm.hide {
+  background-color: #dc2626;
+}
+
+.gpconfirm-confirm.hide:hover {
   background-color: #b91c1c;
+}
+
+.gpconfirm-confirm.show {
+  background-color: #1fd037;
+}
+
+.gpconfirm-confirm.show:hover {
+  background-color: #14b82a;
 }
 
 .gpconfirm-confirm:disabled {

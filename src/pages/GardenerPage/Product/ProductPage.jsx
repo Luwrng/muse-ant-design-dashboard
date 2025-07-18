@@ -314,43 +314,11 @@ function GardenerProductPage() {
         selectedProduct.productId,
         status
       );
+
+      await fetchProducts(currentPage);
     } catch (err) {
       console.log(err);
     }
-
-    // // Check constraints after user confirmsw
-    // if (selectedProduct.status === "Đang bán" && statusAction === "hide") {
-    //   setErrorData({
-    //     title: "Không thể ẩn sản phẩm",
-    //     message: "Sản phẩm đang hoạt động không thể thay đổi trạng thái.",
-    //   });
-    //   setShowError(true);
-    //   return;
-    // }
-
-    // setIsLoading(true);
-
-    // try {
-    //   // Simulate API call
-    //   //--->>>
-    //   await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    //   const actionText = statusAction === "hide" ? "ẩn" : "hiển thị";
-
-    //   setSuccessData({
-    //     title: "Thay đổi trạng thái thành công",
-    //     message: `Sản phẩm "${selectedProduct.productName}" đã được ${actionText}.`,
-    //   });
-    //   setShowSuccess(true);
-    // } catch (error) {
-    //   setErrorData({
-    //     title: "Lỗi thay đổi trạng thái",
-    //     message: "Có lỗi xảy ra khi thay đổi trạng thái sản phẩm.",
-    //   });
-    //   setShowError(true);
-    // } finally {
-    //   setIsLoading(false);
-    // }
   };
 
   // Show create product page if showCreateProduct is true
@@ -498,7 +466,10 @@ function GardenerProductPage() {
                               className="gproduct-dropdown-item"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleChangeStatus(product, "hide");
+                                handleChangeStatus(
+                                  product,
+                                  product.status === "ACTIVE" ? "hide" : "show"
+                                );
                               }}
                             >
                               Đổi trạng thái
@@ -549,6 +520,7 @@ function GardenerProductPage() {
       {/* Product Detail */}
       <ProductDetailPage
         product={selectedProduct}
+        setProduct={setSelectedProduct}
         isOpen={isDetailModalOpen}
         onClose={handleCloseDetail}
         onUpdatePrice={handleUpdatePrice}

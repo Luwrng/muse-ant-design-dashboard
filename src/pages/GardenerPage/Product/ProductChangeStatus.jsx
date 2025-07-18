@@ -87,7 +87,7 @@ function ProductChangeStatus({ product, isOpen, onClose, onConfirm, action }) {
           <button className="gpconfirm-cancel" onClick={onClose}>
             Hủy
           </button>
-          <button className="gpconfirm-confirm" onClick={onConfirm}>
+          <button className={`gpconfirm-confirm ${action}`} onClick={onConfirm}>
             {getConfirmButtonText()}
           </button>
         </div>

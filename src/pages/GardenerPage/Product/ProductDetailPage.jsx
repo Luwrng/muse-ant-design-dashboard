@@ -5,6 +5,7 @@ import productService from "../../services/apiServices/productService";
 
 function ProductDetailPage({
   product,
+  setProduct,
   isOpen,
   onClose,
   onUpdatePrice,
@@ -14,7 +15,6 @@ function ProductDetailPage({
 
   useEffect(() => {
     if (!product || !product.productId) return;
-
     const fetchReviews = async () => {
       try {
         const result = await productService.getProductReview(product.productId);
@@ -34,49 +34,6 @@ function ProductDetailPage({
       onClose();
     }
   };
-
-  // const mockReviews = [
-  //   {
-  //     id: "r1",
-  //     reviewerName: "Nguyễn Văn A",
-  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
-  //     comment: "Sản phẩm rất tươi ngon, giao hàng nhanh chóng. Rất hài lòng!",
-  //     rating: 5,
-  //     createdAt: "2024-07-10",
-  //   },
-  //   {
-  //     id: "r2",
-  //     reviewerName: "Trần Thị B",
-  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
-  //     comment: "Chất lượng tốt, nhưng giá hơi cao so với thị trường.",
-  //     rating: 4,
-  //     createdAt: "2024-07-08",
-  //   },
-  //   {
-  //     id: "r3",
-  //     reviewerName: "Lê Văn C",
-  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
-  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-  //     rating: 3,
-  //     createdAt: "2024-07-05",
-  //   },
-  //   {
-  //     id: "r4",
-  //     reviewerName: "Lê Văn C",
-  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
-  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-  //     rating: 3,
-  //     createdAt: "2024-07-05",
-  //   },
-  //   {
-  //     id: "r5",
-  //     reviewerName: "Lê Văn C",
-  //     reviewerAvatar: "/placeholder.svg?height=40&width=40",
-  //     comment: "Sản phẩm bị dập nhẹ khi nhận hàng, cần cải thiện đóng gói.",
-  //     rating: 3,
-  //     createdAt: "2024-07-05",
-  //   },
-  // ];
 
   const BackIcon = () => (
     <svg
@@ -126,10 +83,21 @@ function ProductDetailPage({
               Chỉnh sửa
             </button>
             <button
-              className="gpd-hide-button"
-              onClick={() => onChangeStatus(product, "hide")}
+              className={`gpd-${
+                product.status === "ACTIVE" ? "hide" : "show"
+              }-button`}
+              onClick={() => {
+                onChangeStatus(
+                  product,
+                  product.status === "ACTIVE" ? "hide" : "show"
+                );
+                setProduct({
+                  ...product,
+                  status: product.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+                });
+              }}
             >
-              Ẩn sản phẩm
+              {product.status === "ACTIVE" ? "Ẩn" : "Hiện"} sản phẩm
             </button>
           </div>
         </div>
@@ -141,10 +109,12 @@ function ProductDetailPage({
             <div className="gpd-product-id-section">
               <span className="gpd-product-id-title">Id: </span>
               <span className="gpd-product-id-value">{product.productId}</span>
-            </div>
-            <div className="gpd-product-status-section">
               <span className="gpd-status-badge">Status: </span>
-              <span className="gpd-status-badge-value">{product.status}</span>
+              <span
+                className={`gpd-status-badge-value ${product.status.toLowerCase()}`}
+              >
+                {product.status}
+              </span>
             </div>
 
             <div className="gpd-price-section">
