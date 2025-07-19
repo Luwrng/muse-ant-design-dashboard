@@ -115,7 +115,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
               onChange={handleImagesChange}
               className="gpcreate-file-input"
             />
-            {formData.images.length > 0 && (
+            {Array.isArray(formData.images) && formData.images.length > 0 && (
               <div className="gpcreate-images-preview-grid">
                 {formData.images.map((image, index) => (
                   <div key={index} className="gpcreate-image-preview-item">
@@ -170,32 +170,33 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
           <div className="gpcreate-field">
             <label className="gpcreate-label">Chọn sản phẩm</label>
             <div className="gpcreate-product-list">
-              {productList.map((product) => (
-                <div key={product.id} className="gpcreate-product-item">
-                  <input
-                    type="checkbox"
-                    id={`product-${product.id}`}
-                    checked={formData.selectedProducts.includes(product.id)}
-                    onChange={() => handleProductToggle(product.id)}
-                    className="gpcreate-checkbox"
-                  />
-                  <label
-                    htmlFor={`product-${product.id}`}
-                    className="gpcreate-product-label"
-                  >
-                    <img
-                      src={
-                        product.image || "/placeholder.svg?height=40&width=40"
-                      }
-                      alt={product.name}
-                      className="gpcreate-product-image"
+              {Array.isArray(productList) &&
+                productList.map((product) => (
+                  <div key={product.id} className="gpcreate-product-item">
+                    <input
+                      type="checkbox"
+                      id={`product-${product.id}`}
+                      checked={formData.selectedProducts.includes(product.id)}
+                      onChange={() => handleProductToggle(product.id)}
+                      className="gpcreate-checkbox"
                     />
-                    <span className="gpcreate-product-name">
-                      {product.name}
-                    </span>
-                  </label>
-                </div>
-              ))}
+                    <label
+                      htmlFor={`product-${product.id}`}
+                      className="gpcreate-product-label"
+                    >
+                      <img
+                        src={
+                          product.image || "/placeholder.svg?height=40&width=40"
+                        }
+                        alt={product.name}
+                        className="gpcreate-product-image"
+                      />
+                      <span className="gpcreate-product-name">
+                        {product.name}
+                      </span>
+                    </label>
+                  </div>
+                ))}
             </div>
           </div>
 

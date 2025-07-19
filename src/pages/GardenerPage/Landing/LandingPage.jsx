@@ -14,6 +14,7 @@ import {
 import { useHistory } from "react-router-dom";
 import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
 import "./LandingPage.css";
+import servicePackageService from "../../services/apiServices/servicePackageService";
 
 function GardenerLandingPage() {
   const [servicePackages, setServicePackages] = useState([]);
@@ -28,136 +29,141 @@ function GardenerLandingPage() {
         // const response = await fetch('/api/service-packages')
         // const data = await response.json()
 
-        // Mock data for demonstration
-        const mockData = [
-          {
-            ServicePackageId: "01HQXYZ123456789ABCDEF",
-            PackageName: "Germinate",
-            Description: "Gói cơ bản cho người mới bắt đầu",
-            Price: 10.0,
-            Duration: 30,
-            Status: "Active",
-            Features: [
-              {
-                ServiceFeatureName: "Kết nối trực tiếp",
-                Action: "Kết nối",
-                DefaultValue: 5,
-              },
-              {
-                ServiceFeatureName: "Hỗ trợ cơ bản",
-                Action: "Hỗ trợ",
-                DefaultValue: 1,
-              },
-            ],
-          },
-          {
-            ServicePackageId: "01HQXYZ123456789ABCDEG",
-            PackageName: "Growing",
-            Description: "Gói phát triển cho doanh nghiệp nhỏ",
-            Price: 25.0,
-            Duration: 30,
-            Status: "Active",
-            Features: [
-              {
-                ServiceFeatureName: "Kết nối trực tiếp",
-                Action: "Kết nối",
-                DefaultValue: 15,
-              },
-              {
-                ServiceFeatureName: "Hỗ trợ nâng cao",
-                Action: "Hỗ trợ",
-                DefaultValue: 3,
-              },
-              {
-                ServiceFeatureName: "Phân tích dữ liệu",
-                Action: "Phân tích",
-                DefaultValue: 10,
-              },
-            ],
-          },
-          {
-            ServicePackageId: "01HQXYZ123456789ABCDEH",
-            PackageName: "Fruiting",
-            Description: "Gói chuyên nghiệp cho doanh nghiệp lớn",
-            Price: 50.0,
-            Duration: 30,
-            Status: "Active",
-            Features: [
-              {
-                ServiceFeatureName: "Kết nối không giới hạn",
-                Action: "Kết nối",
-                DefaultValue: 999,
-              },
-              {
-                ServiceFeatureName: "Hỗ trợ 24/7",
-                Action: "Hỗ trợ",
-                DefaultValue: 24,
-              },
-              {
-                ServiceFeatureName: "Phân tích nâng cao",
-                Action: "Phân tích",
-                DefaultValue: 50,
-              },
-              {
-                ServiceFeatureName: "Tùy chỉnh giao diện",
-                Action: "Tùy chỉnh",
-                DefaultValue: 5,
-              },
-            ],
-          },
-          {
-            ServicePackageId: "01HQXYZ123456789ABCDEI",
-            PackageName: "Plus+",
-            Description:
-              "Nâng cao năng suất và tính sáng tạo với quyền truy cập mở rộng",
-            Price: 20.0,
-            Duration: 30,
-            Status: "Active",
-            Features: [
-              {
-                ServiceFeatureName: "Mọi tính năng trong gói Free",
-                Action: "Truy cập",
-                DefaultValue: 1,
-              },
-              {
-                ServiceFeatureName:
-                  "Mở rộng quyền truy cập vào các tính năng nhân tín",
-                Action: "Mở rộng",
-                DefaultValue: 10,
-              },
-              {
-                ServiceFeatureName: "Chế độ thoại tiêu chuẩn và nâng cao",
-                Action: "Chế độ",
-                DefaultValue: 2,
-              },
-              {
-                ServiceFeatureName:
-                  "Quyền truy cập vào chức năng nghiên cứu chuyên sâu",
-                Action: "Nghiên cứu",
-                DefaultValue: 5,
-              },
-              {
-                ServiceFeatureName:
-                  "Tạo và sử dụng các nhiệm vụ, dự án cùng như GPT tùy chỉnh",
-                Action: "Tạo GPT",
-                DefaultValue: 3,
-              },
-              {
-                ServiceFeatureName:
-                  "Quyền truy cập hạn chế vào chức năng tạo video Sora",
-                Action: "Video Sora",
-                DefaultValue: 2,
-              },
-              {
-                ServiceFeatureName: "Cơ hội để thử nghiệm các tính năng mới",
-                Action: "Thử nghiệm",
-                DefaultValue: 1,
-              },
-            ],
-          },
-        ];
+        const result = await servicePackageService.getAvailableServicePackage(
+          "Status",
+          "ACTIVE"
+        );
 
-        setServicePackages(mockData);
+        // Mock data for demonstration
+        // const mockData = [
+        //   {
+        //     ServicePackageId: "01HQXYZ123456789ABCDEF",
+        //     PackageName: "Germinate",
+        //     Description: "Gói cơ bản cho người mới bắt đầu",
+        //     Price: 10.0,
+        //     Duration: 30,
+        //     Status: "Active",
+        //     Features: [
+        //       {
+        //         ServiceFeatureName: "Kết nối trực tiếp",
+        //         Action: "Kết nối",
+        //         DefaultValue: 5,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Hỗ trợ cơ bản",
+        //         Action: "Hỗ trợ",
+        //         DefaultValue: 1,
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     ServicePackageId: "01HQXYZ123456789ABCDEG",
+        //     PackageName: "Growing",
+        //     Description: "Gói phát triển cho doanh nghiệp nhỏ",
+        //     Price: 25.0,
+        //     Duration: 30,
+        //     Status: "Active",
+        //     Features: [
+        //       {
+        //         ServiceFeatureName: "Kết nối trực tiếp",
+        //         Action: "Kết nối",
+        //         DefaultValue: 15,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Hỗ trợ nâng cao",
+        //         Action: "Hỗ trợ",
+        //         DefaultValue: 3,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Phân tích dữ liệu",
+        //         Action: "Phân tích",
+        //         DefaultValue: 10,
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     ServicePackageId: "01HQXYZ123456789ABCDEH",
+        //     PackageName: "Fruiting",
+        //     Description: "Gói chuyên nghiệp cho doanh nghiệp lớn",
+        //     Price: 50.0,
+        //     Duration: 30,
+        //     Status: "Active",
+        //     Features: [
+        //       {
+        //         ServiceFeatureName: "Kết nối không giới hạn",
+        //         Action: "Kết nối",
+        //         DefaultValue: 999,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Hỗ trợ 24/7",
+        //         Action: "Hỗ trợ",
+        //         DefaultValue: 24,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Phân tích nâng cao",
+        //         Action: "Phân tích",
+        //         DefaultValue: 50,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Tùy chỉnh giao diện",
+        //         Action: "Tùy chỉnh",
+        //         DefaultValue: 5,
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     ServicePackageId: "01HQXYZ123456789ABCDEI",
+        //     PackageName: "Plus+",
+        //     Description:
+        //       "Nâng cao năng suất và tính sáng tạo với quyền truy cập mở rộng",
+        //     Price: 20.0,
+        //     Duration: 30,
+        //     Status: "Active",
+        //     Features: [
+        //       {
+        //         ServiceFeatureName: "Mọi tính năng trong gói Free",
+        //         Action: "Truy cập",
+        //         DefaultValue: 1,
+        //       },
+        //       {
+        //         ServiceFeatureName:
+        //           "Mở rộng quyền truy cập vào các tính năng nhân tín",
+        //         Action: "Mở rộng",
+        //         DefaultValue: 10,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Chế độ thoại tiêu chuẩn và nâng cao",
+        //         Action: "Chế độ",
+        //         DefaultValue: 2,
+        //       },
+        //       {
+        //         ServiceFeatureName:
+        //           "Quyền truy cập vào chức năng nghiên cứu chuyên sâu",
+        //         Action: "Nghiên cứu",
+        //         DefaultValue: 5,
+        //       },
+        //       {
+        //         ServiceFeatureName:
+        //           "Tạo và sử dụng các nhiệm vụ, dự án cùng như GPT tùy chỉnh",
+        //         Action: "Tạo GPT",
+        //         DefaultValue: 3,
+        //       },
+        //       {
+        //         ServiceFeatureName:
+        //           "Quyền truy cập hạn chế vào chức năng tạo video Sora",
+        //         Action: "Video Sora",
+        //         DefaultValue: 2,
+        //       },
+        //       {
+        //         ServiceFeatureName: "Cơ hội để thử nghiệm các tính năng mới",
+        //         Action: "Thử nghiệm",
+        //         DefaultValue: 1,
+        //       },
+        //     ],
+        //   },
+        // ];
+
+        setServicePackages(result);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching service packages:", error);
@@ -379,30 +385,33 @@ function GardenerLandingPage() {
                   </div>
 
                   <button
-                    className={`glanding-package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors ${
-                      pkg.PackageName === "Plus"
-                        ? "glanding-primary bg-emerald-500 text-white"
-                        : "glanding-secondary bg-gray-100 text-gray-800"
-                    }`}
-                    disabled={pkg.PackageName === "Plus" ? true : false}
+                    className={`glanding-package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors glanding-secondary bg-gray-100 text-gray-800 `}
+                    disabled={pkg.packageName === "Plus" ? true : false}
+                    // ${
+                    //   pkg.packageName === "Plus"
+                    //     ? "glanding-primary bg-emerald-500 text-white"
+                    //     : "glanding-secondary bg-gray-100 text-gray-800"
+                    // }
                   >
-                    {pkg.PackageName === "Plus"
+                    {/* {pkg.packageName === "Plus"
                       ? "Gói hiện tại"
-                      : `Chọn ${pkg.PackageName}`}
+                      : `Chọn ${pkg.packageName}`} */}
+                    Mua gói
                   </button>
 
                   <div className="glanding-package-features space-y-3">
-                    {pkg.Features.map((feature, index) => (
-                      <div
-                        key={index}
-                        className="glanding-package-feature flex items-start gap-3"
-                      >
-                        <Check className="glanding-feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span className="glanding-feature-text text-sm text-gray-700">
-                          {feature.Action}: {feature.DefaultValue}
-                        </span>
-                      </div>
-                    ))}
+                    {Array.isArray(pkg.Features) &&
+                      pkg.Features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="glanding-package-feature flex items-start gap-3"
+                        >
+                          <Check className="glanding-feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span className="glanding-feature-text text-sm text-gray-700">
+                            {feature.serviceFeatureName}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 </div>
               ))}

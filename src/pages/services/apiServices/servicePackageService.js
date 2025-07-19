@@ -1,9 +1,19 @@
 import httpService from "./httpService";
 
-const endpoint = "";
+const endpoint = "/admin/service-packages";
 
-const getAvailableServicePackage = async () => {};
+const getAvailableServicePackage = async (filterField, filterValue) => {
+  return await httpService.get(
+    `${endpoint}`,
+    {},
+    {
+      params: { filterField, filterValue },
+    }
+  );
+};
 
-const servicePackageService = {};
+const servicePackageService = {
+  getAvailableServicePackage,
+};
 
 export default servicePackageService;
