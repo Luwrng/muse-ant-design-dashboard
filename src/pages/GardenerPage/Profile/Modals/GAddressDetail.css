@@ -1,0 +1,94 @@
+.gaddressdetail-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.gaddressdetail-popup-container {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.gaddressdetail-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gaddressdetail-back-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+}
+
+.gaddressdetail-back-btn:hover {
+  color: #333;
+}
+
+.gaddressdetail-popup-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.gaddressdetail-popup-content {
+  padding: 25px;
+}
+
+.gaddressdetail-detail-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gaddressdetail-detail-group label {
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+.gaddressdetail-detail-group span {
+  color: #333;
+  font-size: 16px;
+  padding: 12px 0;
+}
+
+.gaddressdetail-popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.gaddressdetail-btn-primary {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.gaddressdetail-btn-primary:hover {
+  background: #16a34a;
+}

@@ -14,10 +14,27 @@ import logo2 from "../assets/images/logo-apple.svg";
 import logo3 from "../assets/images/Google__G__Logo.svg.png";
 
 import { Link } from "react-router-dom";
-
+import styled from "styled-components";
 
 const { Title } = Typography;
 const { Header, Content } = Layout;
+
+const CustomButton = styled(Button)`
+  width: 100%;
+  background: #28bf8d;
+  border: none;
+
+  &:hover {
+    background: #239e78 !important;
+    border: none !important;
+  }
+  ,
+  &:focus,
+  &:active {
+    background: #28bf8d !important;
+    border: none !important;
+  }
+`;
 
 export default class SignUp extends Component {
   render() {
@@ -30,19 +47,20 @@ export default class SignUp extends Component {
     };
     return (
       <>
-        <div className="layout-default ant-layout layout-sign-up" style={{ overflowY: "hidden", height: "100vh" }}>
+        <div
+          className="layout-default ant-layout layout-sign-up"
+          style={{ overflowY: "hidden", height: "100vh" }}
+        >
           <Header>
             <div className="header-col header-nav">
               <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="3">
                   <Link to="/sign-up">
-
                     <span> Đăng kí </span>
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="4">
                   <Link to="/sign-in">
-
                     <span>Đăng nhập </span>
                   </Link>
                 </Menu.Item>
@@ -66,7 +84,6 @@ export default class SignUp extends Component {
               title={<h5>Đăng kí</h5>}
               bordered="false"
             >
-
               <Form
                 name="basic"
                 initialValues={{ remember: true }}
@@ -76,9 +93,7 @@ export default class SignUp extends Component {
               >
                 <Form.Item
                   name="Tên"
-                  rules={[
-                    { required: true, message: "Nhập tên của bạn!" },
-                  ]}
+                  rules={[{ required: true, message: "Nhập tên của bạn!" }]}
                 >
                   <Input placeholder="Tên" />
                 </Form.Item>
@@ -109,13 +124,9 @@ export default class SignUp extends Component {
                 </Form.Item>
 
                 <Form.Item>
-                  <Button
-                    style={{ width: "100%" }}
-                    type="primary"
-                    htmlType="submit"
-                  >
+                  <CustomButton type="primary" htmlType="submit">
                     Đăng kí
-                  </Button>
+                  </CustomButton>
                 </Form.Item>
               </Form>
               <p className="font-semibold text-muted text-center">
@@ -126,7 +137,6 @@ export default class SignUp extends Component {
               </p>
             </Card>
           </Content>
-
         </div>
       </>
     );

@@ -1,0 +1,261 @@
+.gpcategory-category-management {
+  max-width: 100rem;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.gpcategory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 24px;
+}
+
+.gpcategory-header-content {
+  flex: 1;
+}
+
+.gpcategory-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.gpcategory-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.gpcategory-create-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.gpcategory-create-btn:hover {
+  background-color: #059669;
+}
+
+.gpcategory-plus-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.gpcategory-table-container {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  height: 55vh;
+  overflow-y: auto;
+}
+
+.gpcategory-category-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gpcategory-category-table thead {
+  background-color: #f9fafb;
+}
+
+.gpcategory-category-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gpcategory-category-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.gpcategory-category-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.gpcategory-category-name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.gpcategory-category-description {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+.gpcategory-category-description-text{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+
+  line-height: 1.4rem;
+  height: 2.8rem;        /* 1.4rem x 2 lines */
+  max-width: 100%;       /* Important inside table */
+  word-break: break-word;
+}
+
+.gpcategory-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.gpcategory-action-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.gpcategory-view-btn {
+  color: #178fff;
+}
+
+.gpcategory-edit-btn {  
+  color: #ffd900;
+}
+
+.gpcategory-delete-btn {
+  color: #ff4d4f;
+}
+
+.gpcategory-view-btn:hover {
+  background-color: #dbeafe;
+}
+
+.gpcategory-edit-btn:hover {
+  background-color: #e4f6bf;
+}
+
+.gpcategory-delete-btn:hover {
+  background-color: #fee2e2;
+}
+
+.gpcategory-edit-btn:focus {
+  background-color: #e4f6bf;
+  border: none;
+  outline: none;
+}
+
+.gpcategory-delete-btn:focus {
+  background-color: #fee2e2;
+  border: none;
+  outline: none;
+}
+
+.gpcategory-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.gpcategory-pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.gpcategory-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gpcategory-page-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s;
+  min-width: 40px;
+}
+
+.gpcategory-page-btn:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.gpcategory-page-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.gpcategory-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gpcategory-page-dots {
+  padding: 8px 4px;
+  color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gpcategory-category-management {
+    padding: 16px;
+  }
+
+  .gpcategory-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .gpcategory-title {
+    font-size: 24px;
+  }
+
+  .gpcategory-table-container {
+    overflow-x: auto;
+  }
+
+  .gpcategory-category-table {
+    min-width: 600px;
+  }
+
+  .gpcategory-pagination {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .gpcategory-pagination-controls {
+    justify-content: center;
+  }
+}

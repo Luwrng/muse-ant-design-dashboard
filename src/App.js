@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 /*!
 =========================================================
 * Muse Ant Design Dashboard - v1.0.0
@@ -35,12 +36,70 @@ import NotificationPage from "./pages/Notification";
 import StatisticsPage from "./pages/StatisticsPage";
 import ActivePackageCustomers from "./pages/ActivePackageCustomers";
 
+//Gardener import
+import GardenerMain from "./components/gardenerlayout/GardenerMain";
+import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
+import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
+import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
+import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCategory";
+import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
+import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
+import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage";
+import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
+import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
+import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
+import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
+import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
+import GSubscriptionHistory from "./pages/GardenerPage/SubscriptionHistory/GSubscriptionHistory";
+
+//Auth
+import SignUpPage from "./pages/authentication/SignUpPage";
+
 function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/sign-up" exact component={SignUp} />
+        {/* Auth routes */}
+        <Route path="/sign-up" exact component={SignUpPage} />
         <Route path="/sign-in" exact component={SignIn} />
+
+        {/* General routes */}
+        <Route path="/landing" component={GardenerLandingPage} />
+
+        {/* Gardener routes */}
+        <Route path="/gardener/service-package" component={GServicePackage} />
+        <Route path="/gardener/payment-result" component={PaymentResult} />
+      
+        <Route
+          path="/gardener"
+          render={() => (
+            <GardenerMain>
+              <Switch>
+                <Route
+                  path="/gardener/product"
+                  component={GardenerProductPage}
+                />
+                <Route path="/gardener/order" component={GOrderPage} />
+                <Route
+                  path="/gardener/product-category"
+                  component={GProductCategory}
+                />
+                <Route path="/gardener/post" component={GPostPage} />
+                <Route
+                  path="/gardener/appointment"
+                  component={GAppointmentPage}
+                />
+                <Route path="/gardener/message" component={GChatPage} />
+                <Route path="/gardener/profile" component={GProfilePage} />
+                <Route path="/gardener/dashboard" component={GDashboard} />
+                <Route path="/gardener/package-payment" component={GPackageOrderHistory} />
+                <Route path="/gardener/subscription-history" component={GSubscriptionHistory} />
+              </Switch>
+            </GardenerMain>
+          )}
+        ></Route>
+
+        {/* Admin routes */}
         <Main>
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/account" component={Account} />
@@ -75,6 +134,7 @@ function App() {
 
           <Redirect from="*" to="/dashboard" />
         </Main>
+        <Redirect from="*" to="/landing" />
       </Switch>
     </div>
   );

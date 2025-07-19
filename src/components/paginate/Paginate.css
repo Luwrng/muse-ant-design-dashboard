@@ -1,0 +1,52 @@
+.component-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.component-pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.component-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.component-page-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s;
+  min-width: 40px;
+}
+
+.component-page-btn:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.component-page-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.component-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.component-page-dots {
+  padding: 8px 4px;
+  color: #6b7280;
+}

@@ -1,0 +1,274 @@
+/* Main container */
+.gdashboard-container {
+  padding: 30px; /* Increased padding */
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.gdashboard-title {
+  color: #2c3e50;
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Stats cards */
+.gdashboard-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.gdashboard-stat-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gdashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gdashboard-stat-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #7f8c8d;
+}
+
+.gdashboard-stat-value {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.gdashboard-stat-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+/* Charts and calendar section */
+.gdashboard-charts-container {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1.5fr; /* Adjusted column distribution */
+  gap: 20px;
+}
+
+.gdashboard-chart-card {
+  background-color: white;
+  border-radius: 10px;  
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.gdashboard-chart-card h3 {
+  margin: 0; /* Reset margin for new header structure */
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.gdashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Space below the header */
+}
+
+.gdashboard-card-header h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin: 0; /* Ensure no extra margin from h3 default */
+}
+
+.gdashboard-chart-wrapper {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Calendar styling */
+.gdashboard-calendar {
+  grid-column: span 2;
+}
+
+.gdashboard-calendar-content {
+  display: flex; /* Use flexbox for side-by-side */
+  gap: 15px; /* Space between calendar and list */
+  flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+  height: calc(100% - 40px); /* Adjust height to fit within card after header */
+}
+
+.gdashboard-react-calendar {
+  width: 35rem !important; /* Fixed width for calendar */
+  min-width: 25rem; /* Ensure it doesn't shrink too much */
+  border: none !important;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+/* React Calendar specific overrides */
+.gdashboard-react-calendar .react-calendar__navigation__label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.gdashboard-react-calendar .react-calendar__month-view__weekdays__weekday {
+  font-size: 12px;
+  font-weight: bold;
+  color: #7f8c8d;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
+.gdashboard-react-calendar .react-calendar__tile {
+  padding: 8px 0; /* Adjust padding for date cells */
+}
+
+.gdashboard-react-calendar .react-calendar__tile--active {
+  background-color: #36a2eb !important; /* Solid blue background */
+  color: white !important;
+  border-radius: 5px;
+}
+
+.gdashboard-appointment-date {
+  background-color: rgba(54, 162, 235, 0.2) !important;
+  color: #2c3e50 !important;
+  font-weight: bold !important;
+  border-radius: 5px;
+}
+
+.gdashboard-upcoming-appointments {
+  flex: 1; /* Take remaining space */
+  margin-top: 0; /* Remove top margin as it's now side-by-side */
+  padding-left: 15px; /* Add padding to separate from calendar */
+  border-left: 1px solid #ecf0f1; /* Separator line */
+}
+
+.gdashboard-upcoming-appointments h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.gdashboard-appointment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px; /* Adjusted height to match image */
+  overflow-y: auto;
+  padding-right: 5px; /* Add some padding for the scrollbar */
+}
+
+.gdashboard-appointment-item {
+  padding: 10px 0; /* Adjusted padding */
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.gdashboard-appointment-item:last-child {
+  border-bottom: none;
+}
+
+.gdashboard-appointment-title {
+  font-weight: 600; /* Slightly bolder */
+  color: #2c3e50;
+  font-size: 15px; /* Slightly smaller */
+}
+
+.gdashboard-appointment-client {
+  font-size: 13px; /* Slightly smaller */
+  color: #7f8c8d;
+  margin-top: 2px;
+}
+
+.gdashboard-appointment-time {
+  font-size: 11px; /* Slightly smaller */
+  color: #95a5a6;
+  margin-top: 5px;
+}
+
+/* Pie chart */
+.gdashboard-pie-chart {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+/* Bar chart */
+.gdashboard-bar-chart {
+  grid-column: span 2;
+}
+
+.gdashboard-bar-chart canvas {
+    width: 1000rem;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 1200px) {
+  .gdashboard-charts-container {
+    grid-template-columns: 1fr 1fr; 
+  }
+  .gdashboard-bar-chart {
+    grid-column: span 2; 
+  }
+}
+
+@media (max-width: 992px) {
+  .gdashboard-charts-container {
+    grid-template-columns: 1fr; 
+  }
+  .gdashboard-bar-chart {
+    grid-column: span 1;
+  }
+  .gdashboard-calendar-content {
+    flex-direction: column; 
+    height: auto; 
+  }
+  .gdashboard-react-calendar {
+    width: 100% !important; 
+    min-width: unset;
+  }
+  .gdashboard-upcoming-appointments {
+    padding-left: 0;
+    border-left: none;
+    margin-top: 20px; 
+  }
+  .gdashboard-card-header {
+    flex-direction: column; 
+    align-items: flex-start;
+  }
+  .gdashboard-card-header h3:last-child {
+    margin-top: 10px; 
+  }
+}
+
+@media (max-width: 768px) {
+  .gdashboard-stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .gdashboard-stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .gdashboard-stat-card {
+    padding: 15px;
+  }
+
+  .gdashboard-stat-value {
+    font-size: 24px;
+  }
+}

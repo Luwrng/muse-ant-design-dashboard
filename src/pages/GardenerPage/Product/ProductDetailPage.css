@@ -1,0 +1,367 @@
+.gpd-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.gpd-modal-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 80rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.gpd-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.gpd-back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.gpd-back-button:hover {
+  background-color: #f3f4f6;
+}
+
+.gpd-header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.gpd-edit-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.gpd-edit-button:hover {
+  background-color: #2563eb;
+}
+
+.gpd-hide-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.gpd-hide-button:hover {
+  background-color: #b91c1c;
+}
+
+.gpd-show-button {
+  background-color: #26dc3e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.gpd-show-button:hover {
+  background-color: #1cb950;
+}
+
+.gpd-modal-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  flex-grow: 1; /* Allow body to grow */
+  overflow-y: auto; /* Allow body content to scroll if needed */
+}
+
+@media (min-width: 768px) {
+  .gpd-modal-body {
+    grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .gpd-modal-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.gpd-product-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gpd-product-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+.gpd-product-id-section {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gpd-product-id-title {
+  color: #6b7280;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.gpd-product-id-value {
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.gpd-product-status-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gpd-status-badge {
+  margin-left: 7.2rem;
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.gpd-status-badge-value {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.gpd-status-badge-value.active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.gpd-status-badge-value.inactive {
+  background-color: #fce3dc;
+  color: #652616;
+}
+
+.gpd-price-section {
+  background-color: #dcfce7;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.gpd-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.gpd-price-unit {
+  margin-top: 0.5rem;
+  color: #16a34a;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.gpd-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.gpd-info-label {
+  font-weight: 500;
+  color: #374151;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.gpd-category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  width: fit-content;
+}
+
+.gpd-date-info {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gpd-date-item {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 0.875rem;
+  gap: 0.2rem;
+  font-size: 1rem;
+}
+
+.gpd-date-label {
+  min-width: 7.5rem;
+  color: #6b7280;
+}
+
+.gpd-date-value {
+  color: #111827;
+}
+
+.gpd-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Review Section Styles */
+.gpd-reviews-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem; /* Add some padding from the info section */
+  border-top: 1px solid #e5e7eb; /* Separator line */
+  margin-top: 1rem; /* Margin above the separator */
+  overflow: scroll;
+  scrollbar-width: thin;
+}
+
+.gpd-reviews-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.gpd-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.gpd-review-item {
+  background-color: #f9fafb; /* Light background for each review */
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gpd-reviewer-header {
+  display: flex;
+  justify-content: flex-end; /* Align avatar and name to the right */
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.gpd-reviewer-avatar-container {
+  width: 2.5rem; /* 40px */
+  height: 2.5rem; /* 40px */
+  border-radius: 9999px; /* full circle */
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.gpd-reviewer-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gpd-reviewer-name {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+.gpd-review-comment {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.5;
+  margin-top: 0.5rem; /* Space below header */
+}
+
+.gpd-review-rating {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.gpd-star-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.gpd-star-filled {
+  color: #facc15; /* yellow-500 */
+  fill: #facc15; /* fill yellow */
+}
+
+.gpd-star-empty {
+  color: #d1d5db; /* gray-300 */
+  fill: none; /* no fill */
+}
+
+.gpd-review-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.gpd-no-reviews {
+  text-align: center;
+  color: #6b7280;
+  padding: 1rem;
+}
