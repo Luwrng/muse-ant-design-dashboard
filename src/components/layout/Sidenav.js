@@ -59,7 +59,7 @@ function Sidenav() {
           <Menu.Item key="gardener-verification">
             <NavLink to="/gardener-verification">
               <FontAwesomeIcon icon={faUserCheck} />
-              <span>Đại Lý</span>
+              <span>Người Bán Lẻ</span>
             </NavLink>
           </Menu.Item>
         </Menu.SubMenu>
@@ -125,18 +125,13 @@ function Sidenav() {
             </NavLink>
           </Menu.Item>
 
-          <Menu.Item key="statistics">
-            <NavLink to="/statistics">
-              <FontAwesomeIcon icon={faChartLine} />
-              <span>Thống Kê</span>
-            </NavLink>
-          </Menu.Item>
+
         </Menu.SubMenu>
 
         <Menu.Item key="active-package-customers">
           <NavLink to="/active-package-customers">
             <FontAwesomeIcon icon={faUserGroup} />
-            <span>Khách Hàng Đang Sử Dụng Gói</span>
+            <span>Danh Sách Khách Hàng Đang Sử Dụng Gói</span>
           </NavLink>
         </Menu.Item>
 

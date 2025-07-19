@@ -41,23 +41,30 @@ const Orders = () => {
     message.success(`Đã cập nhật trạng thái đơn hàng thành ${newStatus}`);
     // TODO: Gọi API cập nhật trạng thái ở đây
   };
-
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Pending":
-        return "orange";
-      case "Confirmed":
-        return "blue";
-      case "In Progress":
-        return "cyan";
-      case "Completed":
-        return "green";
-      case "Cancelled":
-        return "red";
-      default:
-        return "default";
-    }
+    const info = getStatusInfo(status);
+    return info.color;
   };
+
+
+  const getStatusInfo = (status) => {
+    switch (status) {
+      case "PENDING":
+        return { color: "orange", label: "Đang chờ" };
+      case "CONFIRMED":
+        return { color: "blue", label: "Đã xác nhận" };
+      case "IN_PROGRESS":
+        return { color: "cyan", label: "Đang thực hiện" };
+      case "SUCCESS":
+        return { color: "green", label: "Hoàn thành" };
+      case "CANCELLED":
+        return { color: "red", label: "Đã hủy" };
+      default:
+        return { color: "default", label: "Không xác định" };
+    }
+
+  };
+
 
   const fetchOrders = async (page = 1, size = 10, search = "") => {
     try {
@@ -65,13 +72,14 @@ const Orders = () => {
 
       const formatted = res.items.map((item, index) => ({
         key: index,
-        servicePackageOrderId: item.servicePackageOrderId?.random || "",
-        gardenerId: item.gardenerId?.random || "",
-        servicePackageId: item.servicePackageId?.random || "",
+        servicePackageOrderId: item.servicePackageOrderId || "",
+        gardenerId: item.gardenerId || "",
+        servicePackageId: item.servicePackageId || "",
         totalAmount: item.totalAmount || 0,
         status: item.status,
         createdAt: item.createdAt?.split("T")[0] || "",
       }));
+
 
       setData(formatted);
       setTotal(res.total || 0);
@@ -118,10 +126,12 @@ const Orders = () => {
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (status) => (
-        <Tag color={getStatusColor(status)}>{status}</Tag>
-      ),
+      render: (status) => {
+        const { color, label } = getStatusInfo(status);
+        return <Tag color={color}>{label}</Tag>;
+      },
     },
+
     {
       title: "Ngày Tạo",
       dataIndex: "createdAt",
@@ -219,9 +229,10 @@ const Orders = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Trạng Thái">
               <Tag color={getStatusColor(selectedOrder.status)}>
-                {selectedOrder.status}
+                {getStatusInfo(selectedOrder.status).label}
               </Tag>
             </Descriptions.Item>
+
             <Descriptions.Item label="Ngày Tạo">
               {selectedOrder.createdAt}
             </Descriptions.Item>

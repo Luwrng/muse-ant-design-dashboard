@@ -14,7 +14,8 @@ import {
   Modal,
   Input,
   Tabs,
-
+  Select,
+  Tag
 } from "antd";
 import "../Account/Account";
 
@@ -33,10 +34,13 @@ import approveColumns from "./approveColumns";
 import mauGiayChuDoanhNghiep from "../../assets/images/mauGiayChuDoanhNghiep.jpg";
 import SearchButton from "../../components/button/SearchButton";
 import DetailButton from "../../components/button/DetailButton";
+import EditButton from "../../components/button/EditButton";
+
 import { cleanfood } from "../../api_admin";
 const defaultAvatar = "https://ui-avatars.com/api/?name=User";
 
 const { Title } = Typography;
+const Option = Select;
 
 const formProps = {
   name: "file",
@@ -90,6 +94,26 @@ function Account() {
   };
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
+  const [editStatus, setEditStatus] = useState("");
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingAccountId, setEditingAccountId] = useState(null);
+
+
+
+  const showEditModal = (record) => {
+    const normalizedStatus = record.Status?.toUpperCase();
+
+    if (["ACTIVE", "INACTIVE", "BANNED"].includes(normalizedStatus)) {
+      setEditStatus(normalizedStatus);
+    } else {
+      setEditStatus("INACTIVE"); // fallback
+    }
+
+    setEditingAccountId(record.key);
+    setEditModalVisible(true);
+  };
+
+
 
   const handleViewImage = (url) => {
     setImageSrc(url);              // Gán ảnh
@@ -130,6 +154,7 @@ function Account() {
 
   const showUserDetails = (record) => {
     setSelectedUser(record);
+    setImageSrc(record.CertificateImage || "");
     setIsModalVisible(true);
   };
 
@@ -154,37 +179,61 @@ function Account() {
   };
 
   useEffect(() => {
-    fetchGardeners(); 
+    fetchGardeners();
   }, []);
-  const fetchGardeners = (page = 1, size = 10) => {
-    cleanfood.gardener.getAll(page, size)
-      .then((data) => {
-        const formattedData = data.items.map((item) => ({
+  const fetchGardeners = async (page = 1, size = 10) => {
+    try {
+      const data = await cleanfood.gardener.getAll({ page, size, sortOrder: "asc" });
+
+      const formattedData = data.items.map((item) => {
+        const address = item.addresses?.[0] || {};
+        const certificate = item.certificates?.[0];
+
+        return {
           key: item.accountId,
           Name: item.name,
           Email: item.email,
           PhoneNumber: item.phoneNumber,
-          Gender: item.gender || "Không xác định",
-          Avatar: item.avatar === "None" ? defaultAvatar : item.avatar,
-          Status: item.status,
-          RoleId: item.roleName?.toLowerCase(),
+          Gender:
+            item.gender?.toLowerCase() === "male"
+              ? "Nam"
+              : item.gender?.toLowerCase() === "female"
+                ? "Nữ"
+                : "Không xác định",
+          Avatar:
+            item.avatar?.toLowerCase().startsWith("none") || !item.avatar
+              ? defaultAvatar
+              : item.avatar,
+          Status:
+            item.status?.toUpperCase() === "ACTIVE"
+              ? "Active"
+              : item.status?.toUpperCase() === "INACTIVE"
+                ? "Inactive"
+                : item.status,
+          RoleId: item.roleName?.toLowerCase() || "guest",
           IsVerified: item.isVerified,
-          CreatedAt: item.createdAt ? new Date(item.createdAt).toLocaleDateString("vi-VN") : "---",
-          UpdatedAt: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString("vi-VN") : "---",
-          Address: item.addresses?.[0] || "---",
-        }));
-
-        setStatusData(formattedData);
-        setPagination({
-          current: data.page,
-          pageSize: data.size,
-          total: data.total,
-        });
-      })
-      .catch((err) => {
-        console.error("Lỗi lấy danh sách gardener:", err);
+          CreatedAt: item.createAt
+            ? new Date(item.createAt).toLocaleDateString("vi-VN")
+            : "---",
+          UpdatedAt: item.updatedAt
+            ? new Date(item.updatedAt).toLocaleDateString("vi-VN")
+            : "---",
+          Address: address || "---",
+          CertificateImage: certificate?.imageUrl || null,
+        };
       });
+
+      setStatusData(formattedData);
+      setPagination({
+        current: data.page,
+        pageSize: data.size,
+        total: data.total,
+      });
+    } catch (err) {
+      console.error("Lỗi lấy danh sách gardener:", err);
+    }
   };
+
 
 
   const gardenerColumns = [
@@ -220,68 +269,30 @@ function Account() {
     {
       title: "Trạng thái",
       dataIndex: "Status",
-      width: 120,
+      key: "status",
       align: "center",
-      render: (status, record) => {
-        const isHovered = hoveredStatus === record.key;
+      render: (status) => {
+        const normalizedStatus = status?.toUpperCase();
+        let color = "default";
+        let text = "Không xác định";
 
-        const displayStatus =
-          status === "Active"
-            ? "Đang hoạt động"
-            : status === "Inactive"
-              ? "Ngưng hoạt động"
-              : status;
+        switch (normalizedStatus) {
+          case "ACTIVE":
+            color = "green";
+            text = "Đang hoạt động";
+            break;
+          case "INACTIVE":
+            color = "red";
+            text = "Ngưng hoạt động";
+            break;
+          case "BANNED":
+            color = "volcano";
+            text = "Bị cấm";
+            break;
+        }
 
-        return (
-          <>
-            <div
-              onMouseEnter={() => setHoveredStatus(record.key)}
-              onMouseLeave={() => setHoveredStatus(null)}
-              onClick={() =>
-                setModalInfo({ visible: true, recordKey: record.key })
-              }
-              style={{
-                cursor: "pointer",
-                width: 100,
-                textAlign: "center",
-                padding: "6px 8px",
-                color: status === "Active" ? "#52c41a" : "#ff4d4f",
-                transition: "all 0.3s ease",
-                userSelect: "none",
-              }}
-            >
-              {displayStatus}
-            </div>
-
-            <Modal
-              title="Xác nhận thay đổi trạng thái"
-              open={modalInfo.visible && modalInfo.recordKey === record.key}
-              onCancel={() => setModalInfo({ visible: false, recordKey: null })}
-              okText="Đồng ý"
-              cancelText="Hủy"
-              onOk={() => {
-                setStatusData((prevData) =>
-                  prevData.map((item) => {
-                    if (item.key === record.key) {
-                      return {
-                        ...item,
-                        Status: item.Status === "Active" ? "Inactive" : "Active",
-                      };
-                    }
-                    return item;
-                  }),
-                );
-                setModalInfo({ visible: false, recordKey: null });
-              }}
-            >
-              <p>
-                Bạn có muốn chuyển trạng thái sang{" "}
-                {status === "Active" ? "Không hoạt động" : "Hoạt động"}?
-              </p>
-            </Modal>
-          </>
-        );
-      },
+        return <Tag color={color}>{text}</Tag>;
+      }
     },
     {
       title: "Hành động",
@@ -301,6 +312,10 @@ function Account() {
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          />
+          <EditButton
+            tooltip="Chỉnh sửa trạng thái"
+            onClick={() => showEditModal(record)}
           />
         </Space>
       ),
@@ -359,7 +374,7 @@ function Account() {
                   </Modal>
 
                 </Tabs.TabPane>
-                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}> Đã duyệt </span>} key="2">
+                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}> Đang hoạt động</span>} key="2">
                   <div className="table-responsive " >
                     <Table
                       columns={gardenerColumns}
@@ -379,6 +394,19 @@ function Account() {
                       columns={gardenerColumns}
                       dataSource={statusData.filter(
                         (item) => item.Status === "Inactive",
+                      )}
+                      pagination={false}
+                      className="ant-border-space"
+                      scroll={{ x: true }}
+                    />
+                  </div>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Bị cấm</span>} key="4">
+                  <div className="table-responsive">
+                    <Table
+                      columns={gardenerColumns}
+                      dataSource={statusData.filter(
+                        (item) => item.Status === "BANNED",
                       )}
                       pagination={false}
                       className="ant-border-space"
@@ -476,6 +504,36 @@ function Account() {
           placeholder="Nhập lý do từ chối..."
         />
       </Modal>
+      <Modal
+        title="Chỉnh sửa trạng thái"
+        open={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        onOk={async () => {
+          try {
+            await cleanfood.admin.updateAccountStatus(editingAccountId, editStatus);
+            message.success("Cập nhật trạng thái thành công");
+            setEditModalVisible(false);
+            fetchGardeners(); // reload lại danh sách
+          } catch (error) {
+            console.error("Lỗi cập nhật trạng thái:", error);
+            message.error("Cập nhật trạng thái thất bại");
+          }
+        }}
+      >
+        <p>Trạng thái mới:</p>
+        <Select
+          style={{ width: "100%" }}
+          value={editStatus}
+          onChange={(value) => setEditStatus(value)}
+        >
+          <Select.Option value="ACTIVE">Đang hoạt động</Select.Option>
+          <Select.Option value="INACTIVE">Ngưng hoạt động</Select.Option>
+          <Select.Option value="BANNED">Bị cấm</Select.Option>
+        </Select>
+      </Modal>
+
+
+
 
     </>
   );

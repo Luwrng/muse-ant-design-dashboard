@@ -29,10 +29,10 @@ export const cleanfood = {
     GARDENER API
     * ================================ */
   gardener: {
-    getAll: async (page = 1, size = 10) => {
+    getAll: async ({ page = 1, size = 10, sortOrder = "asc" } = {}) => {
       try {
         const response = await api.get("/api/v1/accounts/gardeners", {
-          params: { page, size, sortOrder: "asc" },
+          params: { page, size, sortOrder },
         });
         return response.data;
       } catch (error) {
@@ -40,6 +40,7 @@ export const cleanfood = {
         throw error;
       }
     },
+
     getAccountById: async (accountId) => {
       try {
         const response = await api.get(`/api/v1/accounts/${accountId}`);
@@ -55,6 +56,19 @@ export const cleanfood = {
   ADMIN API
   * ================================ */
   admin: {
+    updateAccountStatus: async (id, status) => {
+      try {
+        const response = await api.patch(`/api/v1/accounts/${id}/status`, null, {
+          params: { status }, // ✅ Gửi qua query string
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi khi cập nhật trạng thái tài khoản:", error.response?.data || error);
+        throw error;
+      }
+    },
+
+
     getAllUsers: async () => {
       try {
         const response = await api.get("/api/v1/accounts");

@@ -10,17 +10,25 @@ import {
   Tag,
   Avatar,
   Descriptions,
+  message,
+  Select
 } from "antd";
 import DetailButton from "../components/button/DetailButton";
 import SearchButton from "../components/button/SearchButton";
+import EditButton from "../components/button/EditButton";
 import { cleanfood } from '../api_admin';
+import { EditTwoTone } from "@ant-design/icons";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 function GardenerVerification() {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [viewingRecord, setViewingRecord] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [editStatus, setEditStatus] = useState("");
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingAccountId, setEditingAccountId] = useState(null);
   const [retailers, setRetailers] = useState([]);
 
   const [pagination, setPagination] = useState({
@@ -31,36 +39,58 @@ function GardenerVerification() {
 
   const fetchRetailers = async (page = 1, size = 10) => {
     try {
-      const data = await cleanfood.retailer.getAll(page, size);
+      const { items = [], total, page: currentPage, size: pageSize } = await cleanfood.retailer.getAll(page, size);
 
-      const retailersWithAddress = await Promise.all(
-        (data.items || []).map(async (retailer) => {
+      const retailersWithFullInfo = await Promise.all(
+        items.map(async (retailer) => {
           try {
             const addresses = await cleanfood.admin.getAddressesByAccount(retailer.accountId);
-            const address = addresses[0] || {};
-            const addressLine = address.addressLine || "Chưa có";
-            const city = address.city || "Chưa rõ";
+            const address = addresses?.[0] || {};
 
-            return { ...retailer, addressLine, city };
-          } catch (err) {
-            console.error(`Lỗi lấy địa chỉ cho ${retailer.accountId}:`, err);
-            return { ...retailer, addressLine: "Chưa có", city: "Chưa có" };
+            return {
+              key: retailer.accountId,
+              name: retailer.name,
+              email: retailer.email,
+              phoneNumber: retailer.phoneNumber,
+              status: retailer.status?.toUpperCase() || "UNKNOWN",
+              isVerified: retailer.isVerified,
+              createdAt: retailer.createAt,
+              updatedAt: retailer.updatedAt,
+              addressLine: address.addressLine || "Chưa có",
+              city: address.city || "Chưa rõ",
+            };
+          } catch (error) {
+            console.error(`Lỗi lấy địa chỉ cho ${retailer.accountId}:`, error);
+            return {
+              key: retailer.accountId,
+              name: retailer.name,
+              email: retailer.email,
+              phoneNumber: retailer.phoneNumber,
+              status: retailer.status?.toUpperCase() || "UNKNOWN",
+              isVerified: retailer.isVerified,
+              createdAt: retailer.createAt,
+              updatedAt: retailer.updatedAt,
+              addressLine: "Chưa có",
+              city: "Chưa rõ",
+            };
           }
         })
       );
 
-      setRetailers(retailersWithAddress);
+      setRetailers(retailersWithFullInfo);
       setPagination({
-        current: data.page,
-        pageSize: data.size,
-        total: data.total,
+        current: currentPage,
+        pageSize,
+        total,
       });
 
-      console.log("Danh sách retailers có địa chỉ:", retailersWithAddress);
-    } catch (err) {
-      console.error("Lỗi lấy danh sách nhà bán lẻ:", err);
+      console.log("Retailers:", retailersWithFullInfo);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách nhà bán lẻ:", error);
+      message.error("Không thể tải danh sách nhà bán lẻ.");
     }
   };
+
   const fetchAddress = async (accountId) => {
     try {
       const addresses = await cleanfood.admin.getAddressesByAccount(accountId);
@@ -93,6 +123,13 @@ function GardenerVerification() {
     setIsViewModalVisible(false);
     setViewingRecord(null);
   };
+
+  const showEditModal = (record) => {
+    setEditStatus(record.Status?.toUpperCase() || "INACTIVE");
+    setEditingAccountId(record.key);
+    setEditModalVisible(true);
+  };
+
 
   const columns = [
     {
@@ -128,22 +165,22 @@ function GardenerVerification() {
           : "Chưa có",
       align: "center",
     },
-    {
-      title: "Địa chỉ ",
-      dataIndex: "addressLine",
-      key: "addressLine",
-      width: 180,
-      render: (addressLine) => addressLine || "Chưa có",
-      align: "center",
-    },
-    {
-      title: "Thành phố",
-      dataIndex: "city",
-      key: "city",
-      width: 160,
-      render: (city) => city || "Chưa rõ",
-      align: "center",
-    },
+    // {
+    //   title: "Địa chỉ ",
+    //   dataIndex: "addressLine",
+    //   key: "addressLine",
+    //   width: 180,
+    //   render: (addressLine) => addressLine || "Chưa có",
+    //   align: "center",
+    // },
+    // {
+    //   title: "Thành phố",
+    //   dataIndex: "city",
+    //   key: "city",
+    //   width: 160,
+    //   render: (city) => city || "Chưa rõ",
+    //   align: "center",
+    // },
     {
       title: "Ngày đăng ký",
       dataIndex: "updatedAt",
@@ -153,6 +190,37 @@ function GardenerVerification() {
       align: "center",
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      sorter: (a, b) => {
+        const order = ["ACTIVE", "INACTIVE", "BANNED"];
+        return order.indexOf(a.status) - order.indexOf(b.status);
+      },
+      render: (status) => {
+        let color = "default";
+        let text = "Không xác định";
+
+        switch (status) {
+          case "ACTIVE":
+            color = "green";
+            text = "Đang hoạt động";
+            break;
+          case "INACTIVE":
+            color = "orange";
+            text = "Ngưng hoạt động";
+            break;
+          case "BANNED":
+            color = "red";
+            text = "Bị cấm";
+            break;
+        }
+
+        return <Tag color={color}>{text}</Tag>;
+      },
+    },
+    {
       title: "Thao tác",
       key: "action",
       width: 100,
@@ -160,6 +228,8 @@ function GardenerVerification() {
       render: (_, record) => (
         <Space>
           <DetailButton record={record} showModal={showViewModal} />
+          <EditButton tooltip="Chỉnh sửa trạng thái" onClick={() => showEditModal(record)} />
+
         </Space>
       ),
     },
@@ -212,7 +282,7 @@ function GardenerVerification() {
 
       {/* View Details Modal */}
       <Modal
-        title="Chi tiết đại lý"
+        title="Chi tiết"
         open={isViewModalVisible}
         onCancel={handleCancel}
         width={600}
@@ -259,6 +329,36 @@ function GardenerVerification() {
           </>
         )}
       </Modal>
+      <Modal
+        title="Chỉnh sửa trạng thái"
+        open={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        onOk={async () => {
+          try {
+            await cleanfood.admin.updateAccountStatus(editingAccountId, editStatus);
+            message.success("Cập nhật trạng thái thành công");
+            setEditModalVisible(false);
+            fetchRetailers(); // reload danh sách
+          } catch (error) {
+            console.error("Lỗi cập nhật trạng thái:", error);
+            message.error("Cập nhật trạng thái thất bại");
+          }
+        }}
+      >
+        <p>Chọn trạng thái mới:</p>
+        <Select
+          style={{ width: "100%" }}
+          value={editStatus}
+          onChange={(value) => setEditStatus(value)}
+        >
+          <Select.Option value="ACTIVE">Đang hoạt động</Select.Option>
+          <Select.Option value="INACTIVE">Ngưng hoạt động</Select.Option>
+          <Select.Option value="BANNED">Bị cấm</Select.Option>
+        </Select>
+      </Modal>
+
+
+
     </>
   );
 }

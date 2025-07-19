@@ -63,6 +63,7 @@ const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => 
         <FontAwesomeIcon
           icon={faCheck}
           onClick={() => handleApprove(record)}
+          title="Duyệt"
           style={{
             fontSize: "16px",
             color: "#52c41a",
@@ -77,6 +78,7 @@ const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => 
         <FontAwesomeIcon
           icon={faTimes}
           onClick={() => openRejectModal(record)}
+           title="Không duyệt"
           style={{
             fontSize: "16px",
             color: "#ff4d4f",

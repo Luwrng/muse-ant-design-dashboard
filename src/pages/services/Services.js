@@ -146,15 +146,16 @@ const ServiceList = () => {
       render: (_, record) => (
         <Space size="middle">
           <DetailButton
+            tooltip="Xem chi tiết"
             onClick={() => {
               setSelectedRecord(record);
               setDetailModalVisible(true);
             }}
           />
-          <EditButton tooltip="Chỉnh sửa trạng thái" onClick={() => showEditModal(record)} />
+          <EditButton tooltip="Chỉnh sửa" onClick={() => showEditModal(record)} />
           <DeleteButton
             record={record}
-            tooltip="Vô hiệu hóa"
+            tooltip="Xóa"
             type="feature"
             onDeleteSuccess={() => fetchService(currentPage, pageSize, searchText)}
           />
@@ -196,7 +197,7 @@ const ServiceList = () => {
           <Row gutter={12}>
             <Col>
               <SearchButton
-                placeholder="Tìm kiếm hành động..."
+                placeholder="Tìm kiếm"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
