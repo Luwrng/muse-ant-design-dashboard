@@ -47,7 +47,6 @@ const ServicesPackage = () => {
 
   // State cho ô tìm kiếm
 
-
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -81,11 +80,6 @@ const ServicesPackage = () => {
     fetchService(currentPage, pageSize, searchText);
   }, [currentPage, pageSize, searchText]);
 
-
-
-
-
-
   // Vô hiệu hóa gói dịch vụ (tạm dừng bán)
   const handleDisablePackage = (record) => {
     Modal.confirm({
@@ -96,7 +90,7 @@ const ServicesPackage = () => {
       centered: true,
       onOk: async () => {
         try {
-          await cleanfood.admin.disableServicePackage(record);
+          await cleanfood.admin.disableServicePackage(record.key);
           message.success("Đã tạm dừng gói dịch vụ.");
           fetchPackage(); // reload lại danh sách sau khi cập nhật
         } catch (error) {
@@ -106,7 +100,6 @@ const ServicesPackage = () => {
       },
     });
   };
-
 
   // Gọi API để lấy danh sách gói dịch vụ (gọi lại sau khi tạo/kích hoạt)
   const fetchServicePackage = async () => {
@@ -159,7 +152,6 @@ const ServicesPackage = () => {
     }
   };
 
-
   // Mở modal chi tiết gói
   const showPackageDetails = (pkg) => {
     setSelectedPackage(pkg);
@@ -179,7 +171,6 @@ const ServicesPackage = () => {
     }
   };
   // const { Text } = Typography;
-
 
   const columns = [
     {
@@ -225,7 +216,7 @@ const ServicesPackage = () => {
           {/* Nút xem chi tiết */}
           <DetailButton onClick={() => showPackageDetails(record)} />
 
- {/* Nút kích hoạt gói dịch vụ */}
+          {/* Nút kích hoạt gói dịch vụ */}
           <EditButton
             tooltip="Kích hoạt gói"
             onClick={() => {
@@ -237,12 +228,15 @@ const ServicesPackage = () => {
                 centered: true,
                 onOk: async () => {
                   try {
-                    await cleanfood.admin.activateServicePackage(record);
-                    message.success("Gói dịch vụ đã được kích hoạt!");
-                    fetchServicePackage();
+                    const id = record.servicePackageId || record.key;
+                    console.log("🔑 Kích hoạt gói với ID:", id);
+
+                    await cleanfood.admin.activateServicePackage(id);
+                    message.success("✅ Gói dịch vụ đã được kích hoạt!");
+                    fetchServicePackage(currentPage, pageSize, searchText );
                   } catch (error) {
                     console.error("Lỗi khi kích hoạt:", error);
-                    message.error("Kích hoạt thất bại!");
+                    message.error("❌ Kích hoạt thất bại!");
                   }
                 },
               });
@@ -252,15 +246,15 @@ const ServicesPackage = () => {
           {/* Nút xóa (hoặc vô hiệu hóa) */}
           <DeleteButton
             record={record}
-            // tooltip="Vô hiệu hóa gói dịch vụ"
             type="package"
-            onDeleteSuccess={fetchPackage}
+            onDeleteSuccess={() =>
+              fetchService(currentPage, pageSize, searchText)
+            }
           />
-
-
         </Space>
       ),
-    }];
+    },
+  ];
 
   const showModal = (record) => {
     setSelectedPackage(record);
@@ -349,13 +343,9 @@ const ServicesPackage = () => {
                   onChange: (page, size) => {
                     setCurrentPage(page);
                     setPageSize(size);
-
                   },
                 }}
               />
-
-
-
 
               {/* Modal thêm dịch vụ */}
               <Modal

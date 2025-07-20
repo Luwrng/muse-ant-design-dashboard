@@ -28,63 +28,6 @@ function GOrderPage() {
     fetchOrder();
   }, []);
 
-  // Sample order data
-  // const orders = [
-  //   {
-  //     id: 1,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 2,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 3,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 4,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 5,
-  //     store: "Flower Paradise",
-  //     total: "2.200.000",
-  //     items: 2,
-  //     date: "14:20 14/01/2024",
-  //     status: "delivering",
-  //     statusText: "Đang giao",
-  //   },
-  //   {
-  //     id: 6,
-  //     store: "Green Store",
-  //     total: "1.500.000",
-  //     items: 3,
-  //     date: "10:30 15/01/2024",
-  //     status: "pending",
-  //     statusText: "Chờ xử lý",
-  //   },
-  // ];
 
   const filterTabs = [
     { key: "all", label: "Tất cả", count: 6 },

@@ -124,8 +124,6 @@ function Sidenav() {
               <span>Đơn Hàng & Thanh Toán</span>
             </NavLink>
           </Menu.Item>
-
-
         </Menu.SubMenu>
 
         <Menu.Item key="active-package-customers">
@@ -157,15 +155,15 @@ function Sidenav() {
 
         <Menu.Divider />
 
-        <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">
+        {/* <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">
           <Menu.Item key="profile">
             <NavLink to="/profile">
               <FontAwesomeIcon icon={faUser} />
               <span>Hồ Sơ</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="sign-in">
-            <NavLink to="/sign-in">
+          <Menu.Item key="sign-in-admin">
+            <NavLink to="/sign-in-admin">
               <FontAwesomeIcon icon={faSignInAlt} />
               <span>Đăng Nhập</span>
             </NavLink>
@@ -176,7 +174,7 @@ function Sidenav() {
               <span>Đăng Ký</span>
             </NavLink>
           </Menu.Item>
-        </Menu.ItemGroup>
+        </Menu.ItemGroup> */}
       </Menu>
     </>
   );
