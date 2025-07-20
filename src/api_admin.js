@@ -169,6 +169,25 @@ export const cleanfood = {
       }
     },
 
+    updateServicePackage: async (data) => {
+      try {
+        const response = await api.patch(
+          '/api/v1/admin/service-packages/detail',
+          {
+            packageId: data.packageId,
+            packageName: data.packageName,
+            description: data.description,
+          }
+        );
+
+        return response.data;
+      } catch (error) {
+        console.error("❌ Lỗi khi cập nhật gói dịch vụ:", error);
+        throw error;
+      }
+    },
+
+
     disableServicePackage: async (id) => {
       try {
         const response = await api.patch(

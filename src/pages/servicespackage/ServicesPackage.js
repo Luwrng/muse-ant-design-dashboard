@@ -12,6 +12,9 @@ import {
   Descriptions,
   List,
   Popconfirm,
+  Input,
+  Form,
+  Select
 } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,6 +54,10 @@ const ServicesPackage = () => {
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [searchText, setSearchText] = useState("");
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingPackage, setEditingPackage] = useState("null");
+  const [form] = Form.useForm();
 
   // ✅ Gọi API lấy danh sách gói dịch vụ
   const fetchService = async (page = 1, size = 10, search = "") => {
@@ -151,6 +158,17 @@ const ServicesPackage = () => {
       message.error("Không thể tải danh sách gói dịch vụ");
     }
   };
+  const handelUpdatePackage = async (values) => {
+    try {
+      await cleanfood.admin.updateServicePackage(values);
+      message.success("Cập nhật thành công").
+        setEditModalVisible(false);
+      fetch(currentPage, pageSize, searchText)
+    } catch (error) {
+      console.error("Lỗi cập nhật :", error);
+      message.error("Cập nhật thất bạn !!!!");
+    }
+  }
 
   // Mở modal chi tiết gói
   const showPackageDetails = (pkg) => {
@@ -218,30 +236,18 @@ const ServicesPackage = () => {
 
           {/* Nút kích hoạt gói dịch vụ */}
           <EditButton
-            tooltip="Kích hoạt gói"
+            tooltip="Chỉnh sửa gói"
             onClick={() => {
-              Modal.confirm({
-                title: "Xác nhận kích hoạt",
-                content: `Bạn có chắc chắn muốn kích hoạt lại gói dịch vụ "${record.name}" không?`,
-                okText: "Kích hoạt",
-                cancelText: "Hủy",
-                centered: true,
-                onOk: async () => {
-                  try {
-                    const id = record.servicePackageId || record.key;
-                    console.log("🔑 Kích hoạt gói với ID:", id);
-
-                    await cleanfood.admin.activateServicePackage(id);
-                    message.success("✅ Gói dịch vụ đã được kích hoạt!");
-                    fetchServicePackage(currentPage, pageSize, searchText );
-                  } catch (error) {
-                    console.error("Lỗi khi kích hoạt:", error);
-                    message.error("❌ Kích hoạt thất bại!");
-                  }
-                },
+              setEditingPackage({
+                packageId: record.servicePackageId || record.key,
+                packageName: record.name,
+                description: record.description,
+                status: record.status === "active" ? "ACTIVE" : "INACTIVE",
               });
+              setEditModalVisible(true);
             }}
           />
+
 
           {/* Nút xóa (hoặc vô hiệu hóa) */}
           <DeleteButton
@@ -411,6 +417,80 @@ const ServicesPackage = () => {
           </Descriptions>
         )}
       </Modal>
+
+      <Modal
+        title="Chỉnh sửa gói dịch vụ"
+        open={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        onOk={() => {
+          form
+            .validateFields()
+            .then(async (values) => {
+              try {
+                // Gọi hàm cập nhật gói
+                await cleanfood.admin.updateServicePackage(values);
+
+                // Nếu trạng thái là ACTIVE → gọi kích hoạt
+                if (values.status === "ACTIVE") {
+                  await cleanfood.admin.activateServicePackage(values.packageId);
+                }
+
+                message.success("🎉 Gói dịch vụ đã được cập nhật thành công!");
+                setEditModalVisible(false);
+                fetchService(currentPage, pageSize, searchText);
+              } catch (err) {
+                console.error("❌ Cập nhật thất bại:", err);
+                message.error("❌ Cập nhật thất bại!");
+              }
+            })
+            .catch((err) => {
+              console.error("❌ Lỗi form:", err);
+            });
+        }}
+        okText="Lưu"
+        cancelText="Hủy"
+        destroyOnClose
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={editingPackage}
+        >
+          <Form.Item name="packageId" hidden>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Tên gói dịch vụ"
+            name="packageName"
+            rules={[{ required: true, message: "Vui lòng nhập tên gói!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Mô tả"
+            name="description"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+          >
+            <Input.TextArea rows={3} />
+          </Form.Item>
+
+          <Form.Item
+            label="Trạng thái"
+            name="status"
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+          >
+            <Select>
+              <Select.Option value="ACTIVE">Đang hoạt động</Select.Option>
+              <Select.Option value="INACTIVE">Ngưng hoạt động</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+
+
     </>
   );
 };

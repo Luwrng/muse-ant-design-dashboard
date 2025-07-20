@@ -108,11 +108,12 @@ function GardenerSidenav() {
               <span>Hồ Sơ</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="sign-in">
-            <NavLink to="/sign-in">
-              <FontAwesomeIcon icon={faSignInAlt} />
-              <span onClick={() => localStorage.clear()}>Đăng Xuất</span>
-            </NavLink>
+          <Menu.Item key="sign-in" onClick={() => {
+            localStorage.clear();
+            window.location.href = '/';
+          }}>
+            <FontAwesomeIcon icon={faSignInAlt} />
+            <span>Đăng Xuất</span>
           </Menu.Item>
         </Menu.ItemGroup>
       </Menu>

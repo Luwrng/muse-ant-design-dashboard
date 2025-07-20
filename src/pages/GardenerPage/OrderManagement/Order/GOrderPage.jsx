@@ -125,26 +125,22 @@ function GOrderPage() {
         {/* Pagination */}
         <div className="gorder-pagination">
           <div className="gorder-pagination-info">
-            Hiển thị từ 1 đến {filteredOrders.length} trong tổng số{" "}
-            {filteredOrders.length} kết quả
+         
           </div>
-          <div className="gorder-pagination-controls">
+          <div className="gpost-pagination-controls">
+          <button className="gpost-pagination-btn">‹</button>
+          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
-              className="gorder-pagination-btn"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              key={index}
+              className={`gpost-pagination-btn ${
+                page === 1 ? "gpost-active" : ""
+              }`}
             >
-              Trước
+              {page}
             </button>
-            <button className="gorder-pagination-btn gorder-active">1</button>
-            <button
-              className="gorder-pagination-btn"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === 1}
-            >
-              Tiếp
-            </button>
-          </div>
+          ))}
+          <button className="gpost-pagination-btn">›</button>
+        </div>
         </div>
       </div>
       {showOrderDetail && (

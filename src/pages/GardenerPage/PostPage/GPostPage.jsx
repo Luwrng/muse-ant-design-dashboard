@@ -54,9 +54,9 @@ function GPostPage() {
   }, [currentPage]);
 
   const filterTabs = [
-    { id: "all", label: "ACTIVE", count: 2 },
-    { id: "expired", label: "INACTIVE" },
-    { id: "banned", label: "BANNED" },
+    { id: "all", label: "Hoạt động", count: 2 },
+    { id: "expired", label: "Ngưng hoạt động" },
+    { id: "banned", label: "Bị cấm" },
   ];
 
   const validPosts = Array.isArray(posts) ? posts : [];
@@ -248,11 +248,11 @@ function GPostPage() {
           ))}
       </div>
 
-      <div className="gpost-pagination">
-        <span className="gpost-pagination-info">
-          Hiển thị từ 1 đến 6 trong tổng số XX kết quả
-        </span>
-        <div className="gpost-pagination-controls">
+      <div className="gorder-pagination">
+          <div className="gorder-pagination-info">
+         
+          </div>
+          <div className="gpost-pagination-controls">
           <button className="gpost-pagination-btn">‹</button>
           {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
@@ -266,7 +266,7 @@ function GPostPage() {
           ))}
           <button className="gpost-pagination-btn">›</button>
         </div>
-      </div>
+        </div>
       {/* Post Detail Popup */}
       {selectedPost && (
         <GPostDetailModal

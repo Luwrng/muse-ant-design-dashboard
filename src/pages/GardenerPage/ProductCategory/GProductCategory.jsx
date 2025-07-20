@@ -207,13 +207,7 @@ function GProductCategory() {
                   </div>
                 </td>
                 <td className="gpcategory-actions">
-                  {/*<button
-                    className="gpcategory-action-btn gpcategory-view-btn"
-                    onClick={() => handleView(category.id)}
-                    title="Xem chi tiết"
-                  >
-                    <EyeFilled />
-                  </button> */}
+ 
                   <button
                     className="gpcategory-action-btn gpcategory-edit-btn"
                     onClick={() => handleEdit(category.productCategoryId)}
@@ -236,48 +230,25 @@ function GProductCategory() {
       </div>
 
       {/* Paginate Part */}
-      <div className="gpcategory-pagination">
-        <div className="gpcategory-pagination-info">
-          Hiển thị từ 1 đến {totalResults > 10 ? 10 : totalResults} trong tổng
-          số {totalResults} kết quả
-        </div>
-        <div className="gpcategory-pagination-controls">
-          <button
-            className="gpcategory-page-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            ‹
-          </button>
-          {[1, 2, 3].map((page) => (
+      <div className="gorder-pagination">
+          <div className="gorder-pagination-info">
+         
+          </div>
+          <div className="gpost-pagination-controls">
+          <button className="gpost-pagination-btn">‹</button>
+          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
-              key={page}
-              className={`gpcategory-page-btn ${
-                currentPage === page ? "active" : ""
+              key={index}
+              className={`gpost-pagination-btn ${
+                page === 1 ? "gpost-active" : ""
               }`}
-              onClick={() => handlePageChange(page)}
             >
               {page}
             </button>
           ))}
-          <span className="gpcategory-page-dots">...</span>
-          {[8, 9, 10].map((page) => (
-            <button
-              key={page}
-              className="gpcategory-page-btn"
-              onClick={() => handlePageChange(page)}
-            >
-              {page}
-            </button>
-          ))}
-          <button
-            className="gpcategory-page-btn"
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            ›
-          </button>
+          <button className="gpost-pagination-btn">›</button>
         </div>
-      </div>
+        </div>
 
       {/* Show create popup */}
       {showCreateModal && (
