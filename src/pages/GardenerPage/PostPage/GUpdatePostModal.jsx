@@ -9,13 +9,13 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
   useEffect(() => {
     if (post) {
       setTitle(post.title || "");
-      setContent(post.description || "");
+      setContent(post.content || "");
     }
   }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onUpdate({ ...post, title, description: content });
+    await onUpdate({ ...post, title, content });
     onClose();
   };
 

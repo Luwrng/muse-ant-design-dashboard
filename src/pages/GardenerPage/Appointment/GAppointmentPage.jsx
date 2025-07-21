@@ -165,6 +165,8 @@ function GAppointmentPage() {
   const [pendingAppointment, setPendingAppointments] = useState([]);
   const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
+  const today = new Date();
+
   useEffect(() => {
     const fetchPendingAppointment = async () => {
       try {
@@ -585,7 +587,11 @@ function GAppointmentPage() {
                           >
                             {isFirstSlot && (
                               <div
-                                className={`gappointment-appointment-block green`} //Change to check by status is better
+                                className={`gappointment-appointment-block ${
+                                  today > appointment.appointmentDate
+                                    ? "gappointment-appointment-green"
+                                    : "gappointment-appointment-"
+                                }`}
                                 style={{
                                   height: `${
                                     getAppointmentHeight(appointment) * 50 - 4

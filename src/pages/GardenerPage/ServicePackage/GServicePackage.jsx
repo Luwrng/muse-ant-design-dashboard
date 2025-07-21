@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import "./GServicePackage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
+import paymentService from "../../services/apiServices/paymentService";
 
 function GServicePackage() {
   const history = useHistory();
@@ -72,6 +73,23 @@ function GServicePackage() {
     fetchPackage();
   }, []);
 
+  const handlePayPackage = async (pkg) => {
+    try {
+      const data = {
+        gardenerId: localStorage.getItem("account_id"),
+        servicePackageId: pkg.servicePackageId,
+        quantity: 1,
+        location: null,
+      };
+
+      const response = await paymentService.makingPayment(data);
+
+      window.location.href = response.sessionUrl;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="gspackage-container">
       <button
@@ -117,7 +135,10 @@ function GServicePackage() {
                 <p className="gspackage-description">{pkg.description}</p>
               </div>
 
-              <button className={`gspackage-button gspackage-button-default`}>
+              <button
+                className={`gspackage-button gspackage-button-default`}
+                onClick={() => handlePayPackage(pkg)}
+              >
                 Mua gói
               </button>
 

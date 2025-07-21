@@ -285,14 +285,30 @@ function GardenerProductPage() {
     setShowUpdatePrice(false);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (priceData.option === "previous") {
+        await productService.setProductCurrentPrice(
+          selectedProduct.productId,
+          priceData.value
+        );
+      } else if (priceData.option === "new") {
+        await productService.createProductPrice(
+          selectedProduct.productId,
+          priceData.value
+        );
+      }
 
+      fetchProducts(currentPage);
       setSuccessData({
         title: "Cập nhật giá thành công",
         message: `Giá sản phẩm "${selectedProduct.productName}" đã được cập nhật.`,
       });
+
       setShowSuccess(true);
+
+      setSelectedProduct((prev) => {
+        const updated = products.find((p) => p.productId === prev.productId);
+        return updated ?? prev;
+      });
     } catch (error) {
       setErrorData({
         title: "Lỗi cập nhật giá",
@@ -316,6 +332,11 @@ function GardenerProductPage() {
       );
 
       await fetchProducts(currentPage);
+
+      setSelectedProduct((prev) => {
+        const updated = products.find((p) => p.productId === prev.productId);
+        return updated ?? prev;
+      });
     } catch (err) {
       console.log(err);
     }

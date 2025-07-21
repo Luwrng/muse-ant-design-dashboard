@@ -195,7 +195,10 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useHistory,
+  useLocation,
+} from "react-router-dom/cjs/react-router-dom.min";
 import { Layout, Menu, Button, Row, Col, Typography, Form, Input } from "antd";
 import signinbg from "../assets/images/img-signin.jpg";
 import styled from "styled-components";
@@ -226,6 +229,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false); // example useState
   const [error, setError] = useState("");
   const history = useHistory();
+  const location = useLocation();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -233,24 +237,23 @@ export default function SignIn() {
     try {
       localStorage.clear();
       const result = await authenticateService.login(values);
+      //Set value
       localStorage.setItem("auth_token", result.token);
       localStorage.setItem("account_id", result.accountId);
       localStorage.setItem("account_name", result.name);
       localStorage.setItem("account_avatar", result.avatar);
       setLoading(false);
       setError(null);
-      history.push("/gardener/landing");
+      //Check redirect
+      const param = new URLSearchParams(location.search);
+      const redirectPath = param.get("redirect") || "/gardener/dashboard";
+
+      history.push(redirectPath);
     } catch (err) {
       setLoading(false);
       console.log("Login failed: ", err.response.data);
       setError(err.response.data.Error);
     }
-
-    // Simulate API login call
-    // setTimeout(() => {
-    //   console.log("Logged in!");
-    //   setLoading(false);
-    // }, 1000);
   };
 
   return (
@@ -339,113 +342,113 @@ export default function SignIn() {
       </Content>
     </Layout>
   );
-// export default class SignIn extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       imageUrl: "",
-//     };
-//   }
+  // export default class SignIn extends Component {
+  //   constructor(props) {
+  //     super(props);
+  //     this.state = {
+  //       imageUrl: "",
+  //     };
+  //   }
 
-//   onFinish = (values) => {
-//     const dataToSend = {
-//       ...values,
-//       avatar: this.state.imageUrl || null,
-//     };
-//     console.log("📦 Dữ liệu gửi lên backend:", dataToSend);
-//     // TODO: gửi dataToSend lên backend nếu cần
-//   };
+  //   onFinish = (values) => {
+  //     const dataToSend = {
+  //       ...values,
+  //       avatar: this.state.imageUrl || null,
+  //     };
+  //     console.log("📦 Dữ liệu gửi lên backend:", dataToSend);
+  //     // TODO: gửi dataToSend lên backend nếu cần
+  //   };
 
-//   onFinishFailed = (errorInfo) => {
-//     console.log("❌ Lỗi form:", errorInfo);
-//   };
+  //   onFinishFailed = (errorInfo) => {
+  //     console.log("❌ Lỗi form:", errorInfo);
+  //   };
 
-//   render() {
-//     return (
-//       <Layout className="layout-default layout-signin">
-//         <Header>
-//           <div className="header-col header-nav">
-//             <Menu mode="horizontal" defaultSelectedKeys={["4"]}>
-//               <Menu.Item key="3">
-//                 <Link to="/sign-up">
-//                   <span>Đăng kí</span>
-//                 </Link>
-//               </Menu.Item>
-//               <Menu.Item key="4">
-//                 <Link to="/sign-in">
-//                   <span>Đăng nhập</span>
-//                 </Link>
-//               </Menu.Item>
-//             </Menu>
-//           </div>
-//         </Header>
+  //   render() {
+  //     return (
+  //       <Layout className="layout-default layout-signin">
+  //         <Header>
+  //           <div className="header-col header-nav">
+  //             <Menu mode="horizontal" defaultSelectedKeys={["4"]}>
+  //               <Menu.Item key="3">
+  //                 <Link to="/sign-up">
+  //                   <span>Đăng kí</span>
+  //                 </Link>
+  //               </Menu.Item>
+  //               <Menu.Item key="4">
+  //                 <Link to="/sign-in">
+  //                   <span>Đăng nhập</span>
+  //                 </Link>
+  //               </Menu.Item>
+  //             </Menu>
+  //           </div>
+  //         </Header>
 
-//         <Content className="signin">
-//           <Row gutter={[24, 0]} justify="space-around">
-//             <Col xs={24} lg={{ span: 6, offset: 2 }} md={12}>
-//               <Title className="mb-15">Đăng nhập</Title>
+  //         <Content className="signin">
+  //           <Row gutter={[24, 0]} justify="space-around">
+  //             <Col xs={24} lg={{ span: 6, offset: 2 }} md={12}>
+  //               <Title className="mb-15">Đăng nhập</Title>
 
-//               {/* Upload ảnh avatar */}
-//               <CloudinaryUpload
-//                 onUploaded={(url) => {
-//                   this.setState({ imageUrl: url });
-//                   console.log("✅ Ảnh đã upload:", url);
-//                 }}
-//               />
+  //               {/* Upload ảnh avatar */}
+  //               <CloudinaryUpload
+  //                 onUploaded={(url) => {
+  //                   this.setState({ imageUrl: url });
+  //                   console.log("✅ Ảnh đã upload:", url);
+  //                 }}
+  //               />
 
-//               <Form
-//                 layout="vertical"
-//                 className="row-col"
-//                 onFinish={this.onFinish}
-//                 onFinishFailed={this.onFinishFailed}
-//               >
-//                 <Form.Item
-//                   label="Số điện thoại"
-//                   name="phone"
-//                   rules={[
-//                     {
-//                       required: true,
-//                       message: "Vui lòng nhập số điện thoại!",
-//                     },
-//                   ]}
-//                 >
-//                   <Input placeholder="Nhập số điện thoại" />
-//                 </Form.Item>
+  //               <Form
+  //                 layout="vertical"
+  //                 className="row-col"
+  //                 onFinish={this.onFinish}
+  //                 onFinishFailed={this.onFinishFailed}
+  //               >
+  //                 <Form.Item
+  //                   label="Số điện thoại"
+  //                   name="phone"
+  //                   rules={[
+  //                     {
+  //                       required: true,
+  //                       message: "Vui lòng nhập số điện thoại!",
+  //                     },
+  //                   ]}
+  //                 >
+  //                   <Input placeholder="Nhập số điện thoại" />
+  //                 </Form.Item>
 
-//                 <Form.Item
-//                   label="Mật khẩu"
-//                   name="password"
-//                   rules={[
-//                     {
-//                       required: true,
-//                       message: "Vui lòng nhập mật khẩu!",
-//                     },
-//                   ]}
-//                 >
-//                   <Input.Password placeholder="Nhập mật khẩu" />
-//                 </Form.Item>
+  //                 <Form.Item
+  //                   label="Mật khẩu"
+  //                   name="password"
+  //                   rules={[
+  //                     {
+  //                       required: true,
+  //                       message: "Vui lòng nhập mật khẩu!",
+  //                     },
+  //                   ]}
+  //                 >
+  //                   <Input.Password placeholder="Nhập mật khẩu" />
+  //                 </Form.Item>
 
-//                 <Form.Item>
-//                   <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-//                     SIGN IN
-//                   </Button>
-//                 </Form.Item>
+  //                 <Form.Item>
+  //                   <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+  //                     SIGN IN
+  //                   </Button>
+  //                 </Form.Item>
 
-//                 <p className="font-semibold text-muted">
-//                   Bạn chưa có tài khoản?{" "}
-//                   <Link to="/sign-up" className="text-dark font-bold">
-//                     Đăng kí
-//                   </Link>
-//                 </p>
-//               </Form>
-//             </Col>
+  //                 <p className="font-semibold text-muted">
+  //                   Bạn chưa có tài khoản?{" "}
+  //                   <Link to="/sign-up" className="text-dark font-bold">
+  //                     Đăng kí
+  //                   </Link>
+  //                 </p>
+  //               </Form>
+  //             </Col>
 
-//             <Col className="sign-img">
-//               <img src={signinbg} alt="Sign in background" />
-//             </Col>
-//           </Row>
-//         </Content>
-//       </Layout>
-//     );
-//   }
+  //             <Col className="sign-img">
+  //               <img src={signinbg} alt="Sign in background" />
+  //             </Col>
+  //           </Row>
+  //         </Content>
+  //       </Layout>
+  //     );
+  //   }
 }

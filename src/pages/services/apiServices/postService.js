@@ -15,7 +15,10 @@ const getPostDetail = async (postId) => {
 };
 
 const createPost = async (gardenerId, data) => {
-  return await httpService.get(`${gardenerEndpoint}/${gardenerId}/posts`, data);
+  return await httpService.post(
+    `${gardenerEndpoint}/${gardenerId}/posts`,
+    data
+  );
 };
 
 const updatePost = async (postId, data) => {

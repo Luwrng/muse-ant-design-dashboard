@@ -15,20 +15,18 @@ import { useHistory } from "react-router-dom";
 import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
 import "./LandingPage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
+import paymentService from "../../services/apiServices/paymentService";
+import GPopup from "./GPopup";
 
 function GardenerLandingPage() {
   const [servicePackages, setServicePackages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
   const history = useHistory();
 
-  // Mock API call - replace with your actual API endpoint
   useEffect(() => {
     const fetchServicePackages = async () => {
       try {
-        // Replace this with your actual API call
-        // const response = await fetch('/api/service-packages')
-        // const data = await response.json()
-
         const result = await servicePackageService.getAvailableServicePackage(
           "Status",
           "ACTIVE"
@@ -174,11 +172,37 @@ function GardenerLandingPage() {
     fetchServicePackages();
   }, []);
 
+  const handlePayPackage = async (pkg) => {
+    try {
+      if (!localStorage.getItem("account_id")) {
+        setShowAlertPopup(true);
+        return;
+      }
+
+      const data = {
+        gardenerId: localStorage.getItem("account_id"),
+        servicePackageId: pkg.servicePackageId,
+        quantity: 1,
+        location: null,
+      };
+
+      const response = await paymentService.makingPayment(data);
+
+      window.location.href = response.sessionUrl;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "USD",
     }).format(price);
+  };
+
+  const handleConfirm = () => {
+    history.push("/sign-in?redirect=/gardener/service-package");
   };
 
   return (
@@ -359,14 +383,6 @@ function GardenerLandingPage() {
                       : "border-gray-200"
                   }`}
                 >
-                  {/* {pkg.PackageName === "Plus" && (
-                    <div className="absolute -top-3 left-4">
-                      <span className="popular-badge bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        PHỔ BIẾN
-                      </span>
-                    </div>
-                  )} */}
-
                   <div className="glanding-package-header text-center mb-6">
                     <h3 className="glanding-package-name text-xl font-bold mb-2">
                       {pkg.PackageName}
@@ -447,6 +463,12 @@ function GardenerLandingPage() {
           </div>
         </div>
       </footer>
+
+      <GPopup
+        isOpen={showAlertPopup}
+        onClose={() => setShowAlertPopup(false)}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }
