@@ -295,13 +295,26 @@ function GAppointmentPage() {
     }
   };
 
+  const parseTime = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    const date = new Date(0);
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+  };
+
   const getAppointmentForTimeSlot = (day, time) => {
-    return scheduledAppointments.find(
+    if (!scheduledAppointments || scheduledAppointments.length === 0)
+      return null;
+
+    const realTime = parseTime(time);
+    const result = scheduledAppointments.find(
       (apt) =>
-        apt.day.toDateString() === day.toDateString() &&
-        apt.startTime <= time &&
-        apt.endTime > time
+        new Date(apt.appointmentDate).toDateString() ===
+          new Date(day).toDateString() &&
+        parseTime(apt.startTime) <= realTime &&
+        parseTime(apt.endTime) > realTime
     );
+    return result;
   };
 
   const getAppointmentHeight = (appointment) => {
@@ -328,12 +341,8 @@ function GAppointmentPage() {
         "ACCEPTED"
       );
 
-      setPendingAppointments(
-        pendingAppointment.map((appo) =>
-          appo.filter(
-            (item) => item.appointmentId !== appointment.appointmentId
-          )
-        )
+      setPendingAppointments((prev) =>
+        prev.filter((item) => item.appointmentId !== appointment.appointmentId)
       );
     } catch (err) {
       console.log(err);
@@ -349,12 +358,8 @@ function GAppointmentPage() {
         "REJECTED"
       );
 
-      setPendingAppointments(
-        pendingAppointment.map((appo) =>
-          appo.filter(
-            (item) => item.appointmentId !== appointment.appointmentId
-          )
-        )
+      setPendingAppointments((prev) =>
+        prev.filter((item) => item.appointmentId !== appointment.appointmentId)
       );
     } catch (err) {
       console.log(err);
@@ -471,7 +476,7 @@ function GAppointmentPage() {
                         </td>
                         <td className="gappointment-date-cell">
                           {
-                            new Date(appointment.date)
+                            new Date(appointment.appointmentDate)
                               .toISOString()
                               .split("T")[1]
                               .split(".")[0]
@@ -499,13 +504,13 @@ function GAppointmentPage() {
                           </button>
                           <button
                             className="gappointment-approve-button"
-                            onClick={handleApprove}
+                            onClick={() => handleApprove(appointment)}
                           >
                             <CheckOutlined />
                           </button>
                           <button
                             className="gappointment-reject-button"
-                            onClick={handleReject}
+                            onClick={() => handleReject(appointment)}
                           >
                             <CloseOutlined />
                           </button>
@@ -577,8 +582,7 @@ function GAppointmentPage() {
                           dayInfo.fullDate,
                           time
                         );
-                        const isFirstSlot =
-                          appointment && appointment.startTime === time;
+                        const isFirstSlot = appointment ? true : false;
 
                         return (
                           <div
@@ -589,8 +593,8 @@ function GAppointmentPage() {
                               <div
                                 className={`gappointment-appointment-block ${
                                   today > appointment.appointmentDate
-                                    ? "gappointment-appointment-green"
-                                    : "gappointment-appointment-"
+                                    ? "gappointment-appointment-orange"
+                                    : "gappointment-appointment-green"
                                 }`}
                                 style={{
                                   height: `${

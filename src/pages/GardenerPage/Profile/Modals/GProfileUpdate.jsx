@@ -46,7 +46,7 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
       );
 
       const updatedFormData = formData;
-      updatedFormData.imageUrl = res.data.url;
+      updatedFormData.avatar = res.data.url;
 
       const accountId = localStorage.getItem("account_id");
       await accountService.updateProfile(accountId, updatedFormData);

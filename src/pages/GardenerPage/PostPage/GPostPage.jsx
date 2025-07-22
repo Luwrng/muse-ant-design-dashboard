@@ -38,7 +38,7 @@ function GPostPage() {
       const gardenerProducts = await productService.getGardenerProducts(
         gardenerId
       );
-      setProducts(gardenerProducts);
+      setProducts(gardenerProducts.items);
 
       const gardenerPosts = await postService.getGardenerPosts(
         gardenerId,
@@ -191,7 +191,7 @@ function GPostPage() {
           <div className="gpost-filter-tabs-options">
             {filterTabs.map((tab) => (
               <button
-                key={tab.key}
+                key={tab.id}
                 className={`gpost-filter-tab ${
                   activeFilter === tab.label ? "active" : ""
                 }`}

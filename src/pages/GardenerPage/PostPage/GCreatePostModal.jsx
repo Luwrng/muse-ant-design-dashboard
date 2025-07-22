@@ -2,9 +2,11 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import "./GCreatePostModal.css";
+import QuillTestbox from "../../../components/textarea/QuillTextbox";
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
+function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -15,14 +17,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
     gardenerId: localStorage.getItem("account_id"),
   });
 
+  const [contentValue, setContentValue] = useState("");
   const [createVideo, setCreateVideo] = useState();
   const [createImages, setCreateImages] = useState([]);
 
   if (!isOpen) return null;
-
-  //       "mediumUrl": "string",
-  //       "mediumType": "string",
-  //       "uploadedAt": "2025-07-20T19:16:47.406Z"
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -102,6 +101,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
       });
 
       setFormData((prev) => ({ ...prev, postMediaDTOs: mediaList }));
+      setFormData((prev) => ({ ...prev, content: contentValue }));
 
       onCreate(formData);
     } catch (err) {
@@ -214,18 +214,10 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
           {/* Content */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Nội dung *</label>
-            {/* <textarea
-              value={formData.content}
-              onChange={(e) => handleInputChange("content", e.target.value)}
-              className="gpcreate-textarea"
-              placeholder="Nhập nội dung bài viết"
-              rows={4}
-              required
-            /> */}
             <ReactQuill
               theme="snow"
-              value={formData.content}
-              onChange={(e) => handleInputChange("content", e.target.value)}
+              value={contentValue}
+              onChange={setContentValue}
             />
           </div>
 
@@ -262,37 +254,19 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
           {/* Product */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Chọn sản phẩm</label>
-            <div className="gpcreate-product-list">
+
+            <select
+              onChange={(e) => handleProductToggle(e.target.value)}
+              className="gpcreate-product-list"
+            >
+              <option value="">-- Chọn sản phẩm --</option>
               {Array.isArray(productList) &&
                 productList.map((product) => (
-                  <div key={product.id} className="gpcreate-product-item">
-                    <input
-                      type="checkbox"
-                      id={`product-${product.productId}`}
-                      checked={formData.selectedProducts.includes(
-                        product.productId
-                      )}
-                      onChange={() => handleProductToggle(product.productId)}
-                      className="gpcreate-checkbox"
-                    />
-                    <label
-                      htmlFor={`product-${product.productId}`}
-                      className="gpcreate-product-label"
-                    >
-                      {/* <img
-                        src={
-                          product.image || "/placeholder.svg?height=40&width=40"
-                        }
-                        alt={product.productName}
-                        className="gpcreate-product-image"
-                      /> */}
-                      <span className="gpcreate-product-name">
-                        {product.productName}
-                      </span>
-                    </label>
-                  </div>
+                  <option key={product.productId} value={product.productId}>
+                    {product.productName}
+                  </option>
                 ))}
-            </div>
+            </select>
           </div>
 
           <div className="gpcreate-actions">
