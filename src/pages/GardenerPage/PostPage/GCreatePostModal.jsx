@@ -1,8 +1,12 @@
 import React from "react";
+import axios from "axios";
 import { useState } from "react";
 import "./GCreatePostModal.css";
+import QuillTestbox from "../../../components/textarea/QuillTextbox";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
+function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -13,6 +17,12 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
     gardenerId: localStorage.getItem("account_id"),
   });
 
+  const [contentValue, setContentValue] = useState("");
+  const [createVideo, setCreateVideo] = useState();
+  const [createImages, setCreateImages] = useState([]);
+
+  if (!isOpen) return null;
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -22,54 +32,99 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prev) => ({
-      ...prev,
-      video: file,
-    }));
+    setCreateVideo(file);
   };
 
   const handleImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files],
-    }));
+    setCreateImages((prev) => [...prev, ...files]);
   };
 
   const removeImage = (indexToRemove) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove),
-    }));
+    setCreateImages((prev) => prev.filter((_, i) => i !== indexToRemove));
   };
 
   const handleProductToggle = (productId) => {
     setFormData((prev) => ({
       ...prev,
-      selectedProducts: prev.selectedProducts.includes(productId)
-        ? prev.selectedProducts.filter((id) => id !== productId)
-        : [...prev.selectedProducts, productId],
+      productId: productId,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onCreate(formData);
-    setFormData({
-      title: "",
-      content: "",
-      video: null,
-      images: [],
-      selectedProducts: [],
-    });
-    onClose();
+    const uploadedAt = new Date().toISOString();
+    try {
+      const mediaList = [];
+
+      //Upload Video => Get video url and thumbnail url
+      const fileData = new FormData();
+      fileData.append("file", createVideo);
+      fileData.append("upload_preset", "clean_food_viet");
+
+      const videoRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dhin0zlf7/video/upload",
+        fileData
+      );
+
+      const publicId = videoRes.data.public_id;
+      const secureUrl = videoRes.data.secure_url;
+
+      //Push video + thumbnail
+      mediaList.push({
+        mediumUrl: secureUrl,
+        mediumType: "VIDEO",
+        uploadedAt,
+      });
+
+      const thumbnailUrl = `https://res.cloudinary.com/your_cloud_name/video/upload/so_1/${publicId}.jpg`;
+      mediaList.push({
+        mediumUrl: thumbnailUrl,
+        mediumType: "THUMBNAIL",
+        uploadedAt,
+      });
+
+      //Upload images
+      createImages.map(async (image) => {
+        fileData.set("file", image);
+
+        const imageRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
+          fileData
+        );
+
+        mediaList.push({
+          mediumUrl: imageRes.data.secure_url,
+          mediumType: "IMAGE",
+          uploadedAt,
+        });
+      });
+
+      setFormData((prev) => ({ ...prev, postMediaDTOs: mediaList }));
+      setFormData((prev) => ({ ...prev, content: contentValue }));
+
+      onCreate(formData);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setFormData({
+        title: "",
+        content: "",
+        harvestDate: "",
+        postEndDate: new Date(),
+        postMediaDTOs: [],
+        productId: "",
+        gardenerId: localStorage.getItem("account_id"),
+      });
+      onClose();
+    }
   };
 
   const handleCancel = () => {
     setFormData({
       title: "",
       content: "",
-      harvestDate: "",
+      harvestDate: new Date(),
       postEndDate: new Date(),
       postMediaDTOs: [],
       productId: "",
@@ -77,8 +132,6 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
     });
     onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="gpcreate-overlay" onClick={onClose}>
@@ -91,6 +144,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
         </div>
 
         <form onSubmit={handleSubmit} className="gpcreate-form">
+          {/* Video */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Video</label>
             <input
@@ -99,13 +153,14 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
               onChange={handleVideoChange}
               className="gpcreate-file-input"
             />
-            {formData.video && (
+            {createVideo && (
               <div className="gpcreate-file-preview">
-                <span>📹 {formData.video.name}</span>
+                <span>📹 {createVideo.name}</span>
               </div>
             )}
           </div>
 
+          {/* Image List */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Hình ảnh</label>
             <input
@@ -115,9 +170,9 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
               onChange={handleImagesChange}
               className="gpcreate-file-input"
             />
-            {formData.images.length > 0 && (
+            {Array.isArray(createImages) && createImages.length > 0 && (
               <div className="gpcreate-images-preview-grid">
-                {formData.images.map((image, index) => (
+                {createImages.map((image, index) => (
                   <div key={index} className="gpcreate-image-preview-item">
                     <img
                       src={URL.createObjectURL(image) || "/placeholder.svg"}
@@ -143,6 +198,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
             )}
           </div>
 
+          {/* Title */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Tiêu đề *</label>
             <input
@@ -155,48 +211,62 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList = [] }) {
             />
           </div>
 
+          {/* Content */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Nội dung *</label>
-            <textarea
-              value={formData.content}
-              onChange={(e) => handleInputChange("content", e.target.value)}
-              className="gpcreate-textarea"
-              placeholder="Nhập nội dung bài viết"
-              rows={4}
+            <ReactQuill
+              theme="snow"
+              value={contentValue}
+              onChange={setContentValue}
+            />
+          </div>
+
+          {/* Havest Date */}
+          <div className="gpcreate-field">
+            <label className="gpcreate-label">Ngày thu hoạch *</label>
+            <input
+              type="date"
+              id="harvestDate"
+              value={formData.harvestDate}
+              onChange={(e) => handleInputChange("harvestDate", e.target.value)}
+              min={new Date().toISOString().split("T")[0]}
+              className="gpcreate-input"
               required
             />
           </div>
 
+          {/* Post End Date */}
+          <div className="gpcreate-field">
+            <label className="gpcreate-label">
+              Ngày dự tính kết thúc bài đăng *
+            </label>
+            <input
+              type="date"
+              id="postEndDate"
+              value={formData.postEndDate}
+              onChange={(e) => handleInputChange("postEndDate", e.target.value)}
+              min={new Date().toISOString().split("T")[0]}
+              className="gpcreate-input"
+              required
+            />
+          </div>
+
+          {/* Product */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Chọn sản phẩm</label>
-            <div className="gpcreate-product-list">
-              {productList.map((product) => (
-                <div key={product.id} className="gpcreate-product-item">
-                  <input
-                    type="checkbox"
-                    id={`product-${product.id}`}
-                    checked={formData.selectedProducts.includes(product.id)}
-                    onChange={() => handleProductToggle(product.id)}
-                    className="gpcreate-checkbox"
-                  />
-                  <label
-                    htmlFor={`product-${product.id}`}
-                    className="gpcreate-product-label"
-                  >
-                    <img
-                      src={
-                        product.image || "/placeholder.svg?height=40&width=40"
-                      }
-                      alt={product.name}
-                      className="gpcreate-product-image"
-                    />
-                    <span className="gpcreate-product-name">
-                      {product.name}
-                    </span>
-                  </label>
-                </div>
-              ))}
-            </div>
+
+            <select
+              onChange={(e) => handleProductToggle(e.target.value)}
+              className="gpcreate-product-list"
+            >
+              <option value="">-- Chọn sản phẩm --</option>
+              {Array.isArray(productList) &&
+                productList.map((product) => (
+                  <option key={product.productId} value={product.productId}>
+                    {product.productName}
+                  </option>
+                ))}
+            </select>
           </div>
 
           <div className="gpcreate-actions">

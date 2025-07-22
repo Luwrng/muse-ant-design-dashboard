@@ -1,14 +1,11 @@
 import httpService from "./httpService";
 
-const endpoint = "";
+const endpoint = "/gadener/payments";
 
-//Create, view?
-const makingPayment = async () => {};
+const makingPayment = async (data) => {
+  return await httpService.post(`${endpoint}`, data);
+};
 
-const viewPackageOrderHistory = async () => {};
-
-const viewPackageOrderDetail = async () => {};
-
-const paymentService = {};
+const paymentService = { makingPayment };
 
 export default paymentService;

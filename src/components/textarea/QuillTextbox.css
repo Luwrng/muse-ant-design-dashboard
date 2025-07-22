@@ -1,0 +1,20 @@
+.quill-controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.quill-controls-right {
+  margin-left: auto;
+}
+
+.quill-state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.quill-state-title {
+  color: #999;
+  text-transform: uppercase;
+}

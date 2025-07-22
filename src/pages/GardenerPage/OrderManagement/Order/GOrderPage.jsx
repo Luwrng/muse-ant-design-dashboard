@@ -36,10 +36,11 @@ function GOrderPage() {
     { key: "completed", label: "Hoàn thành", count: 4 },
   ];
 
-  const filteredOrders =
-    activeFilter === "all"
-      ? orders
-      : orders.filter((order) => order.status === activeFilter);
+  const filteredOrders = Array.isArray(orders)
+    ? activeFilter === "all"
+      ? orders || []
+      : (orders || []).filter((order) => order.status === activeFilter)
+    : [];
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);

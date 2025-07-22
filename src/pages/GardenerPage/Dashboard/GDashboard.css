@@ -9,8 +9,8 @@
 .gdashboard-title {
   color: #2c3e50;
   margin-bottom: 24px;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: bold;
 }
 
 /* Stats cards */
@@ -66,7 +66,7 @@
 
 .gdashboard-chart-card {
   background-color: white;
-  border-radius: 10px;  
+  border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
@@ -210,46 +210,46 @@
 }
 
 .gdashboard-bar-chart canvas {
-    width: 1000rem;
+  width: 1000rem;
 }
 
 /* Responsive adjustments */
 
 @media (max-width: 1200px) {
   .gdashboard-charts-container {
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: 1fr 1fr;
   }
   .gdashboard-bar-chart {
-    grid-column: span 2; 
+    grid-column: span 2;
   }
 }
 
 @media (max-width: 992px) {
   .gdashboard-charts-container {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
   .gdashboard-bar-chart {
     grid-column: span 1;
   }
   .gdashboard-calendar-content {
-    flex-direction: column; 
-    height: auto; 
+    flex-direction: column;
+    height: auto;
   }
   .gdashboard-react-calendar {
-    width: 100% !important; 
+    width: 100% !important;
     min-width: unset;
   }
   .gdashboard-upcoming-appointments {
     padding-left: 0;
     border-left: none;
-    margin-top: 20px; 
+    margin-top: 20px;
   }
   .gdashboard-card-header {
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
   }
   .gdashboard-card-header h3:last-child {
-    margin-top: 10px; 
+    margin-top: 10px;
   }
 }
 

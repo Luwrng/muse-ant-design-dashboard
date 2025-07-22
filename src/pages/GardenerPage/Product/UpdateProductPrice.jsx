@@ -5,7 +5,13 @@ import productService from "../../services/apiServices/productService";
 
 function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
   const [priceOption, setPriceOption] = useState("previous");
-  const [newPrice, setNewPrice] = useState("");
+  const [newPrice, setNewPrice] = useState({
+    price: 0,
+    currency: "VND",
+    weightUnit: "",
+    availabledDate: new Date().toISOString().split("T")[0],
+    isCurrent: true,
+  });
   const [selectedPreviousPrice, setSelectedPreviousPrice] = useState();
 
   const [prices, setPrices] = useState([]);
@@ -20,19 +26,19 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
     fetchPrices();
   }, [product]);
 
-  // // Mock previous prices data - replace with real data
-  // const previousPrices = [
-  //   { id: 1, price: "45.000đ/kg", date: "15/12/2024" },
-  //   { id: 2, price: "48.000đ/kg", date: "20/12/2024" },
-  //   { id: 3, price: "52.000đ/kg", date: "25/12/2024" },
-  // ];
-
   if (!isOpen || !product) return null;
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const handleNewPriceInputChange = (field, value) => {
+    setNewPrice((prev) => ({
+      ...prev,
+      field: value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -74,7 +80,7 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
           <div className="gppupdate-product-info">
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">ID:</span>
-              <span className="gppupdate-info-value">P01234355</span>
+              <span className="gppupdate-info-value">{product.productId}</span>
             </div>
             <div className="gppupdate-info-row">
               <span className="gppupdate-info-label">Tên sản phẩm:</span>
@@ -114,7 +120,7 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
                   {prices.map((priceItem) => (
                     <option
                       key={priceItem.productPriceId}
-                      value={priceItem.price}
+                      value={priceItem.productPriceId}
                     >
                       {priceItem.price}
                       {priceItem.currency}/{priceItem.weightUnit}
@@ -128,12 +134,40 @@ function UpdateProductPrice({ product, isOpen, onClose, onSubmit }) {
               <div className="gppupdate-form-group">
                 <label className="gppupdate-label">Giá mới:</label>
                 <input
-                  type="text"
-                  className="gppupdate-input"
-                  placeholder="Nhập giá mới..."
-                  value={newPrice}
-                  onChange={(e) => setNewPrice(e.target.value)}
+                  id="price"
+                  type="number"
+                  placeholder="Nhập giá bán"
+                  min={0}
+                  value={newPrice.price}
+                  onChange={(e) =>
+                    handleNewPriceInputChange("price", e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    if (["-", "+", "e"].includes(e.key)) {
+                      e.preventDefault(); // Block - + and scientific notation input
+                    }
+                  }}
                   required
+                />
+                <label className="gppupdate-label">Đơn vị khối lượng:</label>
+                <input
+                  id="weightUnit"
+                  type="text"
+                  placeholder="Ví dụ: kg, g"
+                  value={newPrice.weightUnit}
+                  onChange={(e) =>
+                    handleNewPriceInputChange("weightUnit", e.target.value)
+                  }
+                />
+                <label className="gppupdate-label">Ngày hiệu lực:</label>
+                <input
+                  id="availabledDate"
+                  type="date"
+                  value={newPrice.availabledDate}
+                  min={new Date().toISOString().split("T")[0]}
+                  onChange={(e) =>
+                    handleNewPriceInputChange("availabledDate", e.target.value)
+                  }
                 />
               </div>
             )}

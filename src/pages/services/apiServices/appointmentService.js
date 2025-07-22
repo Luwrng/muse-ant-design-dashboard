@@ -4,9 +4,13 @@ const endpoint = "/appointments";
 const accountEndpoint = "/accounts";
 
 const getAccountAppointments = async (accountId, filterField, filterValue) => {
-  return await httpService.get(`${accountEndpoint}/${accountId}/appointments`, {
-    params: { filterField, filterValue },
-  });
+  return await httpService.get(
+    `${accountEndpoint}/${accountId}/appointments`,
+    {},
+    {
+      params: { filterField, filterValue },
+    }
+  );
 };
 
 const getAccountRequestedAppointments = async (accountId) => {
@@ -30,9 +34,13 @@ const updateAppointment = async (appointmentId, data) => {
 };
 
 const updateAppointmentStatus = async (appointmentId, status) => {
-  return await httpService.patch(`${endpoint}/${appointmentId}/status`, {
-    params: { status },
-  });
+  return await httpService.patch(
+    `${endpoint}/${appointmentId}/status`,
+    {},
+    {
+      params: { status },
+    }
+  );
 };
 
 const cancelAppointment = async (appointmentId, data) => {

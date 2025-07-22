@@ -195,7 +195,10 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useHistory,
+  useLocation,
+} from "react-router-dom/cjs/react-router-dom.min";
 import { Layout, Menu, Button, Row, Col, Typography, Form, Input } from "antd";
 import signinbg from "../assets/images/img-signin.jpg";
 import styled from "styled-components";
@@ -226,6 +229,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false); // example useState
   const [error, setError] = useState("");
   const history = useHistory();
+  const location = useLocation();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -233,10 +237,17 @@ export default function SignIn() {
     try {
       localStorage.clear();
       const result = await authenticateService.login(values);
+      //Set value
       localStorage.setItem("auth_token", result.token);
       localStorage.setItem("account_id", result.accountId);
       localStorage.setItem("account_name", result.name);
       localStorage.setItem("account_avatar", result.avatar);
+
+      setLoading(false);
+      setError(null);
+      //Check redirect
+      const param = new URLSearchParams(location.search);
+      const redirectPath = param.get("redirect") || "/gardener/dashboard";
 
       // Lấy thông tin user để kiểm tra role
       try {
@@ -268,7 +279,7 @@ export default function SignIn() {
         } else {
           console.log("🌱 Chuyển hướng đến gardener dashboard");
           // Các role khác (gardener, retailer, guest) sẽ vào gardener dashboard
-          history.push("/gardener/dashboard");
+          history.push(redirectPath);
         }
       } catch (userInfoError) {
         console.log("❌ Không thể lấy thông tin user:", userInfoError);

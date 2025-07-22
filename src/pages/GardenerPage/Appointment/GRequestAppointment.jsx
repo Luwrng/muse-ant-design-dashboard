@@ -44,7 +44,9 @@ function GRequestAppointment({
                   .join("")}
               </div>
               <div className="garequest-user-details">
-                <h3 className="garequest-user-name">{appointment.retailerName}</h3>
+                <h3 className="garequest-user-name">
+                  {appointment.retailerName}
+                </h3>
                 <span className="garequest-status-badge">
                   {appointment.status}
                 </span>
@@ -64,7 +66,18 @@ function GRequestAppointment({
               <span className="garequest-detail-label">Ngày hẹn:</span>
               <span className="garequest-detail-value">
                 {/* {appointment.date} lúc {appointment.time} */}
-                {new Date(appointment.appointmentDate).toISOString().split('T')[0]} lúc {new Date(appointment.date).toISOString().split('T')[1].split('.')[0]}
+                {
+                  new Date(appointment.appointmentDate)
+                    .toISOString()
+                    .split("T")[0]
+                }{" "}
+                lúc{" "}
+                {
+                  new Date(appointment.appointmentDate)
+                    .toISOString()
+                    .split("T")[1]
+                    .split(".")[0]
+                }
               </span>
             </div>
             <div className="garequest-detail-row">

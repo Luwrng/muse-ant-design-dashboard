@@ -37,9 +37,14 @@ import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage
 import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
 import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
 import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
-import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
 import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
 import GSubscriptionHistory from "./pages/GardenerPage/SubscriptionHistory/GSubscriptionHistory";
+
+//Payment
+import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
+import SuccessPaymentResult from "./pages/GardenerPage/PaymentResult/SuccessPaymentResult";
+import FailPaymentResult from "./pages/GardenerPage/PaymentResult/FailPaymentResult";
+
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
 
@@ -54,7 +59,7 @@ function App() {
 
           {/* General routes */}
           <Route path="/" exact component={GardenerLandingPage} />
-
+            
           {/* Gardener routes */}
           <ProtectedRoute
             path="/gardener/service-package"
@@ -65,6 +70,16 @@ function App() {
             path="/gardener/payment-result"
             component={PaymentResult}
             allowedRoles={['gardener', 'retailer']}
+          />
+              
+          {/* Payment Result Routes */}
+          <Route
+            path="/gardener/payment-result/success"
+            component={SuccessPaymentResult}
+          />
+          <Route
+            path="/gardener/payment-result/fail"
+            component={FailPaymentResult}
           />
 
           <Route

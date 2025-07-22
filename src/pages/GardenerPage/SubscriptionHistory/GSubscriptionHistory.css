@@ -1,7 +1,6 @@
 .gsbchistory-container {
   font-family: sans-serif;
   padding: 20px;
-  max-width: 1200px;
   margin: 0 auto;
   background-color: #f8f9fa;
   border-radius: 8px;
@@ -15,7 +14,7 @@
 }
 
 .gsbchistory-title {
-  font-size: 24px;
+  font-size: 2.2rem;
   font-weight: bold;
   color: #333;
   margin: 0;
@@ -27,7 +26,15 @@
   margin-bottom: 20px;
 }
 
-.gsbchistory-search-input,
+.gsbchistory-search-input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
 .gsbchistory-status-select {
   padding: 10px 15px;
   border: 1px solid #ddd;
@@ -95,7 +102,7 @@
   color: #008000;
 }
 
-.gsbchistory-status-suspended {
+.gsbchistory-status-pending {
   background-color: #fffacd;
   color: #daa520;
 }
