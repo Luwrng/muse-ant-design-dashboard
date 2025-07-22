@@ -42,9 +42,15 @@ const getProductPrices = async (productId) => {
   return await httpService.get(`${productEndpoint}/${productId}/prices`);
 };
 
-const createProductPrice = async (productId, data) => {};
+const createProductPrice = async (productId, data) => {
+  return await httpService.post(`${productEndpoint}/${productId}/prices`, data);
+};
 
-const setProductCurrentPrice = async (productId, priceId) => {};
+const setProductCurrentPrice = async (productId, priceId) => {
+  return await httpService.patch(
+    `${productEndpoint}/${productId}/prices/${priceId}`
+  );
+};
 
 //Product Category
 const getGardenerProductCategories = async (gardenerId, page, size) => {
@@ -88,6 +94,8 @@ const productService = {
 
   //Price
   getProductPrices,
+  createProductPrice,
+  setProductCurrentPrice,
 
   //Category
   getGardenerProductCategories,

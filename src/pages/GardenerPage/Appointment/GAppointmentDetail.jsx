@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./GAppointmentDetail.css";
 
-function    GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
+function GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
   if (!isOpen || !appointment) return null;
 
   function getFormattedStartAndEndTime(isoDate, durationMinutes) {
-  const start = new Date(isoDate);
-  const end = new Date(start.getTime() + durationMinutes * 60000);
+    const start = new Date(isoDate);
+    const end = new Date(start.getTime() + durationMinutes * 60000);
 
-  const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
+    const formatTime = (date) => {
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    };
 
-  return {
-    startTime: formatTime(start),
-    endTime: formatTime(end)
-  };
-}
-  const { startTime, endTime } = getFormattedStartAndEndTime(appointment.appointmentDate, appointment.duration);
+    return {
+      startTime: formatTime(start),
+      endTime: formatTime(end),
+    };
+  }
+  const { startTime, endTime } = getFormattedStartAndEndTime(
+    appointment.appointmentDate,
+    appointment.duration
+  );
 
   const handleCancel = () => {
     onCancel(appointment);
@@ -49,11 +52,11 @@ function    GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
                 <h3 className="gapdetail-appointment-subject">
                   {appointment.subject}
                 </h3>
-                <span
+                {/* <span
                   className={`gapdetail-status-badge gapdetail-status-${appointment.status.toLowerCase()}`}
                 >
                   {appointment.status}
-                </span>
+                </span> */}
               </div>
             </div>
           </div>
@@ -64,7 +67,7 @@ function    GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
               <span className="gapdetail-detail-label">Thời gian:</span>
               <span className="gapdetail-detail-value">
                 {/* Add a function for calculating the endTime of the appointment */}
-                {startTime} - {endTime}
+                {appointment.startTime} - {appointment.endTime}
               </span>
             </div>
             <div className="gapdetail-detail-row">

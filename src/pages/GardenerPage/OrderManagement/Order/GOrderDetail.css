@@ -8,7 +8,6 @@
   z-index: 1000;
   overflow-y: auto;
 }
-
 .godetail-header {
   display: flex;
   justify-content: space-between;
@@ -20,7 +19,6 @@
   top: 0;
   z-index: 10;
 }
-
 .godetail-back-btn {
   background: none;
   border: none;
@@ -31,17 +29,14 @@
   align-items: center;
   gap: 8px;
 }
-
 .godetail-back-btn:hover {
   color: #333;
 }
-
 .godetail-actions {
   display: flex;
   gap: 12px;
   align-items: center;
 }
-
 .godetail-create-delivery-btn {
   background: #28a745;
   color: white;
@@ -51,15 +46,12 @@
   font-size: 14px;
   cursor: pointer;
 }
-
 .godetail-create-delivery-btn:hover {
   background: #218838;
 }
-
 .godetail-dropdown {
   position: relative;
 }
-
 .godetail-menu-btn {
   background: #f8f9fa;
   border: 1px solid #e0e0e0;
@@ -68,7 +60,6 @@
   cursor: pointer;
   font-size: 16px;
 }
-
 .godetail-dropdown-menu {
   position: absolute;
   top: 100%;
@@ -80,7 +71,6 @@
   min-width: 150px;
   z-index: 20;
 }
-
 .godetail-dropdown-item {
   display: block;
   width: 100%;
@@ -91,80 +81,70 @@
   cursor: pointer;
   font-size: 14px;
 }
-
 .godetail-dropdown-item:hover {
   background: #f8f9fa;
 }
-
 .godetail-content {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
 }
-
 .godetail-title-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
 }
-
 .godetail-title {
   font-size: 24px;
   font-weight: 600;
   color: #333;
   margin: 0;
 }
-
 .godetail-status {
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
 }
-
 .godetail-status-pending {
   background: #fff3cd;
   color: #856404;
 }
-
 .godetail-status-delivering {
   background: #cce5ff;
   color: #0066cc;
 }
-
-.godetail-status-completed {
+.godetail-status-completed,
+.godetail-status-delivered {
+  /* Added .godetail-status-delivered */
   background: #d4edda;
   color: #155724;
 }
-
 .godetail-info {
   margin-bottom: 32px;
 }
-
 .godetail-info p {
   margin: 8px 0;
   font-size: 14px;
   color: #666;
 }
-
 .godetail-customer {
   font-weight: 500;
   color: #333 !important;
 }
-
 .godetail-total {
   font-weight: 500;
   color: #333 !important;
 }
-
-.godetail-products-title {
+.godetail-products-title,
+.godetail-deliveries-title {
+  /* Added .godetail-deliveries-title */
   font-size: 18px;
   font-weight: 600;
   color: #333;
   margin-bottom: 16px;
 }
-
 .godetail-product-item {
   display: flex;
   justify-content: space-between;
@@ -175,47 +155,39 @@
   margin-bottom: 12px;
   background: #f8f9fa;
 }
-
 .godetail-product-left {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   flex: 1;
 }
-
 .godetail-product-checkbox {
   margin-top: 4px;
 }
-
 .godetail-product-info {
   flex: 1;
 }
-
 .godetail-product-name {
   font-size: 16px;
   font-weight: 500;
   color: #333;
   margin: 0 0 4px 0;
 }
-
 .godetail-product-price {
   font-size: 14px;
   color: #666;
   margin: 0 0 12px 0;
 }
-
 .godetail-quantity-input {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
 }
-
 .godetail-quantity-input label {
   font-size: 14px;
   color: #333;
 }
-
 .godetail-quantity-input input {
   width: 60px;
   padding: 4px 8px;
@@ -223,43 +195,35 @@
   border-radius: 4px;
   font-size: 14px;
 }
-
 .godetail-quantity-input input.godetail-error {
   border-color: #dc3545;
 }
-
 .godetail-quantity-limit {
   font-size: 14px;
   color: #666;
 }
-
 .godetail-error-message {
   color: #dc3545;
   font-size: 12px;
   margin-top: 4px;
 }
-
 .godetail-product-right {
   text-align: right;
 }
-
 .godetail-quantity-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-
 .godetail-quantity-label {
   font-size: 14px;
   color: #666;
 }
-
 .godetail-quantity-remaining {
   font-size: 14px;
   color: #dc3545;
   font-weight: 500;
 }
-
 .godetail-delivery-actions {
   display: flex;
   gap: 12px;
@@ -268,7 +232,6 @@
   padding-top: 20px;
   border-top: 1px solid #e0e0e0;
 }
-
 .godetail-create-btn {
   background: #28a745;
   color: white;
@@ -278,12 +241,10 @@
   font-size: 14px;
   cursor: pointer;
 }
-
 .godetail-create-btn:disabled {
   background: #6c757d;
   cursor: not-allowed;
 }
-
 .godetail-cancel-btn {
   background: #6c757d;
   color: white;
@@ -292,4 +253,115 @@
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
+}
+
+/* New styles for Order Deliveries List */
+.godetail-deliveries-section {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.godetail-no-deliveries {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+.godetail-delivery-item {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.godetail-delivery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer; /* Indicate clickable */
+}
+
+.godetail-delivery-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.godetail-delivery-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.godetail-dropdown-icon {
+  width: 18px;
+  height: 18px;
+  color: #666;
+  transition: transform 0.2s ease-in-out;
+}
+
+.godetail-delivery-item p {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0;
+}
+
+.godetail-delivery-details-list {
+  margin-top: 15px;
+  border-top: 1px dashed #ccc;
+  padding-top: 10px;
+  /* max-height: 150px; */ /* Removed fixed height for dropdown effect */
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 10px;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* Smooth transition */
+  max-height: 500px; /* A large enough value for expanded state */
+  opacity: 1;
+}
+
+/* Optional: For a true collapse effect, you might use max-height: 0 and overflow: hidden */
+/* .godetail-delivery-details-list.collapsed {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+} */
+
+.godetail-delivery-details-list h4 {
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.godetail-delivery-detail-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #444;
+  padding: 5px 0;
+  border-bottom: 1px dotted #eee;
+}
+
+.godetail-delivery-detail-item:last-child {
+  border-bottom: none;
+}
+
+.godetail-no-delivery-details {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 10px 0;
+}
+
+.godetail-loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: #555;
 }

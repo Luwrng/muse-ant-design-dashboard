@@ -11,11 +11,11 @@ function GAddCertificate({ onClose, onAdd }) {
     issueDate: "",
     expiryDate: "",
     imageUrl: "",
-    status: "ACTIVE"
+    status: "ACTIVE",
   });
 
   const [file, setFile] = useState();
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [previewUrl, setPreviewUrl] = useState("");
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -23,7 +23,7 @@ function GAddCertificate({ onClose, onAdd }) {
   // };
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -31,19 +31,19 @@ function GAddCertificate({ onClose, onAdd }) {
 
   const handleFileChange = (e) => {
     const chosenFile = e.target.files[0];
-    if(!chosenFile) return;
+    if (!chosenFile) return;
 
     setFile(chosenFile);
     // const objectUrl = URL.createObjectURL(chosenFile);
     // setPreviewUrl(objectUrl);
-  }
+  };
 
-//   // Cleanup object URLs
-// useEffect(() => {
-//   return () => {
-//     if (previewUrl) URL.revokeObjectURL(previewUrl);
-//   };
-// }, [previewUrl]);
+  //   // Cleanup object URLs
+  // useEffect(() => {
+  //   return () => {
+  //     if (previewUrl) URL.revokeObjectURL(previewUrl);
+  //   };
+  // }, [previewUrl]);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -53,24 +53,23 @@ function GAddCertificate({ onClose, onAdd }) {
 
   const handleCreateSubmit = async (e) => {
     try {
-       e.preventDefault();
+      e.preventDefault();
       const fileData = new FormData();
-      fileData.append('file', file); // This will work
-      fileData.append('upload_preset', 'clean_food_viet');
-      
+      fileData.append("file", file); // This will work
+      fileData.append("upload_preset", "clean_food_viet");
+
       const res = await axios.post(
         "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
         fileData
       );
-      
+
       const updatedFormData = formData;
       updatedFormData.imageUrl = res.data.url;
-      console.log(updatedFormData.status)
 
       const gardenerId = localStorage.getItem("account_id");
       await certificateService.createCertificate(gardenerId, updatedFormData);
 
-      console.log(updatedFormData.status)
+      console.log(updatedFormData.status);
       onAdd(formData);
     } catch (err) {
       console.log(err);
@@ -87,7 +86,10 @@ function GAddCertificate({ onClose, onAdd }) {
           <h2>Thêm chứng chỉ</h2>
         </div>
 
-        <form onSubmit={handleCreateSubmit} className="gaddcertificate-popup-form">
+        <form
+          onSubmit={handleCreateSubmit}
+          className="gaddcertificate-popup-form"
+        >
           <div className="gaddcertificate-form-group">
             <label htmlFor="name">Tên chứng chỉ</label>
             <input

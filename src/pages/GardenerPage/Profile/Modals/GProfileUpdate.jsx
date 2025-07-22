@@ -1,6 +1,7 @@
 import { useState } from "react";
 import React from "react";
 import "./GProfileUpdate.css";
+import axios from "axios";
 import accountService from "../../../services/apiServices/accountService";
 
 function GProfileUpdate({ profile, onClose, onUpdate }) {
@@ -9,12 +10,22 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
     gender: profile.gender,
     avatar: profile.avatar,
   });
+  const [file, setFile] = useState();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const chosenFile = e.target.files[0];
+    if (!chosenFile) return;
+
+    setFile(chosenFile);
+    // const objectUrl = URL.createObjectURL(chosenFile);
+    // setPreviewUrl(objectUrl);
   };
 
   const handleOverlayClick = (e) => {
@@ -26,9 +37,20 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
   const handleUpdateSubmit = async (e) => {
     try {
       e.preventDefault();
+      const fileData = new FormData();
+      fileData.append("file", file); // This will work
+      fileData.append("upload_preset", "clean_food_viet");
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
+        fileData
+      );
+
+      const updatedFormData = formData;
+      updatedFormData.avatar = res.data.url;
+
       const accountId = localStorage.getItem("account_id");
-      await accountService.updateProfile(accountId, formData);
-      onUpdate({ ...profile, ...formData });
+      await accountService.updateProfile(accountId, updatedFormData);
+      onUpdate({ ...profile, ...updatedFormData });
       onClose();
     } catch (err) {
       console.log(err);
@@ -45,7 +67,10 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
           <h2>Cập nhật hồ sơ</h2>
         </div>
 
-        <form onSubmit={handleUpdateSubmit} className="gupdateprofile-popup-form">
+        <form
+          onSubmit={handleUpdateSubmit}
+          className="gupdateprofile-popup-form"
+        >
           <div className="gupdateprofile-form-group">
             <label htmlFor="name">Tên</label>
             <input
@@ -75,11 +100,11 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
           <div className="gupdateprofile-form-group">
             <label htmlFor="avatar">Avatar</label>
             <input
-              type="text"
+              type="file"
               id="avatar"
               name="avatar"
-              value={formData.avatar}
-              onChange={handleChange}
+              accept="image/*"
+              onChange={handleFileChange}
               placeholder="https://example.com/image.jpg"
             />
           </div>

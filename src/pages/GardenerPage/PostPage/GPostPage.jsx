@@ -27,31 +27,33 @@ function GPostPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  // #region Fetching data
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const gardenerId = localStorage.getItem("account_id");
-        const gardenerProducts = await productService.getGardenerProducts(
-          gardenerId
-        );
-        setProducts(gardenerProducts);
-
-        const gardenerPosts = await postService.getGardenerPosts(
-          gardenerId,
-          currentPage,
-          10,
-          "Status"
-        );
-        setPosts(gardenerPosts);
-        setTotalPages(gardenerPosts.totalPages);
-        setTotalResults(gardenerPosts.total);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchData();
+    fetchData(currentPage);
   }, [currentPage]);
+
+  const fetchData = async (currentPage) => {
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      const gardenerProducts = await productService.getGardenerProducts(
+        gardenerId
+      );
+      setProducts(gardenerProducts.items);
+
+      const gardenerPosts = await postService.getGardenerPosts(
+        gardenerId,
+        currentPage,
+        10,
+        "Status"
+      );
+      setPosts(gardenerPosts);
+      setTotalPages(gardenerPosts.totalPages);
+      setTotalResults(gardenerPosts.total);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // #endregion
 
   const filterTabs = [
     { id: "all", label: "Hoạt động", count: 2 },
@@ -123,26 +125,26 @@ function GPostPage() {
     setShowUpdatePopup(false);
   };
 
-  const handleCreate = (newPostData) => {
-    const newPost = {
-      id: posts.length + 1,
-      title: newPostData.title,
-      description: newPostData.content,
-      image: "/placeholder.svg?height=200&width=300",
-      status: "Đang bán",
-      rating: 0,
-      createdDate: new Date().toLocaleDateString("vi-VN"),
-      productName: "New Product",
-      price: "100,000đ",
-      unit: "kg",
-      harvestDate: new Date().toLocaleDateString("vi-VN"),
-      category: "Unknown",
-      products: productList.filter((product) =>
-        newPostData.selectedProducts.includes(product.id)
-      ),
-    };
-    setPosts([...posts, newPost]);
-    setShowCreatePopup(false);
+  const handleCreate = async (newPostData) => {
+    try {
+      const newPost = {
+        id: posts.length + 1,
+        title: newPostData.title,
+        content: newPostData.content,
+        harvestDate: new Date().toLocaleDateString("vi-VN"),
+        postEndDate: new Date().toLocaleDateString("vi-VN"),
+        productId: newPostData.productId,
+        gardenerId: newPostData.gardenerId,
+        postMediaDTOs: newPostData.postMediaDTOs,
+      };
+
+      await postService.createPost(newPost.gardenerId, newPost);
+      await fetchData(1);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setShowCreatePopup(false);
+    }
   };
 
   const handleConfirmDisable = async () => {
@@ -189,7 +191,7 @@ function GPostPage() {
           <div className="gpost-filter-tabs-options">
             {filterTabs.map((tab) => (
               <button
-                key={tab.key}
+                key={tab.id}
                 className={`gpost-filter-tab ${
                   activeFilter === tab.label ? "active" : ""
                 }`}
