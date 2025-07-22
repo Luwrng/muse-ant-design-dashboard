@@ -32,65 +32,29 @@ function GardenerProductPage() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
+  const [filterTabs, setFilterTabs] = useState([
+    { id: "all", label: "Tất cả", count: 0 },
+    { id: "ACTIVE", label: "Đang bán", count: 0 },
+    { id: "INACTIVE", label: "Hết hàng", count: 0 },
+  ]);
+
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  // const mockProducts = [
-  //   {
-  //     id: "1",
-  //     name: "Rau cải",
-  //     category: "Rau củ",
-  //     price: 50000,
-  //     weightUnit: "kg",
-  //     status: "selling",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Cà chua",
-  //     category: "Rau củ",
-  //     price: 35000,
-  //     weightUnit: "kg",
-  //     status: "selling",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Khoai tây",
-  //     category: "Rau củ",
-  //     price: 25000,
-  //     weightUnit: "kg",
-  //     status: "out_of_stock",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Bắp cải",
-  //     category: "Rau củ",
-  //     price: 40000,
-  //     weightUnit: "kg",
-  //     status: "selling",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "Hành tây",
-  //     category: "Rau củ",
-  //     price: 15000,
-  //     weightUnit: "kg",
-  //     status: "selling",
-  //   },
-  //   {
-  //     id: "6",
-  //     name: "Tỏi",
-  //     category: "Gia vị",
-  //     price: 60000,
-  //     weightUnit: "kg",
-  //     status: "out_of_stock",
-  //   },
-  // ];
-
+  
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    setFilterTabs([
+      { id: "all", label: "Tất cả", count: products.length },
+      { id: "ACTIVE", label: "Đang bán", count: products.filter((p) => p.status === "ACTIVE").length },
+      { id: "INACTIVE", label: "Hết hàng", count: products.filter((p) => p.status === "INACTIVE").length },
+    ]);
+  }, [products]);
 
   const fetchProducts = async (currentPage) => {
     try {
@@ -120,18 +84,7 @@ function GardenerProductPage() {
     return matchesTab && matchesSearch;
   });
 
-  // Get counts for each filter
-  const getFilterCounts = () => {
-    const available = products.filter((p) => p.status === "ACTIVE").length;
-    const outOfStock = products.filter((p) => p.status === "INACTIVE").length;
-    return {
-      all: products.length,
-      available,
-      outOfStock,
-    };
-  };
 
-  const filterCounts = getFilterCounts();
 
   // Close dropdown when clicking outside
   const dropdownRef = useRef(null);
@@ -147,7 +100,7 @@ function GardenerProductPage() {
     };
   }, [dropdownRef]);
 
-  //#region In code icon
+
   const SearchIcon = () => (
     <svg
       className="gproduct-icon gproduct-search-icon"
@@ -180,21 +133,7 @@ function GardenerProductPage() {
     </svg>
   );
 
-  // const FilterIcon = () => (
-  //   <svg
-  //     className="gproduct-icon"
-  //     fill="none"
-  //     stroke="currentColor"
-  //     viewBox="0 0 24 24"
-  //   >
-  //     <path
-  //       strokeLinecap="round"
-  //       strokeLinejoin="round"
-  //       strokeWidth={2}
-  //       d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.586a1 1 0  0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707V17l-4 4v-6.586a1 1 0 0 0-.293-.707L3.293 7.293A1 1 0 0 1 3 6.586V4Z"
-  //     />
-  //   </svg>
-  // );
+  
 
   const ChevronLeftIcon = () => (
     <svg
@@ -227,9 +166,9 @@ function GardenerProductPage() {
       />
     </svg>
   );
-  //#endregion
 
-  // View Product Detail
+
+  
   const handleProductClick = (product) => {
     setIsDropdownOpen(false);
     setSelectedProduct(product);
@@ -362,31 +301,17 @@ function GardenerProductPage() {
 
       <div className="gproduct-header-bottom">
         <div className="gproduct-tabs-list">
-          <button
-            className={`gproduct-tab-trigger ${
-              activeTab === "all" ? "gproduct-tab-trigger-active" : ""
-            }`}
-            onClick={() => setActiveTab("all")}
-          >
-            Tất cả ({products.length})
-          </button>
-          <button
-            className={`gproduct-tab-trigger ${
-              activeTab === "selling" ? "gproduct-tab-trigger-active" : ""
-            }`}
-            onClick={() => setActiveTab("selling")}
-          >
-            Đang bán ({products.filter((p) => p.status === "selling").length})
-          </button>
-          <button
-            className={`gproduct-tab-trigger ${
-              activeTab === "out_of_stock" ? "gproduct-tab-trigger-active" : ""
-            }`}
-            onClick={() => setActiveTab("out_of_stock")}
-          >
-            Hết hàng (
-            {products.filter((p) => p.status === "out_of_stock").length})
-          </button>
+          {filterTabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`gproduct-tab-trigger ${
+                activeTab === tab.id ? "gproduct-tab-trigger-active" : ""
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label} ({tab.count})
+            </button>
+          ))}
         </div>
         <div className="gproduct-search-container">
           <SearchIcon className="gproduct-search-icon" />
@@ -515,29 +440,26 @@ function GardenerProductPage() {
         </table>
       </div>
 
-      <div className="gproduct-pagination-info">
-        <span>
-          Hiển thị {filteredProducts.length > 0 ? 1 : 0} từ{" "}
-          {filteredProducts.length} đến tổng số {products.length} kết quả
-        </span>
-        <div className="gproduct-pagination-buttons">
-          <button className="gproduct-button gproduct-pagination-button">
-            {"<"}
-          </button>
-          <button className="gproduct-button gproduct-pagination-button">
-            1
-          </button>
-          <button className="gproduct-button gproduct-pagination-button">
-            2
-          </button>
-          <button className="gproduct-button gproduct-pagination-button">
-            3
-          </button>
-          <button className="gproduct-button gproduct-pagination-button">
-            {">"}
-          </button>
+      <div className="gorder-pagination">
+          <div className="gorder-pagination-info">
+         
+          </div>
+          <div className="gpost-pagination-controls">
+          <button className="gpost-pagination-btn">‹</button>
+          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
+            <button
+              key={index}
+              className={`gpost-pagination-btn ${
+                page === 1 ? "gpost-active" : ""
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          <button className="gpost-pagination-btn">›</button>
         </div>
-      </div>
+        </div>
+
       {/* Product Detail */}
       <ProductDetailPage
         product={selectedProduct}

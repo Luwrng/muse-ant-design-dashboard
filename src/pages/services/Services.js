@@ -12,7 +12,8 @@ import {
   Descriptions,
   message,
   Select,
-  Switch
+  Switch,
+  Form,
 } from "antd";
 import DetailButton from "../../components/button/DetailButton";
 import EditButton from "../../components/button/EditButton";
@@ -20,10 +21,11 @@ import DeleteButton from "../../components/button/DeleteButton";
 import SearchButton from "../../components/button/SearchButton";
 import AddButton from "../../components/button/AddButton";
 import Service_add from "./Service_add";
+import { Input, InputNumber } from "antd";
+import { Option } from "antd/es/mentions";
+import { useForm } from "antd/es/form/Form";
 
 import { cleanfood } from "../../api_admin";
-
-const { Option } = Select;
 
 const ServiceList = () => {
   const [dataSource, setDataSources] = useState([]);
@@ -33,16 +35,23 @@ const ServiceList = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-
+  const [form] = Form.useForm();
   const fetchService = async (page = 1, size = 10, search = "") => {
     try {
-      const data = await cleanfood.admin.getServiceFeatures({ page, size, search });
+      const data = await cleanfood.admin.getServiceFeatures({
+        page,
+        size,
+        search,
+      });
       const formattedData = data.items.map((item) => ({
         key: item.serviceFeatureId,
+        serviceFeatureId: item.serviceFeatureId,
         action: item.serviceFeatureName,
         value: item.defaultValue,
         description: item.description,
@@ -63,36 +72,46 @@ const ServiceList = () => {
 
   const showEditModal = (record) => {
     setEditRecord(record);
-    setEditStatus(record.status);
     setEditModalVisible(true);
+
+    form.setFieldsValue({
+      serviceFeatureName: record.action,
+      description: record.description,
+      action: record.value,
+      status: record.status,
+    });
   };
 
   const handleUpdateStatus = async () => {
     try {
+      const values = await form.validateFields();
+      setConfirmLoading(true);
+
       const payload = {
-        serviceFeatureName: editRecord.action, // GIỮ NGUYÊN không đổi
-        description: editRecord.description,   // Có thể giữ nguyên hoặc thay đổi
-        status: editStatus,                    // Cập nhật mới
-        action: 0,                             // Bắt buộc
+        serviceFeatureId: editRecord?.serviceFeatureId,
+        serviceFeatureName: values.serviceFeatureName,
+        description: values.description,
+        action: editRecord?.value ?? 0, 
+        status: values.status,
       };
 
-      await cleanfood.admin.updateServiceFeature(editRecord.key, payload);
-      message.success("Cập nhật trạng thái thành công!");
+      console.log("📦 Payload gửi đi:", payload); // Kiểm tra kỹ ID này!
+
+      await cleanfood.admin.updateServiceFeature(payload);
+      message.success("🎉 Cập nhật dịch vụ thành công");
       setEditModalVisible(false);
       fetchService(currentPage, pageSize, searchText);
     } catch (error) {
-      console.error("Lỗi updateServiceFeature:", error);
-      if (error.response?.data?.errors) {
-        const messages = Object.entries(error.response.data.errors)
-          .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
-          .join("\n");
-        message.error(messages);
-      } else {
-        message.error("Cập nhật trạng thái thất bại!");
-      }
+      console.error(
+        "❌ Lỗi khi cập nhật dịch vụ:",
+        error.response?.data?.errors || error
+      );
+      message.error("Cập nhật thất bại");
+      throw error;
+    } finally {
+      setConfirmLoading(false);
     }
   };
-
 
   const handleAddService = async (newServiceData) => {
     try {
@@ -146,19 +165,24 @@ const ServiceList = () => {
       render: (_, record) => (
         <Space size="middle">
           <DetailButton
+            tooltip="Xem chi tiết"
             onClick={() => {
               setSelectedRecord(record);
               setDetailModalVisible(true);
             }}
           />
-          <EditButton tooltip="Chỉnh sửa trạng thái" onClick={() => showEditModal(record)} />
+          <EditButton
+            tooltip="Chỉnh sửa trạng thái"
+            onClick={() => showEditModal(record)}
+          />
           <DeleteButton
             record={record}
-            tooltip="Vô hiệu hóa"
+            tooltip="Xóa"
             type="feature"
-            onDeleteSuccess={() => fetchService(currentPage, pageSize, searchText)}
+            onDeleteSuccess={() =>
+              fetchService(currentPage, pageSize, searchText)
+            }
           />
-
         </Space>
       ),
     },
@@ -171,13 +195,21 @@ const ServiceList = () => {
         open={detailModalVisible}
         title="Chi Tiết Dịch Vụ"
         onCancel={() => setDetailModalVisible(false)}
-        footer={<Button onClick={() => setDetailModalVisible(false)}>Đóng</Button>}
+        footer={
+          <Button onClick={() => setDetailModalVisible(false)}>Đóng</Button>
+        }
       >
         {selectedRecord && (
           <Descriptions bordered column={1}>
-            <Descriptions.Item label="Hành Động">{selectedRecord.action}</Descriptions.Item>
-            <Descriptions.Item label="Giá Trị">{selectedRecord.value}</Descriptions.Item>
-            <Descriptions.Item label="Mô Tả">{selectedRecord.description}</Descriptions.Item>
+            <Descriptions.Item label="Hành Động">
+              {selectedRecord.action}
+            </Descriptions.Item>
+            <Descriptions.Item label="Giá Trị">
+              {selectedRecord.value}
+            </Descriptions.Item>
+            <Descriptions.Item label="Mô Tả">
+              {selectedRecord.description}
+            </Descriptions.Item>
             <Descriptions.Item label="Trạng Thái">
               <Tag color={selectedRecord.status === "ACTIVE" ? "green" : "red"}>
                 {selectedRecord.status === "ACTIVE" ? "Hoạt Động" : "Tạm Dừng"}
@@ -196,7 +228,7 @@ const ServiceList = () => {
           <Row gutter={12}>
             <Col>
               <SearchButton
-                placeholder="Tìm kiếm hành động..."
+                placeholder="Tìm kiếm"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
@@ -238,29 +270,41 @@ const ServiceList = () => {
         {/* Modal chỉnh sửa trạng thái */}
         <Modal
           open={editModalVisible}
-          title="Chỉnh sửa trạng thái"
+          title="Chỉnh sửa dịch vụ"
           onCancel={() => setEditModalVisible(false)}
           onOk={handleUpdateStatus}
           okText="Lưu"
+          confirmLoading={confirmLoading}
           cancelText="Hủy"
         >
-          <p>Trạng thái hiện tại của dịch vụ: <strong>{editRecord?.action}</strong></p>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-            <Switch
-              checked={editStatus === "ACTIVE"}
-              checkedChildren="Hoạt Động"
-              unCheckedChildren="Tạm Dừng"
-              onChange={(checked) => setEditStatus(checked ? "ACTIVE" : "INACTIVE")}
-              className="custom-switch"
-              style={{
+          <Form form={form} layout="vertical">
+            <Form.Item
+              label="Tên dịch vụ"
+              name="serviceFeatureName"
+              rules={[{ required: true, message: "Vui lòng nhập tên dịch vụ" }]}
+            >
+              <Input />
+            </Form.Item>
 
-                backgroundColor: editStatus === "ACTIVE" ? "#52c41a" : "#f5222d",
-                fontWeight: "bold",
-              }}
-            />
-          </div>
+            <Form.Item
+              label="Mô tả"
+              name="description"
+              rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+            >
+              <Input.TextArea rows={3} />
+            </Form.Item>
 
-
+            <Form.Item
+              label="Trạng thái"
+              name="status"
+              rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+            >
+              <Select>
+                <Option value="ACTIVE">Hoạt Động</Option>
+                <Option value="INACTIVE">Tạm Dừng</Option>
+              </Select>
+            </Form.Item>
+          </Form>
         </Modal>
       </Card>
     </>

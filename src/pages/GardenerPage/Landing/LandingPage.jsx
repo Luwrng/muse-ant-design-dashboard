@@ -11,7 +11,7 @@ import {
   BadgeCheck,
   HandHeart,
 } from "lucide-react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
 import "./LandingPage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
@@ -221,14 +221,14 @@ function GardenerLandingPage() {
             </div>
             <nav className="glanding-nav md:flex items-center space-x-8">
               <div className="glanding-link-div">
-                <a href="/sign-in" className="glanding-a-link">
+                <Link to="/sign-in" className="glanding-a-link">
                   Đăng nhập
-                </a>
+                </Link>
               </div>
               <div className="glanding-link-div">
-                <a href="/sign-up" className="glanding-a-link">
+                <Link to="/sign-up" className="glanding-a-link">
                   Đăng ký
-                </a>
+                </Link>
               </div>
             </nav>
           </div>
@@ -252,18 +252,18 @@ function GardenerLandingPage() {
                 ứng minh bạch, có thể truy xuất nguồn gốc.
               </p>
               <div className="glanding-hero-buttons flex flex-col sm:flex-row gap-4">
-                {/* <button
-                  className="glanding-btn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50"
-                  onClick={() => history.push("/gardener/product")}
+                <button
+                  className="glanding-btn-primary bg-white text-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-50 transition-colors"
+                  onClick={() => history.push("/sign-in")}
                 >
-                  Quản lý sản phẩm
+                  Đăng nhập
                 </button>
                 <button
-                  className="glanding-btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600"
-                  onClick={() => history.push("/gardener/post")}
+                  className="glanding-btn-secondary border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-600 transition-colors"
+                  onClick={() => history.push("/sign-up")}
                 >
-                  Quản lý bài đăng
-                </button> */}
+                  Đăng ký
+                </button>
               </div>
               <div className="glanding-hero-features flex items-center gap-8 mt-8 text-sm">
                 <div className="glanding-hero-feature flex items-center gap-2">

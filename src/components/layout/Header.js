@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-
 import {
   Row,
   Col,
@@ -28,6 +27,7 @@ import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import UserInfo from "../UserInfo";
 
 function Header({
   placement,
@@ -78,8 +78,11 @@ function Header({
 
   return (
     <>
-      <div onClick={goToNotifications} style={{ position: "absolute", top: 20, right: 40, cursor: "pointer", fontSize: "20px" }}>
-        <BellOutlined />
+      <div style={{ position: "absolute", top: 20, right: 40, display: "flex", alignItems: "center", gap: "20px" }}>
+        <div onClick={goToNotifications} style={{ cursor: "pointer", fontSize: "20px" }}>
+          <BellOutlined />
+        </div>
+        <UserInfo />
       </div>
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>

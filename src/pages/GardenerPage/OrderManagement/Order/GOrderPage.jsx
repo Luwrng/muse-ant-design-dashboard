@@ -28,63 +28,6 @@ function GOrderPage() {
     fetchOrder();
   }, []);
 
-  // Sample order data
-  // const orders = [
-  //   {
-  //     id: 1,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 2,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 3,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 4,
-  //     store: "Nature Shop",
-  //     total: "800.000",
-  //     items: 2,
-  //     date: "09:15 13/01/2024",
-  //     status: "completed",
-  //     statusText: "Hoàn thành",
-  //   },
-  //   {
-  //     id: 5,
-  //     store: "Flower Paradise",
-  //     total: "2.200.000",
-  //     items: 2,
-  //     date: "14:20 14/01/2024",
-  //     status: "delivering",
-  //     statusText: "Đang giao",
-  //   },
-  //   {
-  //     id: 6,
-  //     store: "Green Store",
-  //     total: "1.500.000",
-  //     items: 3,
-  //     date: "10:30 15/01/2024",
-  //     status: "pending",
-  //     statusText: "Chờ xử lý",
-  //   },
-  // ];
 
   const filterTabs = [
     { key: "all", label: "Tất cả", count: 6 },
@@ -183,26 +126,22 @@ function GOrderPage() {
         {/* Pagination */}
         <div className="gorder-pagination">
           <div className="gorder-pagination-info">
-            Hiển thị từ 1 đến {filteredOrders.length} trong tổng số{" "}
-            {filteredOrders.length} kết quả
+         
           </div>
-          <div className="gorder-pagination-controls">
+          <div className="gpost-pagination-controls">
+          <button className="gpost-pagination-btn">‹</button>
+          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
-              className="gorder-pagination-btn"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              key={index}
+              className={`gpost-pagination-btn ${
+                page === 1 ? "gpost-active" : ""
+              }`}
             >
-              Trước
+              {page}
             </button>
-            <button className="gorder-pagination-btn gorder-active">1</button>
-            <button
-              className="gorder-pagination-btn"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === 1}
-            >
-              Tiếp
-            </button>
-          </div>
+          ))}
+          <button className="gpost-pagination-btn">›</button>
+        </div>
         </div>
       </div>
       {showOrderDetail && (

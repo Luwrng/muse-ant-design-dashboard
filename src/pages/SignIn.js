@@ -242,13 +242,54 @@ export default function SignIn() {
       localStorage.setItem("account_id", result.accountId);
       localStorage.setItem("account_name", result.name);
       localStorage.setItem("account_avatar", result.avatar);
+
       setLoading(false);
       setError(null);
       //Check redirect
       const param = new URLSearchParams(location.search);
       const redirectPath = param.get("redirect") || "/gardener/dashboard";
 
-      history.push(redirectPath);
+      // Lấy thông tin user để kiểm tra role
+      try {
+        console.log("🔍 Đang lấy thông tin user...");
+        const userInfo = await authenticateService.getUserInfo();
+        console.log("📋 Thông tin user nhận được:", userInfo);
+
+        // Kiểm tra role từ nhiều field khác nhau
+        let userRole = userInfo.roleName?.toLowerCase() ||
+          userInfo.role?.toLowerCase() ||
+          userInfo.roleId?.toLowerCase() ||
+          "guest";
+
+        // TEMPORARY: Test với admin role (comment out khi test xong)
+        // userRole = "admin";
+        console.log("👤 Role của user:", userRole);
+
+        // Lưu role vào localStorage
+        localStorage.setItem("user_role", userRole);
+        console.log("💾 Đã lưu role vào localStorage:", userRole);
+
+        setLoading(false);
+        setError(null);
+
+        // Chuyển hướng dựa trên role
+        if (userRole === "admin") {
+          console.log("🚀 Chuyển hướng đến admin dashboard");
+          history.push("/dashboard");
+        } else {
+          console.log("🌱 Chuyển hướng đến gardener dashboard");
+          // Các role khác (gardener, retailer, guest) sẽ vào gardener dashboard
+          history.push(redirectPath);
+        }
+      } catch (userInfoError) {
+        console.log("❌ Không thể lấy thông tin user:", userInfoError);
+        console.log("📄 Response error:", userInfoError.response?.data);
+        // Nếu không lấy được thông tin user, mặc định chuyển đến gardener
+        localStorage.setItem("user_role", "gardener");
+        setLoading(false);
+        setError(null);
+        history.push("/gardener/dashboard");
+      }
     } catch (err) {
       setLoading(false);
       console.log("Login failed: ", err.response.data);

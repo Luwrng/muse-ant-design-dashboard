@@ -1,79 +1,59 @@
 import React from "react";
+import { Tooltip, Modal, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Tooltip, Modal, message } from "antd";
 import { cleanfood } from "../../api_admin";
 
-const DeleteButton = ({
-  record,
-  tooltip = "Xóa",
-  color = "#ff4d4f",
-  setDataSources,
-  onDeleteSuccess,
-  type = "feature", // "feature" hoặc "package"
-}) => {
-  const handleDelete = () => {
+const DeleteButton = ({ record, tooltip, type, onDeleteSuccess }) => {
+  const handleDelete = async () => {
+    try {
+      if (type === "feature") {
+        await cleanfood.admin.disableServiceFeature(record.serviceFeatureId);
+        message.success("✅ Đã vô hiệu hóa dịch vụ thành công");
+      } else if (type === "package") {
+        await cleanfood.admin.disableServicePackage(
+          record.servicePackageId || record.key
+        );
+        message.success("✅ Đã vô hiệu hóa gói dịch vụ thành công");
+      } else {
+        message.warning("❗ Loại xóa không được hỗ trợ");
+        return;
+      }
+
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
+    } catch (err) {
+      console.error("❌ Lỗi khi vô hiệu hóa:", err);
+
+      if (err?.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const msg = Object.entries(errors)
+          .map(([k, v]) => `${k}: ${v.join(", ")}`)
+          .join("\n");
+        message.error(msg);
+      } else {
+        message.error("❌ Vô hiệu hóa thất bại");
+      }
+    }
+  };
+
+  const showConfirm = () => {
     Modal.confirm({
-      title: "Xác nhận vô hiệu hóa",
-      content: `Bạn có chắc chắn muốn vô hiệu hóa ${type === "package" ? "gói dịch vụ" : "dịch vụ"
-        } "${record.name}" không?`,
-      okText: "Vô hiệu hóa",
+      title: "Xác nhận",
+      content: "Bạn có chắc chắn muốn vô hiệu hóa dịch vụ này?",
+      okText: "Đồng ý",
       cancelText: "Hủy",
-      maskClosable: true,
-      onCancel() {
-        message.info("Đã hủy thao tác");
-      },
-      onOk: async () => {
-        try {
-          if (type === "package") {
-            // ✅ Gửi đúng định dạng payload: { servicePackageId: string }
-            await cleanfood.admin.disableServicePackage({
-              servicePackageId: record.servicePackageId || record.key,
-            });
-          } else {
-            // Dịch vụ con (service feature)
-            await cleanfood.admin.disableServiceFeature(record.serviceFeatureId);
-          }
-
-          message.success("Vô hiệu hóa thành công!");
-
-          // Cập nhật lại danh sách nếu cần
-          if (setDataSources) {
-            setDataSources((prev) =>
-              prev.filter((item) =>
-                type === "package"
-                  ? item.servicePackageId !== record.servicePackageId
-                  : item.serviceFeatureId !== record.serviceFeatureId
-              )
-            );
-          }
-
-          if (onDeleteSuccess) onDeleteSuccess();
-        } catch (error) {
-          console.error("❌ Lỗi khi vô hiệu hóa:", error);
-          if (error.response?.data?.message) {
-            message.error(`Lỗi: ${error.response.data.message}`);
-          } else {
-            message.error("Vô hiệu hóa thất bại. Vui lòng thử lại!");
-          }
-        }
-      },
+      onOk: handleDelete,
     });
   };
 
   return (
-    <Tooltip title={tooltip}>
+    <Tooltip title={tooltip || "Xóa"}>
       <FontAwesomeIcon
         icon={faTrash}
-        onClick={handleDelete}
-        style={{
-          fontSize: "16px",
-          color,
-          cursor: "pointer",
-          transition: "transform 0.3s",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        style={{ cursor: "pointer", color: "#ff4d4f" }}
+        onClick={showConfirm}
       />
     </Tooltip>
   );

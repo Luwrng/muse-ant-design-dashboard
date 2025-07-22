@@ -9,8 +9,8 @@ const api = axios.create({
 
 export const cleanfood = {
   /* ================================
-      RETAILER API
-    * ================================ */
+        RETAILER API
+      * ================================ */
   retailer: {
     getAll: async (page = 1, size = 10) => {
       try {
@@ -26,13 +26,13 @@ export const cleanfood = {
   },
 
   /* ================================
-    GARDENER API
-    * ================================ */
+      GARDENER API
+      * ================================ */
   gardener: {
-    getAll: async (page = 1, size = 10) => {
+    getAll: async ({ page = 1, size = 10, sortOrder = "asc" } = {}) => {
       try {
         const response = await api.get("/api/v1/accounts/gardeners", {
-          params: { page, size, sortOrder: "asc" },
+          params: { page, size, sortOrder },
         });
         return response.data;
       } catch (error) {
@@ -40,6 +40,7 @@ export const cleanfood = {
         throw error;
       }
     },
+
     getAccountById: async (accountId) => {
       try {
         const response = await api.get(`/api/v1/accounts/${accountId}`);
@@ -52,9 +53,28 @@ export const cleanfood = {
   },
 
   /* ================================
-  ADMIN API
-  * ================================ */
+    ADMIN API
+    * ================================ */
   admin: {
+    updateAccountStatus: async (id, status) => {
+      try {
+        const response = await api.patch(
+          `/api/v1/accounts/${id}/status`,
+          null,
+          {
+            params: { status }, // ✅ Gửi qua query string
+          }
+        );
+        return response.data;
+      } catch (error) {
+        console.error(
+          "Lỗi khi cập nhật trạng thái tài khoản:",
+          error.response?.data || error
+        );
+        throw error;
+      }
+    },
+
     getAllUsers: async () => {
       try {
         const response = await api.get("/api/v1/accounts");
@@ -130,69 +150,107 @@ export const cleanfood = {
       }
     },
 
-    updateServiceFeature: async (id, data) => {
-      try {
-        const response = await api.patch(`/api/v1/admin/service-features/${id}`, data);
-        return response.data;
-      } catch (error) {
-        if (error.response) {
-          console.error("Server trả về lỗi:", error.response.status);
-          console.error("Chi tiết lỗi:", error.response.data);
-        } else if (error.request) {
-          console.error("Không nhận được phản hồi từ server:", error.request);
-        } else {
-          console.error("Lỗi không xác định:", error.message);
-        }
-        throw error;
-      }
-    },
-
-
-    // Soft delete service feature: chuyển status sang INACTIVE sau khi kiểm tra usage
     disableServiceFeature: async (id) => {
       try {
-        const response = await api.patch(`/api/v1/admin/service-features/disable/${id}`);
+        const response = await api.patch(
+          `/api/v1/admin/service-features/disable`,
+          null,
+          {
+            params: { id },
+          }
+        );
         return response.data;
       } catch (error) {
-        console.error("Lỗi disableServiceFeature:", error);
+        console.error(
+          "❌ Lỗi khi vô hiệu hóa dịch vụ:",
+          error.response?.data || error
+        );
         throw error;
       }
     },
 
     updateServicePackage: async (data) => {
       try {
-        const response = await api.patch(`/api/v1/admin/service-packages/detail`, data);
+        const response = await api.patch(
+          '/api/v1/admin/service-packages/detail',
+          {
+            packageId: data.packageId,
+            packageName: data.packageName,
+            description: data.description,
+          }
+        );
+
         return response.data;
       } catch (error) {
-        console.error("Lỗi khi cập nhật gói dịch vụ:", error);
+        console.error("❌ Lỗi khi cập nhật gói dịch vụ:", error);
         throw error;
       }
     },
 
-    disableServicePackage: async (payload) => {
+
+    disableServicePackage: async (id) => {
       try {
-        const response = await api.patch(`/api/v1/admin/service-packages/disable`, payload);
+        const response = await api.patch(
+          `/api/v1/admin/service-packages/disable`,
+          null,
+          {
+            params: { id }, // Gửi ID qua query string
+          }
+        );
         return response.data;
       } catch (error) {
-        console.error("❌ Lỗi khi vô hiệu hóa gói dịch vụ:", error.response?.data || error);
+        console.error(
+          "❌ Lỗi khi vô hiệu hóa gói dịch vụ:",
+          error.response?.data || error
+        );
         throw error;
       }
     },
 
-
-    activateServicePackage: async (record) => {
+    updateServiceFeature: async (data) => {
       try {
-        const payload = {
-          servicePackageId: record.servicePackageId || record.key,
-        };
-        const response = await api.patch(`/api/v1/admin/service-packages/activate`, payload);
+        const response = await api.patch(
+          `/api/v1/admin/service-features/update?id=${data.serviceFeatureId}`,
+          {
+            serviceFeatureName: data.serviceFeatureName,
+            description: data.description,
+            status: data.status,
+          }
+        );
         return response.data;
       } catch (error) {
-        console.error("❌ Lỗi khi kích hoạt gói dịch vụ:", error);
+        console.error(
+          "Lỗi khi cập nhật dịch vụ:",
+          error.response?.data || error
+        );
         throw error;
       }
     },
-    getContract: async ({ page = 1, size = 10, search = "", sortField = "", sortOrder = "asc" } = {}) => {
+
+    activateServicePackage: async (servicePackageId) => {
+      try {
+        const response = await api.patch(
+          `/api/v1/admin/service-packages/activate`,
+          null,
+          { params: { id: servicePackageId } }
+        );
+        return response.data;
+      } catch (error) {
+        console.error(
+          "❌ Lỗi khi kích hoạt gói dịch vụ:",
+          error.response?.data || error
+        );
+        throw error;
+      }
+    },
+
+    getContract: async ({
+      page = 1,
+      size = 10,
+      search = "",
+      sortField = "",
+      sortOrder = "asc",
+    } = {}) => {
       try {
         const response = await api.get("/api/v1/admin/subscription-contracts", {
           params: {
@@ -205,12 +263,19 @@ export const cleanfood = {
         });
         return response.data;
       } catch (error) {
-        console.error("❌ Lỗi getContract:", error.response?.data || error.message);
+        console.error(
+          "❌ Lỗi getContract:",
+          error.response?.data || error.message
+        );
         throw error;
       }
     },
 
-    getServicePackageOrders: async ({ page = 1, size = 10, search = "" } = {}) => {
+    getServicePackageOrders: async ({
+      page = 1,
+      size = 10,
+      search = "",
+    } = {}) => {
       try {
         const response = await api.get("/api/v1/admin/service-package-orders", {
           params: {
@@ -222,7 +287,10 @@ export const cleanfood = {
         });
         return response.data;
       } catch (error) {
-        console.error("Lỗi getServicePackageOrders:", error.response?.data || error);
+        console.error(
+          "Lỗi getServicePackageOrders:",
+          error.response?.data || error
+        );
         throw error;
       }
     },
@@ -242,12 +310,6 @@ export const cleanfood = {
         throw error;
       }
     },
-
-
-
-
-
-
   },
 };
 export default api;

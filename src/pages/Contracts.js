@@ -62,15 +62,12 @@ const columns = [
     align: "center",
     render: (status) => {
       const colorMap = {
-        Active: "green",
-        Pending: "orange",
-        Expired: "red",
+        ACTIVE: { color: "green", label: "Đang hoạt động" },
+        PENDING: { color: "orange", label: "Chờ kích hoạt" },
+        EXPIRED: { color: "red", label: "Đã hết hạn" },
       };
-      return (
-        <Tag color={colorMap[status] || "default"}>
-          {status.toUpperCase()}
-        </Tag>
-      );
+      const { color, label } = colorMap[status] || { color: "gray", label: "Không xác định" };
+      return <Tag color={color}>{label}</Tag>;
     },
   },
 ];
@@ -143,6 +140,10 @@ const ContractTable = () => {
               setCurrentPage(page);
               setPageSize(size);
             },
+          }}
+          scroll={{
+            x: "max-content", // Cho phép cuộn ngang nếu bảng rộng
+            y: 400,           // Chiều cao tối đa bảng để cuộn dọc
           }}
         />
       </Card>

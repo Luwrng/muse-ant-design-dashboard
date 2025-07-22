@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import GNotificationIcon from "../../pages/GardenerPage/Notification/GNotificationIcon";
 import httpService from "../../pages/services/apiServices/httpService";
 import notificationService from "../../pages/services/apiServices/notificationService";
+// import UserInfo from "../UserInfo";
 
 function GardenerHeader({
   placement,
@@ -144,7 +145,6 @@ function GardenerHeader({
           fontSize: "20px",
         }}
       >
-        {/* <BellOutlined /> */}
         <GNotificationIcon notifications={notifications} />
       </div>
       <Row gutter={[24, 0]}>
