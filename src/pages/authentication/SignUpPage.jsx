@@ -1,7 +1,12 @@
-import React from "react";
-import { useState, useCallback } from "react";
-import SignUpSuccessModal from "./SignUpSuccessModal";
+// src/pages/SignUpPage.js
+import React, { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+import CloudinaryUpload from "../../cloudinary/CloudinaryUpload";
+import SignUpSuccessModal from "./SignUpSuccessModal";
+import authenticateService from "../services/apiServices/authenticateService";
+
 import "./SignUpPage.css";
 
 function SignUpPage() {
@@ -18,360 +23,297 @@ function SignUpPage() {
     issuingAuthority: "",
     issueDate: "",
     expiryDate: "",
+    imageUrl: "",
   });
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  const handleInputChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  const setupRecaptcha = () => {
+    const container = document.getElementById("recaptcha-container");
+    if (!container) {
+      console.error("❌ Không tìm thấy #recaptcha-container trong DOM.");
+      return;
+    }
+  
+    if (!window.recaptchaVerifier) {
+      try {
+        console.log("auth object:", auth);
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              console.log("✅ reCAPTCHA verified:", response);
+            },
+          },
+          auth
+        );
+  
+        window.recaptchaVerifier.render().then((widgetId) => {
+          window.recaptchaWidgetId = widgetId;
+        });
+      } catch (err) {
+        console.error("🔥 Lỗi tạo reCAPTCHA:", err);
+      }
+    }
+  };
+  
+
+  const handleNextStep = async () => {
+    if (currentStep === 1) {
+      if (!formData.name || !formData.phone || !formData.password || !formData.address) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+      }
+
+      // Kiểm tra auth có hợp lệ không
+      if (!auth || !auth.app) {
+        alert("Firebase chưa sẵn sàng. Vui lòng thử lại sau.");
+        return;
+      }
+  
+      // Chỉ khởi tạo recaptcha một lần
+      if (!window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier = new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "invisible",
+              callback: (response) => {
+                console.log("reCAPTCHA resolved:", response);
+              },
+              "expired-callback": () => {
+                console.warn("reCAPTCHA hết hạn");
+              },
+            }
+          );
+        } catch (err) {
+          console.error("🔥 Lỗi tạo reCAPTCHA:", err);
+          alert("Lỗi reCAPTCHA. Không thể tiếp tục.");
+          return;
+        }
+      }
+  
+      const appVerifier = window.recaptchaVerifier;
+      const fullPhone = "+84" + formData.phone.replace(/^0/, "");
+  
+      try {
+        const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
+        window.confirmationResult = confirmationResult;
+        alert("✅ OTP đã gửi. Vui lòng kiểm tra tin nhắn!");
+        setCurrentStep(2);
+      } catch (error) {
+        console.error("❌ Gửi OTP lỗi:", error);
+        alert("Không thể gửi OTP. " + error.message);
+      }
+    }
+  
+    // 👉 Xác minh OTP
+    else if (currentStep === 2) {
+      if (!formData.otp || formData.otp.length !== 6) {
+        alert("Vui lòng nhập mã OTP hợp lệ.");
+        return;
+      }
+      try {
+        const result = await window.confirmationResult.confirm(formData.otp);
+        console.log("✅ Xác minh thành công:", result.user);
+        setCurrentStep(3);
+      } catch (error) {
+        console.error("❌ OTP không đúng:", error);
+        alert("Mã OTP sai hoặc đã hết hạn.");
+      }
+    }
+  };
+  
+  
+
+  const handlePrevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  const handleSubmit = async () => {
+    if (!formData.imageUrl || !formData.certName || !formData.issuingAuthority || !formData.issueDate || !formData.expiryDate) {
+      alert("Vui lòng nhập đầy đủ thông tin chứng chỉ.");
+      return;
+    }
+
+    const payload = {
+      phoneNumber: formData.phone,
+      password: formData.password,
+      name: formData.name,
+      imageUrl: formData.imageUrl,
+      issuingAuthority: formData.issuingAuthority,
+      issueDate: formData.issueDate,
+      expiryDate: formData.expiryDate,
+      status: "PENDING",
+      addresses: [
+        {
+          addressLine: formData.address,
+        },
+      ],
+    };
+
+    try {
+      const res = await authenticateService.gardenerRegister(payload);
+      console.log("Đăng ký thành công:", res.data);
+      setShowSuccessPopup(true);
+    } catch (err) {
+      console.error("Lỗi đăng ký:", err);
+      alert("Đăng ký thất bại.");
+    }
+  };
 
   const handleSignUpSuccess = () => {
     setShowSuccessPopup(false);
     history.push("/sign-in");
   };
 
-  const handleInputChange = useCallback((field, value) => {
-    setFormData((prev) => {
-      if (prev[field] === value) return prev;
-      return { ...prev, [field]: value };
-    });
-  }, []);
-
-  const handleNextStep = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handlePrevStep = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
   const CleanFoodVietLogo = () => (
     <div className="siup-logo-container">
-      {/* <div className="siup-logo-icon">
-        <span>🌱</span>
-      </div> */}
       <span className="siup-logo-text">CleanFoodViet</span>
     </div>
   );
 
-  if (currentStep === 1) {
-    return (
-      <>
-        <div className="siup-page-layout">
-          {/* Left green sidebar */}
-          <div className="siup-sidebar-left">
-            {/* <img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg" /> */}
-          </div>
-
-          {/* Center white content */}
-          <div className="siup-content-center">
-            <div className="siup-content-wrapper">
-              <CleanFoodVietLogo />
-              <div className="siup-form-container">
-                <h1 className="siup-page-title">Đăng ký</h1>
-
-                <div className="siup-form-fields">
-                  <div className="siup-field-group">
-                    <label htmlFor="name" className="siup-field-label">
-                      Tên <span className="siup-required">*</span>
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Nhập tên của bạn"
-                      value={formData.name}
-                      onChange={(e) =>
-                        handleInputChange("name", e.target.value)
-                      }
-                      className="siup-input-field"
-                    />
-                  </div>
-
-                  <div className="siup-field-group">
-                    <label htmlFor="phone" className="siup-field-label">
-                      Số điện thoại <span className="siup-required">*</span>
-                    </label>
-                    <input
-                      id="phone"
-                      type="tel"
-                      placeholder="Nhập số điện thoại của bạn"
-                      value={formData.phone}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        handleInputChange("phone", value);
-                      }}
-                      className="siup-input-field"
-                      maxLength={11}
-                    />
-                  </div>
-
-                  <div className="siup-field-group">
-                    <label htmlFor="address" className="siup-field-label">
-                      Địa chỉ <span className="siup-required">*</span>
-                    </label>
+  const Step1 = () => (
+    <div className="siup-page-layout">
+      <div className="siup-sidebar-left"></div>
+      <div className="siup-content-center">
+        <div className="siup-content-wrapper">
+          <CleanFoodVietLogo />
+          <div className="siup-form-container">
+            <h1 className="siup-page-title">Đăng ký</h1>
+            <div className="siup-form-fields">
+              {["name", "phone", "address", "password"].map((field) => (
+                <div className="siup-field-group" key={field}>
+                  <label className="siup-field-label">
+                    {field === "name"
+                      ? "Tên"
+                      : field === "phone"
+                      ? "Số điện thoại"
+                      : field === "address"
+                      ? "Địa chỉ"
+                      : "Mật khẩu"}{" "}
+                    <span className="siup-required">*</span>
+                  </label>
+                  {field === "address" ? (
                     <textarea
-                      id="address"
-                      placeholder="Nhập địa chỉ của bạn"
-                      value={formData.address}
-                      onChange={(e) =>
-                        handleInputChange("address", e.target.value)
-                      }
+                      rows={2}
                       className="siup-textarea-field"
-                      rows={3}
+                      placeholder={`Nhập ${field}`}
+                      value={formData[field]}
+                      onChange={(e) => handleInputChange(field, e.target.value)}
                     />
-                  </div>
-
-                  <div className="siup-field-group">
-                    <label htmlFor="password" className="siup-field-label">
-                      Mật khẩu <span className="siup-required">*</span>
-                    </label>
-                    <div className="siup-password-container">
-                      <input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Nhập mật khẩu của bạn"
-                        value={formData.password}
-                        onChange={(e) =>
-                          handleInputChange("password", e.target.value)
-                        }
-                        className="siup-input-field siup-password-input"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="siup-password-toggle"
-                      >
-                        {showPassword ? "👁️" : "👁️‍🗨️"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="siup-checkbox-container">
+                  ) : (
                     <input
-                      type="checkbox"
-                      id="terms"
-                      className="siup-checkbox"
+                      type={field === "password" && !showPassword ? "password" : "text"}
+                      className="siup-input-field"
+                      placeholder={`Nhập ${field}`}
+                      value={formData[field]}
+                      onChange={(e) =>
+                        handleInputChange(
+                          field,
+                          field === "phone" ? e.target.value.replace(/\D/g, "") : e.target.value
+                        )
+                      }
                     />
-                    <label htmlFor="terms" className="siup-checkbox-label">
-                      Tôi đồng ý với các{" "}
-                      <span className="siup-link">điều khoản và dịch vụ</span>{" "}
-                      của Clean Food Viet
-                      {/* Add redirect */}
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={handleNextStep}
-                    className="siup-submit-button"
-                  >
-                    Đăng ký
-                  </button>
-
-                  <div className="siup-login-link">
-                    <span>
-                      Bạn đã có tài khoản?{" "}
-                      <span
-                        className="siup-link"
-                        onClick={() => history.push("/sign-in")}
-                      >
-                        Đăng nhập ngay
-                      </span>
-                    </span>
-                  </div>
+                  )}
                 </div>
+              ))}
+
+              <div className="siup-checkbox-container">
+                <input type="checkbox" id="terms" className="siup-checkbox" />
+                <label htmlFor="terms" className="siup-checkbox-label">
+                  Tôi đồng ý với{" "}
+                  <span className="siup-link">điều khoản và dịch vụ</span>
+                </label>
+              </div>
+
+              <button onClick={handleNextStep} className="siup-submit-button">
+                Đăng ký
+              </button>
+
+              <div id="recaptcha-container"></div>
+
+              <div className="siup-login-link">
+                Đã có tài khoản?{" "}
+                <span className="siup-link" onClick={() => history.push("/sign-in")}>
+                  Đăng nhập ngay
+                </span>
               </div>
             </div>
           </div>
-
-          {/* Right green sidebar */}
-          <div className="siup-sidebar-right"></div>
         </div>
-      </>
-    );
-  }
+      </div>
+      <div className="siup-sidebar-right"></div>
+    </div>
+  );
 
-  if (currentStep === 2) {
-    return (
-      <>
-        <div className="siup-page-layout">
-          {/* Left green sidebar */}
-          <div className="siup-sidebar-left"></div>
-
-          {/* Center white content */}
-          <div className="siup-content-center">
-            <div className="siup-content-wrapper">
-              <CleanFoodVietLogo />
-              <div className="siup-form-container">
-                <button onClick={handlePrevStep} className="siup-back-button">
-                  ← Quay lại
-                </button>
-
-                <h1 className="siup-page-title">
-                  Xác minh số điện thoại của bạn
-                </h1>
-
-                <p className="siup-description">
-                  Chúng tôi đã gửi một tin nhắn SMS có mã OTP kích hoạt đến số
-                  điện thoại của bạn +84{formData.phone}
-                </p>
-
-                <div className="siup-otp-container">
-                  <input
-                    type="tel"
-                    placeholder="Nhập mã OTP"
-                    value={formData.otp}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      handleInputChange("otp", value);
-                    }}
-                    className="siup-otp-input"
-                    maxLength={6}
-                  />
-
-                  <button
-                    onClick={handleNextStep}
-                    className="siup-submit-button"
-                  >
-                    Xác Minh
-                  </button>
-
-                  <div className="siup-resend-link">
-                    <span>
-                      Bạn không nhận được mã xác minh{" "}
-                      <span className="siup-link">Gửi lại mã</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right green sidebar */}
-          <div className="siup-sidebar-right"></div>
+  const Step2 = () => (
+    <div className="siup-page-layout">
+      <div className="siup-content-center">
+        <div className="siup-content-wrapper">
+          <CleanFoodVietLogo />
+          <button onClick={handlePrevStep} className="siup-back-button">← Quay lại</button>
+          <h1 className="siup-page-title">Xác minh OTP</h1>
+          <p>OTP đã gửi đến +84{formData.phone}</p>
+          <input
+            type="tel"
+            placeholder="Nhập mã OTP"
+            value={formData.otp}
+            maxLength={6}
+            onChange={(e) => handleInputChange("otp", e.target.value.replace(/\D/g, ""))}
+            className="siup-otp-input"
+          />
+          <button onClick={handleNextStep} className="siup-submit-button">Xác minh</button>
+          <p className="siup-resend-link" onClick={handleNextStep}>Gửi lại mã?</p>
         </div>
-      </>
-    );
-  }
+      </div>
+    </div>
+  );
 
-  if (currentStep === 3) {
-    return (
-      <>
-        <div className="siup-page-layout">
-          {/* Left green sidebar */}
-          <div className="siup-sidebar-left"></div>
-
-          {/* Center white content */}
-          <div className="siup-content-center">
-            <div className="siup-content-wrapper">
-              <CleanFoodVietLogo />
-              <div className="siup-form-container">
-                <button onClick={handlePrevStep} className="siup-back-button">
-                  ← Quay lại
-                </button>
-                <h1 className="siup-page-title">Cấp chứng chỉ của bạn</h1>
-                <div className="siup-certificate-form">
-                  {/* Image upload area */}
-                  <div className="siup-upload-area">
-                    <div className="siup-upload-icon">📁</div>
-                    <p className="siup-upload-text">
-                      + Thêm ảnh ảnh của bạn ở đây
-                    </p>
-                  </div>
-
-                  {/* Certificate details form */}
-                  <div className="siup-certificate-fields">
-                    <div className="siup-field-group">
-                      <label htmlFor="certName" className="siup-field-label">
-                        Name <span className="siup-required">*</span>
-                      </label>
-                      <input
-                        id="certName"
-                        type="text"
-                        placeholder="Enter certificate name"
-                        value={formData.certName}
-                        onChange={(e) =>
-                          handleInputChange("certName", e.target.value)
-                        }
-                        className="siup-input-field"
-                      />
-                    </div>
-
-                    <div className="siup-field-group">
-                      <label
-                        htmlFor="issuingAuthority"
-                        className="siup-field-label"
-                      >
-                        Issuing Authority{" "}
-                        <span className="siup-required">*</span>
-                      </label>
-                      <input
-                        id="issuingAuthority"
-                        type="text"
-                        placeholder="Enter issuing authority"
-                        value={formData.issuingAuthority}
-                        onChange={(e) =>
-                          handleInputChange("issuingAuthority", e.target.value)
-                        }
-                        className="siup-input-field"
-                      />
-                    </div>
-
-                    <div className="siup-date-fields">
-                      <div className="siup-field-group">
-                        <label htmlFor="issueDate" className="siup-field-label">
-                          Issue Date <span className="siup-required">*</span>
-                        </label>
-                        <input
-                          id="issueDate"
-                          type="date"
-                          value={formData.issueDate}
-                          onChange={(e) =>
-                            handleInputChange("issueDate", e.target.value)
-                          }
-                          className="siup-input-field"
-                        />
-                      </div>
-
-                      <div className="siup-field-group">
-                        <label
-                          htmlFor="expiryDate"
-                          className="siup-field-label"
-                        >
-                          Expiry Date <span className="siup-required">*</span>
-                        </label>
-                        <input
-                          id="expiryDate"
-                          type="date"
-                          value={formData.expiryDate}
-                          onChange={(e) =>
-                            handleInputChange("expiryDate", e.target.value)
-                          }
-                          className="siup-input-field"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    className="siup-submit-button"
-                    onClick={() => setShowSuccessPopup(true)}
-                  >
-                    Hoàn thành
-                  </button>
-                </div>
-                <SignUpSuccessModal
-                  isVisible={showSuccessPopup}
-                  onClose={() => handleSignUpSuccess()}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Right green sidebar */}
-          <div className="siup-sidebar-right"></div>
+  const Step3 = () => (
+    <div className="siup-page-layout">
+      <div className="siup-content-center">
+        <div className="siup-content-wrapper">
+          <CleanFoodVietLogo />
+          <button onClick={handlePrevStep} className="siup-back-button">← Quay lại</button>
+          <h1 className="siup-page-title">Thông tin chứng chỉ</h1>
+          <CloudinaryUpload onUploaded={(url) => handleInputChange("imageUrl", url)} />
+          <input
+            placeholder="Tên chứng chỉ"
+            value={formData.certName}
+            onChange={(e) => handleInputChange("certName", e.target.value)}
+            className="siup-input-field"
+          />
+          <input
+            placeholder="Cơ quan cấp"
+            value={formData.issuingAuthority}
+            onChange={(e) => handleInputChange("issuingAuthority", e.target.value)}
+            className="siup-input-field"
+          />
+          <input
+            type="date"
+            value={formData.issueDate}
+            onChange={(e) => handleInputChange("issueDate", e.target.value)}
+            className="siup-input-field"
+          />
+          <input
+            type="date"
+            value={formData.expiryDate}
+            onChange={(e) => handleInputChange("expiryDate", e.target.value)}
+            className="siup-input-field"
+          />
+          <button onClick={handleSubmit} className="siup-submit-button">Hoàn tất</button>
+          <SignUpSuccessModal isVisible={showSuccessPopup} onClose={handleSignUpSuccess} />
         </div>
-      </>
-    );
-  }
+      </div>
+    </div>
+  );
 
-  return null;
+  return currentStep === 1 ? Step1() : currentStep === 2 ? Step2() : Step3();
 }
 
 export default SignUpPage;

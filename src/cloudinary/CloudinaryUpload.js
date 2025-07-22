@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 
 const CloudinaryUpload = ({ onUploaded }) => {
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
+    const fileInputRef = useRef(null); // để trigger input ẩn
 
     const handleUpload = async (event) => {
         const file = event.target.files[0];
@@ -13,7 +14,7 @@ const CloudinaryUpload = ({ onUploaded }) => {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", "clean_food_viet"); // ✅ đúng preset unsigned
+        formData.append("upload_preset", "clean_food_viet");
 
         try {
             const res = await axios.post(
@@ -32,10 +33,30 @@ const CloudinaryUpload = ({ onUploaded }) => {
         }
     };
 
+    const handleClick = () => {
+        fileInputRef.current.click(); // khi click vào khu vực thì gọi input file
+    };
+
     return (
         <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", marginBottom: 8 }}>Chọn ảnh đại diện:</label>
-            <input type="file" accept="image/*" onChange={handleUpload} />
+            {/* Upload Area thay thế */}
+            <div className="siup-upload-area" onClick={handleClick} style={{ cursor: "pointer" }}>
+                <div className="siup-upload-icon">📁</div>
+                <p className="siup-upload-text">
+                    + Thêm ảnh ảnh của bạn ở đây
+                </p>
+            </div>
+
+            {/* Ẩn input file */}
+            <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleUpload}
+                style={{ display: "none" }}
+            />
+
+            {/* Đang tải + preview ảnh */}
             {uploading && <p>Đang tải ảnh lên...</p>}
             {imageUrl && (
                 <div style={{ marginTop: 8 }}>
