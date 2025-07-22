@@ -35,7 +35,7 @@
 
 .gproduct-title {
   font-size: 2.2rem; /* text-2xl */
-  font-weight: 500; /* font-bold */
+  font-weight: bold; /* font-bold */
 }
 
 /* General button styles */

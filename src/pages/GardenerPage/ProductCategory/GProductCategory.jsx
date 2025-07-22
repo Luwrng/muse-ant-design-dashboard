@@ -174,9 +174,9 @@ function GProductCategory() {
       <div className="gpcategory-header">
         <div className="gpcategory-header-content">
           <h1 className="gpcategory-title">Quản lý Danh mục Sản phẩm</h1>
-          <p className="gpcategory-subtitle">
+          {/* <p className="gpcategory-subtitle">
             Quản lý các danh mục sản phẩm cho vườn rau của bạn
-          </p>
+          </p> */}
         </div>
         <button
           className="gpcategory-create-btn"

@@ -404,10 +404,10 @@ function GAppointmentPage() {
     <div className="gappointment-appointment-container">
       <div className="gappointment-appointment-header">
         <h1 className="gappointment-appointment-title">Quản lý các cuộc hẹn</h1>
-        <p className="gappointment-appointment-subtitle">
+        {/* <p className="gappointment-appointment-subtitle">
           Quản lý các cuộc hẹn đã được đặt trước và những yêu cầu về tạo cuộc
           hẹn từ phía Retailer
-        </p>
+        </p> */}
       </div>
 
       <div className="gappointment-tabs-container">

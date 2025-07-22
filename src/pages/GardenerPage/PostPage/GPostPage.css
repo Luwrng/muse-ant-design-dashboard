@@ -17,8 +17,8 @@
 }
 
 .gpost-title-section h1 {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: bold;
   color: #212529;
   margin: 0 0 5px 0;
 }
@@ -71,7 +71,7 @@
   justify-content: space-between;
 }
 
-.gpost-filter-tabs-options{
+.gpost-filter-tabs-options {
   display: flex;
   gap: 32px;
 }
@@ -99,7 +99,7 @@
   color: #666;
 }
 
-.gpost-filter-tab.active::after{
+.gpost-filter-tab.active::after {
   content: "";
   position: absolute;
   bottom: -1px;
@@ -109,7 +109,7 @@
   background: #28a745;
 }
 
-.gpost-search-filter-tabs{
+.gpost-search-filter-tabs {
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
@@ -129,7 +129,7 @@
   max-width: 5rem;
 }
 
-.gpost-sort-options:hover{
+.gpost-sort-options:hover {
   background-color: #c4c4c4;
 }
 
