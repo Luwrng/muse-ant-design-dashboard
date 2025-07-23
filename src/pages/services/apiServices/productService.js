@@ -24,7 +24,7 @@ const createProduct = async (gardenerId, data) => {
 
 const changeProductStatus = async (productId, status) => {
   return await httpService.patch(
-    `${productEndpoint}/${productId}`,
+    `${productEndpoint}/${productId}/status`,
     {},
     {
       params: { status },
