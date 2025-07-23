@@ -161,7 +161,8 @@ function GardenerLandingPage() {
         //   },
         // ];
 
-        setServicePackages(result);
+        console.log("servicePackages result:", result);
+        setServicePackages(Array.isArray(result.items) ? result.items : []);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching service packages:", error);
@@ -219,7 +220,7 @@ function GardenerLandingPage() {
                 CleanFoodViet
               </span>
             </div>
-            <nav className="glanding-nav md:flex items-center space-x-8">
+            <nav className="glanding-nasetServicePackagesv md:flex items-center space-x-8">
               <div className="glanding-link-div">
                 <Link to="/sign-in" className="glanding-a-link">
                   Đăng nhập
@@ -374,7 +375,7 @@ function GardenerLandingPage() {
             </div>
           ) : (
             <div className="glanding-packages-grid grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {servicePackages.map((pkg) => (
+              {Array.isArray(servicePackages) && servicePackages.map(pkg => (
                 <div
                   key={pkg.ServicePackageId}
                   className={`glanding-package-card bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${
