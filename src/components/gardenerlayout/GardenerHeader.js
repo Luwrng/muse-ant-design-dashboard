@@ -34,9 +34,9 @@ function GardenerHeader({
   const breadcrumbMap = {
     dashboard: "Tổng Quan",
     order: "Quản Lý Đơn Hàng",
-    "order-delivery": "Quản Lý Đơn hàng Vận Chuyển",
+    "order-delivery": "Quản Lý Đơn Hàng Vận Chuyển",
     services: "Danh Sách Dịch Vụ",
-    post: "Danh Sách Bìa Đăng",
+    post: "Danh Sách Bài Đăng",
     product: "Quản Lý Sản Phẩm",
     "product-category": "Quản Lý Danh Mục Sản Phẩm",
     appointment: "Quản Lý Cuộc Hẹn",
@@ -44,11 +44,13 @@ function GardenerHeader({
     notifications: "Thông Báo",
     feedback: "Danh Sách Phản Hồi",
     profile: "Hồ Sơ",
-    "sign-up": "Đăng Xuất",
+    "sign-up": "Đăng Ký",
   };
+
   const location = useLocation();
-  const path = location.pathname.replace("/", "");
-  const pageTitle = breadcrumbMap[path] || path;
+  const pathSegments = location.pathname.split("/").filter(Boolean);
+  const currentPageKey = pathSegments[pathSegments.length - 1];
+  const pageTitle = breadcrumbMap[currentPageKey] || currentPageKey;
 
   const history = useHistory();
 
@@ -151,20 +153,13 @@ function GardenerHeader({
         <Col span={24} md={6}>
           <Breadcrumb>
             <Breadcrumb.Item>
-              <NavLink to="/">Pages</NavLink>
+              <NavLink to="/">Trang Chủ</NavLink>
             </Breadcrumb.Item>
             <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
               {pageTitle}
             </Breadcrumb.Item>
           </Breadcrumb>
-          <div className="ant-page-header-heading">
-            <span
-              className="ant-page-header-heading-title"
-              style={{ textTransform: "capitalize" }}
-            >
-              {pageTitle}
-            </span>
-          </div>
+
         </Col>
       </Row>
     </>

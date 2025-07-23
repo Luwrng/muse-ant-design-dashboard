@@ -1,6 +1,5 @@
 import httpService from "./httpService";
 
-// const endpoint = "";
 
 const login = async (credential) => {
   return await httpService.post("/login", credential);
@@ -16,7 +15,9 @@ const getUserInfo = async () => {
 
 const register = () => httpService.post();
 
-const gardenerRegister = () => httpService.post();
+const gardenerRegister = async (payload) => {
+  return await httpService.post("gardener-register", payload);
+};
 
 const authenticateService = {
   login,

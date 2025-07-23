@@ -92,21 +92,7 @@ function Sidenav() {
           </Menu.Item>
         </Menu.SubMenu>
 
-        {/* FE-04: Quản lý danh mục sản phẩm */}
-        {/* <Menu.SubMenu
-          key="product-management"
-          icon={<FontAwesomeIcon icon={faShoppingBasket} />}
-          title="Quản Lý Sản Phẩm"
-        >
-          <Menu.Item key="productcategory">
-            <NavLink to="/productcategory">
-              <FontAwesomeIcon icon={faList} />
-              <span>Danh Mục Sản Phẩm</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.SubMenu> */}
-
-        {/* FE-05 & FE-06: Quản lý đăng ký */}
+       
         <Menu.SubMenu
           key="subscription-management"
           icon={<FontAwesomeIcon icon={faFileContract} />}
@@ -155,26 +141,7 @@ function Sidenav() {
 
         <Menu.Divider />
 
-        {/* <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">
-          <Menu.Item key="profile">
-            <NavLink to="/profile">
-              <FontAwesomeIcon icon={faUser} />
-              <span>Hồ Sơ</span>
-            </NavLink>
-          </Menu.Item>
-          <Menu.Item key="sign-in-admin">
-            <NavLink to="/sign-in-admin">
-              <FontAwesomeIcon icon={faSignInAlt} />
-              <span>Đăng Nhập</span>
-            </NavLink>
-          </Menu.Item>
-          <Menu.Item key="sign-up">
-            <NavLink to="/sign-up">
-              <FontAwesomeIcon icon={faUserPlus} />
-              <span>Đăng Ký</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.ItemGroup> */}
+       
       </Menu>
     </>
   );

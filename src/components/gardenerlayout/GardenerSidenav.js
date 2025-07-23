@@ -99,6 +99,14 @@ function GardenerSidenav() {
             <span>Gói đã mua</span>
           </NavLink>
         </Menu.Item>
+
+        {/* Quản lý báo cáo */}
+        <Menu.Item key="report">
+          <NavLink to="/gardener/report">
+            <FontAwesomeIcon icon={faClipboardList} />
+            <span>Báo Cáo</span>
+          </NavLink>
+        </Menu.Item>
         <Menu.Divider />
 
         <Menu.ItemGroup key="account-pages" title="Trang Tài Khoản">

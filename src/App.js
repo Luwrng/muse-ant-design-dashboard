@@ -39,6 +39,7 @@ import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
 import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
 import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
 import GSubscriptionHistory from "./pages/GardenerPage/SubscriptionHistory/GSubscriptionHistory";
+import GReportPage from "./pages/GardenerPage/Report/GReportPage";
 
 //Payment
 import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
@@ -59,7 +60,7 @@ function App() {
 
           {/* General routes */}
           <Route path="/" exact component={GardenerLandingPage} />
-            
+
           {/* Gardener routes */}
           <ProtectedRoute
             path="/gardener/service-package"
@@ -71,7 +72,7 @@ function App() {
             component={PaymentResult}
             allowedRoles={['gardener', 'retailer']}
           />
-              
+
           {/* Payment Result Routes */}
           <Route
             path="/gardener/payment-result/success"
@@ -137,6 +138,7 @@ function App() {
                     component={GSubscriptionHistory}
                     allowedRoles={['gardener', 'retailer']}
                   />
+                  <Route path="/gardener/report" component={GReportPage} />
                 </Switch>
               </GardenerMain>
             )}
