@@ -53,13 +53,10 @@ const setProductCurrentPrice = async (productId, priceId) => {
 };
 
 //Product Category
-const getGardenerProductCategories = async (gardenerId, page, size) => {
-  return await httpService.get(
-    `${gardenerEndpoint}/${gardenerId}/product-categories`,
-    {
-      params: { page, size },
-    }
-  );
+const getProductCategories = async (gardenerId, page, size) => {
+  return await httpService.get(`${productCateEndpoint}`, {
+    params: { page, size },
+  });
 };
 
 const getGardenerProductCategoriesList = async (gardenerId) => {
@@ -98,7 +95,7 @@ const productService = {
   setProductCurrentPrice,
 
   //Category
-  getGardenerProductCategories,
+  getProductCategories,
   getGardenerProductCategoriesList,
   createProductCategory,
   updateProductCategory,

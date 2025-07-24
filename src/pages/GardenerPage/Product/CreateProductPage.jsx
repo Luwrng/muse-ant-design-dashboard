@@ -3,6 +3,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import "./CreateProductPage.css";
 import productService from "../../services/apiServices/productService";
+import CreateProductCertificatePopup from "./CreateProductCertificatePopup";
 
 function CreateProductPage({ onBack }) {
   const [formData, setFormData] = useState({
@@ -18,21 +19,24 @@ function CreateProductPage({ onBack }) {
     weightUnit: "",
   });
 
+  const [productTags, setProductTags] = useState([]);
+  const [newTagInput, setNewTagInput] = useState("");
+  const [productCertificates, setProductCertificates] = useState([]);
+  const [activeTab, setActiveTab] = useState("basic"); // 'basic' or 'certificates'
+
   const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
   const [newCategoryTempName, setNewCategoryTempName] = useState("");
   const [newCategoryTempDescription, setNewCategoryTempDescription] =
     useState("");
-  const [isNewCate, setIsNewCate] = useState(false);
-
   const [categories, setCategories] = useState([]);
+  const [showAddCertificateModal, setShowAddCertificateModal] = useState(false);
 
+  //Call get product Category
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const gardenerId = localStorage.getItem("account_id");
-        const result = await productService.getGardenerProductCategoriesList(
-          gardenerId
-        );
+        const result = await productService.getProductCategories(gardenerId);
         setCategories(result.items);
       } catch (err) {
         console.log(err);
@@ -51,67 +55,47 @@ function CreateProductPage({ onBack }) {
     }));
   };
 
-  const handleCategorySelect = (value) => {
-    if (value === "new") {
-      setIsNewCate(true);
-      setShowNewCategoryModal(true);
-      setFormData((prev) => ({
-        ...prev,
-        productCategoryId: null, // Set to null for new category
-        name: "",
-        description: "",
-      }));
-      setNewCategoryTempName("");
-      setNewCategoryTempDescription("");
-    } else {
-      const selectedCategory = categories.find(
-        (cat) => cat.productCategoryId === value
-      );
-      if (selectedCategory) {
-        setFormData((prev) => ({
-          ...prev,
-          productCategoryId: selectedCategory.productCategoryId,
-          name: selectedCategory.name,
-          description: selectedCategory.description,
-        }));
-      } else {
-        resetCategorySelection();
-      }
+  const handleAddTag = (e) => {
+    if (e.key === "Enter" && newTagInput.trim() !== "") {
+      e.preventDefault();
+      setProductTags((prevTags) => [...prevTags, newTagInput.trim()]);
+      setNewTagInput("");
     }
   };
 
-  const handleNewCategorySubmit = () => {
-    if (newCategoryTempName.trim() === "") {
-      alert("Tên danh mục không được để trống");
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      productCategoryId: null,
-      name: newCategoryTempName,
-      description: newCategoryTempDescription,
-    }));
-    setShowNewCategoryModal(false);
+  const handleRemoveTag = (tagToRemove) => {
+    setProductTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
   };
 
-  const resetCategorySelection = () => {
-    setFormData((prev) => ({
-      ...prev,
-      productCategoryId: "", // Reset to empty string to select "Chọn phân loại"
-      name: "",
-      description: "",
-    }));
-    setShowNewCategoryModal(false);
-    setIsNewCate(false);
+  const handleAddCertificate = (newCertificate) => {
+    setProductCertificates((prevCertificates) => [
+      ...prevCertificates,
+      newCertificate,
+    ]);
+    setShowAddCertificateModal(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Creating product:", formData);
+    const finalFormData = {
+      ...formData,
+      tagNames: productTags, // Changed from productTags to tagNames
+      certificates: productCertificates.map((cert) => ({
+        // Map certificates to match API
+        certificateName: cert.certificateName,
+        issuingOrganization: cert.issuingOrganization,
+        certificateNumber: cert.certificateNumber,
+        issuedDate: new Date(cert.issuedDate).toISOString(), // Convert to ISO string
+        expirationDate: new Date(cert.expirationDate).toISOString(), // Convert to ISO string
+        imageUrl: cert.certificateImageUrl, // Renamed from certificateImageUrl to imageUrl
+      })),
+    };
 
     try {
       const gardenerId = localStorage.getItem("account_id");
       await productService.createProduct(gardenerId, formData);
+
+      //Back to List Page
     } catch (err) {
       console.log(err);
     }
@@ -122,193 +106,278 @@ function CreateProductPage({ onBack }) {
   return (
     <div className="create-product-container">
       <div className="create-product-content">
-        <h1 className="cproduct-page-title">Tạo sản phẩm</h1>
+        <h1 className="cproduct-page-title">Create Product</h1>
+
+        <div className="cproduct-tabs">
+          <button
+            className={`cproduct-tab-button ${
+              activeTab === "basic" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("basic")}
+          >
+            Basic Information
+          </button>
+          <button
+            className={`cproduct-tab-button ${
+              activeTab === "certificates" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("certificates")}
+          >
+            Certificates
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit}>
-          {/* Product Name */}
-          <div className="cproduct-form-group">
-            <label htmlFor="productName" className="cproduct-form-label">
-              Tên sản phẩm <span className="cproduct-required">*</span>
-            </label>
-            <div className="cproduct-input-container">
-              <input
-                id="productName"
-                type="text"
-                className="cproduct-form-input"
-                placeholder="Mô tả tên sản phẩm của bạn"
-                value={formData.productName}
-                onChange={(e) =>
-                  handleInputChange("productName", e.target.value)
-                }
-                maxLength={180}
-                required
-              />
-              <span className="cproduct-character-count">
-                {formData.productName.length}/180
-              </span>
-            </div>
-          </div>
+          {activeTab === "basic" && (
+            <div className="cproduct-tab-content">
+              {/* Product Name */}
+              <div className="cproduct-form-group">
+                <label htmlFor="productName" className="cproduct-form-label">
+                  Product Name <span className="cproduct-required">*</span>
+                </label>
+                <div className="cproduct-input-container">
+                  <input
+                    id="productName"
+                    type="text"
+                    className="cproduct-form-input"
+                    placeholder="Enter product name"
+                    value={formData.productName}
+                    onChange={(e) =>
+                      handleInputChange("productName", e.target.value)
+                    }
+                    maxLength={180}
+                    required
+                  />
+                  <span className="cproduct-character-count">
+                    {formData.productName.length}/180
+                  </span>
+                </div>
+              </div>
 
-          {/* Status */}
-          <div className="cproduct-form-group">
-            <label htmlFor="status" className="cproduct-form-label">
-              Trạng thái <span className="cproduct-required">*</span>
-            </label>
-            <select
-              id="status"
-              className="cproduct-form-input"
-              value={formData.status}
-              onChange={(e) => handleInputChange("status", e.target.value)}
-              required
-            >
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="INACTIVE">INACTIVE</option>
-            </select>
-          </div>
+              {/* Status */}
+              <div className="cproduct-form-group">
+                <label htmlFor="status" className="cproduct-form-label">
+                  Status <span className="cproduct-required">*</span>
+                </label>
+                <select
+                  id="status"
+                  className="cproduct-form-input"
+                  value={formData.status}
+                  onChange={(e) => handleInputChange("status", e.target.value)}
+                  required
+                >
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
+                </select>
+              </div>
 
-          {/* Product Category Dropdown */}
-          <div className="cproduct-form-group">
-            <label htmlFor="productCategoryId" className="cproduct-form-label">
-              Danh mục sản phẩm <span className="cproduct-required">*</span>
-            </label>
-            <div className="cproduct-search-input-container">
-              <select
-                id="productCategoryId"
-                className="cproduct-form-input"
-                value={
-                  formData.productCategoryId === null
-                    ? "new"
-                    : formData.productCategoryId
-                }
-                onChange={(e) => handleCategorySelect(e.target.value)}
-                required
-              >
-                <option value="">Chọn danh mục</option>
-                {categories.map((category) => (
-                  <option
-                    key={category.productCategoryId}
-                    value={category.productCategoryId}
+              {/* Product Category Dropdown */}
+              <div className="cproduct-form-group">
+                <label
+                  htmlFor="productCategoryId"
+                  className="cproduct-form-label"
+                >
+                  Product Category <span className="cproduct-required">*</span>
+                </label>
+                <div className="cproduct-search-input-container">
+                  <select
+                    id="productCategoryId"
+                    className="cproduct-form-input"
+                    value={formData.productCategoryId}
+                    onChange={(e) =>
+                      handleInputChange("productCategoryId", e.target.value)
+                    }
+                    required
                   >
-                    {category.name}
-                  </option>
-                ))}
-                <option value="new">Tạo mới</option>
-              </select>
-            </div>
-          </div>
+                    <option value="">Select category</option>
+                    {categories.map((category) => (
+                      <option
+                        key={category.productCategoryId}
+                        value={category.productCategoryId}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {/* Category Name (display only if a category is selected or new one is being created) */}
-          {(formData.productCategoryId ||
-            formData.productCategoryId === null) && (
-            <div className="cproduct-form-group">
-              <label htmlFor="name" className="cproduct-form-label">
-                Tên danh mục
-              </label>
-              <input
-                id="name"
-                type="text"
-                className="cproduct-form-input"
-                value={formData.name}
-                readOnly={formData.productCategoryId !== null} // Read-only if existing category
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                required
-                placeholder="Tên danh mục"
-                disabled={!isNewCate}
-              />
-            </div>
-          )}
+              {/* Product Tags */}
+              <div className="cproduct-form-group">
+                <label htmlFor="productTags" className="cproduct-form-label">
+                  Product Tags
+                </label>
+                <div className="cproduct-tags-input-container">
+                  {productTags.map((tag, index) => (
+                    <div key={index} className="cproduct-tag-pill">
+                      {tag}
+                      <button
+                        type="button"
+                        className="cproduct-tag-remove-button"
+                        onClick={() => handleRemoveTag(tag)}
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  <input
+                    id="productTags"
+                    type="text"
+                    className="cproduct-tags-input"
+                    placeholder="Add more tags..."
+                    value={newTagInput}
+                    onChange={(e) => setNewTagInput(e.target.value)}
+                    onKeyDown={handleAddTag}
+                  />
+                </div>
+              </div>
 
-          {/* Category Description (display only if a category is selected or new one is being created) */}
-          {(formData.productCategoryId ||
-            formData.productCategoryId === null) && (
-            <div className="cproduct-form-group">
-              <label htmlFor="description" className="cproduct-form-label">
-                Mô tả danh mục
-              </label>
-              <textarea
-                id="description"
-                className="cproduct-form-input"
-                value={formData.description}
-                readOnly={formData.productCategoryId !== null} // Read-only if existing category
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-                rows="3"
-                placeholder="Mô tả chi tiết danh mục"
-                disabled={!isNewCate}
-              ></textarea>
-            </div>
-          )}
+              {/* Price */}
+              <div className="cproduct-form-group cproduct-form-group-inline">
+                <div className="cproduct-form-group-half">
+                  <label htmlFor="price" className="cproduct-form-label">
+                    Price <span className="cproduct-required">*</span>
+                  </label>
+                  <input
+                    id="price"
+                    type="number"
+                    className="cproduct-form-input"
+                    placeholder="Enter price"
+                    min={0}
+                    value={formData.price}
+                    onChange={(e) => handleInputChange("price", e.target.value)}
+                    onKeyDown={(e) => {
+                      if (["-", "+", "e"].includes(e.key)) {
+                        e.preventDefault(); // Block - + and scientific notation input
+                      }
+                    }}
+                    required
+                  />
+                </div>
+                {/* Currency */}
+                <div className="cproduct-form-group-half">
+                  <label htmlFor="currency" className="cproduct-form-label">
+                    Currency
+                  </label>
+                  <select
+                    id="currency"
+                    className="cproduct-form-input"
+                    value={formData.currency}
+                    onChange={(e) =>
+                      handleInputChange("currency", e.target.value)
+                    }
+                  >
+                    <option value="VND">VND</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                  </select>
+                </div>
+              </div>
 
-          {/* Price */}
-          <div className="cproduct-form-group">
-            <label htmlFor="price" className="cproduct-form-label">
-              Giá tiền <span className="cproduct-required">*</span>
-            </label>
-            <div className="cproduct-search-input-container">
-              <input
-                id="price"
-                type="number"
-                className="cproduct-search-input"
-                placeholder="Nhập giá bán"
-                min={0}
-                value={formData.price}
-                onChange={(e) => handleInputChange("price", e.target.value)}
-                onKeyDown={(e) => {
-                  if (["-", "+", "e"].includes(e.key)) {
-                    e.preventDefault(); // Block - + and scientific notation input
+              {/* Weight Unit */}
+              <div className="cproduct-form-group">
+                <label htmlFor="weightUnit" className="cproduct-form-label">
+                  Weight Unit
+                </label>
+                <input
+                  id="weightUnit"
+                  type="text"
+                  className="cproduct-form-input"
+                  placeholder="e.g., kg, g"
+                  value={formData.weightUnit}
+                  onChange={(e) =>
+                    handleInputChange("weightUnit", e.target.value)
                   }
-                }}
-                required
-              />
+                />
+              </div>
+
+              {/* Available Date */}
+              <div className="cproduct-form-group">
+                <label htmlFor="availabledDate" className="cproduct-form-label">
+                  Available Date
+                </label>
+                <input
+                  id="availabledDate"
+                  type="date"
+                  className="cproduct-form-input"
+                  value={formData.availabledDate}
+                  min={new Date().toISOString().split("T")[0]}
+                  onChange={(e) =>
+                    handleInputChange("availabledDate", e.target.value)
+                  }
+                />
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Currency */}
-          <div className="cproduct-form-group">
-            <label htmlFor="currency" className="cproduct-form-label">
-              Tiền tệ
-            </label>
-            <input
-              id="currency"
-              type="text"
-              className="cproduct-form-input"
-              placeholder="Ví dụ: VND, USD"
-              value={formData.currency}
-              onChange={(e) => handleInputChange("currency", e.target.value)}
-            />
-          </div>
-
-          {/* Weight Unit */}
-          <div className="cproduct-form-group">
-            <label htmlFor="weightUnit" className="cproduct-form-label">
-              Đơn vị cân nặng (giá tiền)
-            </label>
-            <input
-              id="weightUnit"
-              type="text"
-              className="cproduct-form-input"
-              placeholder="Ví dụ: kg, g"
-              value={formData.weightUnit}
-              onChange={(e) => handleInputChange("weightUnit", e.target.value)}
-            />
-          </div>
-
-          {/* Available Date */}
-          <div className="cproduct-form-group">
-            <label htmlFor="availabledDate" className="cproduct-form-label">
-              Ngày giá tiền có hiệu lực
-            </label>
-            <input
-              id="availabledDate"
-              type="date"
-              className="cproduct-form-input"
-              value={formData.availabledDate}
-              min={new Date().toISOString().split("T")[0]}
-              onChange={(e) =>
-                handleInputChange("availabledDate", e.target.value)
-              }
-            />
-          </div>
+          {activeTab === "certificates" && (
+            <div className="cproduct-tab-content">
+              <div className="cproduct-certificates-header">
+                <h2 className="cproduct-certificates-title">
+                  Product Certificates
+                </h2>
+                <button
+                  type="button"
+                  className="cproduct-add-certificate-button"
+                  onClick={() => setShowAddCertificateModal(true)}
+                >
+                  + Add Certificate
+                </button>
+              </div>
+              <div className="cproduct-certificates-list-container">
+                {productCertificates.length === 0 ? (
+                  <div className="cproduct-no-certificates">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-award"
+                    >
+                      <circle cx="12" cy="8" r="6" />
+                      <path d="M15.477 12.89L17.18 22l-5.15-3.62L6.82 22l1.703-9.11" />
+                    </svg>
+                    <p>No certificates added yet</p>
+                    <p>Click &quot;Add Certificate&quot; to get started</p>
+                  </div>
+                ) : (
+                  <ul className="cproduct-certificate-list">
+                    {productCertificates.map((cert, index) => (
+                      <li key={index} className="cproduct-certificate-item">
+                        <div className="cproduct-certificate-details">
+                          <p className="cproduct-certificate-name">
+                            {cert.certificateName}
+                          </p>
+                          <p className="cproduct-certificate-org">
+                            {cert.issuingOrganization}
+                          </p>
+                          <p className="cproduct-certificate-number">
+                            Cert No: {cert.certificateNumber}
+                          </p>
+                          <p className="cproduct-certificate-dates">
+                            Issued: {cert.issuedDate} | Expires:{" "}
+                            {cert.expirationDate}
+                          </p>
+                        </div>
+                        {cert.certificateImageUrl && (
+                          <img
+                            src={cert.certificateImageUrl || "/placeholder.svg"}
+                            alt={cert.certificateName}
+                            className="cproduct-certificate-image"
+                          />
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Form Actions */}
           <div className="cproduct-form-actions">
@@ -317,89 +386,21 @@ function CreateProductPage({ onBack }) {
               className="cproduct-cancel-button"
               onClick={onBack}
             >
-              Hủy
+              Cancel
             </button>
             <button type="submit" className="cproduct-create-button">
-              Tạo sản phẩm
+              Create Product
             </button>
           </div>
         </form>
       </div>
 
-      {/* New Category Modal */}
-      {showNewCategoryModal && (
-        <div
-          className="cproduct-modal-overlay"
-          onClick={resetCategorySelection}
-        >
-          {" "}
-          {/* Click overlay to reset */}
-          <div
-            className="cproduct-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {" "}
-            {/* Prevent clicks inside from closing */}
-            <div className="cproduct-modal-header">
-              <h2>Tạo danh mục mới</h2>
-              <button
-                className="cproduct-modal-close"
-                onClick={resetCategorySelection}
-              >
-                {" "}
-                {/* Close button to reset */}
-                <X size={20} />
-              </button>
-            </div>
-            <div className="cproduct-modal-body">
-              <div className="cproduct-form-group">
-                <label htmlFor="newname" className="cproduct-form-label">
-                  Tên danh mục mới <span className="cproduct-required">*</span>
-                </label>
-                <input
-                  id="newname"
-                  type="text"
-                  className="cproduct-form-input"
-                  value={newCategoryTempName}
-                  onChange={(e) => setNewCategoryTempName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="cproduct-form-group">
-                <label htmlFor="newdescription" className="cproduct-form-label">
-                  Mô tả danh mục mới
-                </label>
-                <textarea
-                  id="newdescription"
-                  className="cproduct-form-input"
-                  value={newCategoryTempDescription}
-                  onChange={(e) =>
-                    setNewCategoryTempDescription(e.target.value)
-                  }
-                  rows="3"
-                ></textarea>
-              </div>
-            </div>
-            <div className="cproduct-modal-footer">
-              <button
-                type="button"
-                className="cproduct-cancel-button"
-                onClick={resetCategorySelection}
-              >
-                {" "}
-                {/* Cancel button to reset */}
-                Hủy
-              </button>
-              <button
-                type="button"
-                className="cproduct-create-button"
-                onClick={handleNewCategorySubmit}
-              >
-                Xác nhận
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Add Certificate Modal */}
+      {showAddCertificateModal && (
+        <CreateProductCertificatePopup
+          onClose={() => setShowAddCertificateModal(false)}
+          onAddCertificate={handleAddCertificate}
+        />
       )}
     </div>
   );

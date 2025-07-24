@@ -7,26 +7,17 @@ import "./GChatPage.css";
 
 function GChatPage() {
   const [user, setUser] = useState({
-    phone: "0123456789",
-    email: "test@gmail.com",
-    name: "Test",
-    imageUrl: "https://picsum.photos/200",
+    id: localStorage.getItem("account_id"),
+    name: localStorage.getItem("account_name"),
+    imageUrl: localStorage.getItem("account_avatar"),
   });
-  const [userId, setUserId] = useState();
   const [channelUrl, setChannelUrl] = useState();
-
-  useEffect(() => {
-    if (user) {
-      const id = user.email.split("@")[0];
-      setUserId(id);
-    }
-  }, [user]);
 
   return (
     <div className="gchat-chat-container">
       <SendbirdProvider
         appId={"296C6AE3-686D-44BF-8FDA-7DDFF64921C3"}
-        userId={userId}
+        userId={user.id}
         nickname={user.name}
         profileUrl={user?.imageUrl}
         allowProfileEdit={true}

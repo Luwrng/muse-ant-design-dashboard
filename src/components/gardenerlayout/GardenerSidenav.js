@@ -13,7 +13,7 @@ import {
   faCalendarAlt,
   faMessage,
   faCreditCard,
-  faClockRotateLeft
+  faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import "./GardenerSidenav.css";
 
@@ -61,12 +61,12 @@ function GardenerSidenav() {
         </Menu.Item>
 
         {/* Quản lý danh mục sản phẩm */}
-        <Menu.Item key="product-category">
+        {/* <Menu.Item key="product-category">
           <NavLink to="/gardener/product-category">
             <FontAwesomeIcon icon={faSeedling} />
             <span>Danh Mục Sản phẩm</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
 
         {/* Quản lý cuộc hẹn */}
         <Menu.Item key="appointment">
@@ -116,10 +116,13 @@ function GardenerSidenav() {
               <span>Hồ Sơ</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="sign-in" onClick={() => {
-            localStorage.clear();
-            window.location.href = '/';
-          }}>
+          <Menu.Item
+            key="sign-in"
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/";
+            }}
+          >
             <FontAwesomeIcon icon={faSignInAlt} />
             <span>Đăng Xuất</span>
           </Menu.Item>
