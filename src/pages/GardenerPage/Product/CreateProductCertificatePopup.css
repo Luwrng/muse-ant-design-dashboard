@@ -17,8 +17,10 @@
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 500px;
+  max-width: 40vw;
   position: relative;
+  overflow-y: auto;
+  max-height: 90vh;
 }
 
 .gpcertiadd-modal-header {
@@ -159,8 +161,8 @@
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 400px; /* Smaller for confirmation */
+  width: 100%;
+  max-width: 40vw; /* Smaller for confirmation */
   position: relative;
   text-align: center;
 }
@@ -187,13 +189,15 @@
 
 .gpcertiadd-confirm-body p {
   margin-bottom: 0.5rem;
-  color: #374151;
+  /* color: #374151; */
   font-size: 0.9rem;
 }
 
 .gpcertiadd-confirm-warning {
   color: #dc2626; /* Red for warning */
-  font-weight: 600;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }

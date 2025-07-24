@@ -10,13 +10,12 @@ function CreateProductPage({ onBack }) {
     productName: "",
     status: "ACTIVE",
     productCategoryId: "", // Will be null if new category is created
-    name: "", // Name of the selected or new category
-    description: "", // Description of the selected or new category
-    price: "",
+    price: 0,
     currency: "VND", // Default currency
     availabledDate: new Date().toISOString().split("T")[0],
     isCurrent: true,
     weightUnit: "",
+    // quantity: 0,
   });
 
   const [productTags, setProductTags] = useState([]);
@@ -24,10 +23,6 @@ function CreateProductPage({ onBack }) {
   const [productCertificates, setProductCertificates] = useState([]);
   const [activeTab, setActiveTab] = useState("basic"); // 'basic' or 'certificates'
 
-  const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
-  const [newCategoryTempName, setNewCategoryTempName] = useState("");
-  const [newCategoryTempDescription, setNewCategoryTempDescription] =
-    useState("");
   const [categories, setCategories] = useState([]);
   const [showAddCertificateModal, setShowAddCertificateModal] = useState(false);
 
@@ -35,9 +30,8 @@ function CreateProductPage({ onBack }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await productService.getProductCategories(gardenerId);
-        setCategories(result.items);
+        const result = await productService.getProductCategories(1, 10, true);
+        setCategories(result);
       } catch (err) {
         console.log(err);
       }
@@ -93,8 +87,9 @@ function CreateProductPage({ onBack }) {
 
     try {
       const gardenerId = localStorage.getItem("account_id");
-      await productService.createProduct(gardenerId, formData);
+      await productService.createProduct(gardenerId, finalFormData);
 
+      console.log(finalFormData);
       //Back to List Page
     } catch (err) {
       console.log(err);
@@ -106,7 +101,7 @@ function CreateProductPage({ onBack }) {
   return (
     <div className="create-product-container">
       <div className="create-product-content">
-        <h1 className="cproduct-page-title">Create Product</h1>
+        <h1 className="cproduct-page-title">Tạo sản phẩm</h1>
 
         <div className="cproduct-tabs">
           <button
@@ -115,7 +110,7 @@ function CreateProductPage({ onBack }) {
             }`}
             onClick={() => setActiveTab("basic")}
           >
-            Basic Information
+            Thông tin cơ bản
           </button>
           <button
             className={`cproduct-tab-button ${
@@ -123,7 +118,7 @@ function CreateProductPage({ onBack }) {
             }`}
             onClick={() => setActiveTab("certificates")}
           >
-            Certificates
+            Các chứng chỉ
           </button>
         </div>
 
@@ -133,14 +128,14 @@ function CreateProductPage({ onBack }) {
               {/* Product Name */}
               <div className="cproduct-form-group">
                 <label htmlFor="productName" className="cproduct-form-label">
-                  Product Name <span className="cproduct-required">*</span>
+                  Tên sản phẩm <span className="cproduct-required">*</span>
                 </label>
                 <div className="cproduct-input-container">
                   <input
                     id="productName"
                     type="text"
                     className="cproduct-form-input"
-                    placeholder="Enter product name"
+                    placeholder="Nhập tên sản phẩm..."
                     value={formData.productName}
                     onChange={(e) =>
                       handleInputChange("productName", e.target.value)
@@ -157,7 +152,7 @@ function CreateProductPage({ onBack }) {
               {/* Status */}
               <div className="cproduct-form-group">
                 <label htmlFor="status" className="cproduct-form-label">
-                  Status <span className="cproduct-required">*</span>
+                  Trạng thái <span className="cproduct-required">*</span>
                 </label>
                 <select
                   id="status"
@@ -166,8 +161,8 @@ function CreateProductPage({ onBack }) {
                   onChange={(e) => handleInputChange("status", e.target.value)}
                   required
                 >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
+                  <option value="ACTIVE">Bán</option>
+                  <option value="INACTIVE">Dừng bán</option>
                 </select>
               </div>
 
@@ -177,7 +172,7 @@ function CreateProductPage({ onBack }) {
                   htmlFor="productCategoryId"
                   className="cproduct-form-label"
                 >
-                  Product Category <span className="cproduct-required">*</span>
+                  Danh mục <span className="cproduct-required">*</span>
                 </label>
                 <div className="cproduct-search-input-container">
                   <select
@@ -189,7 +184,7 @@ function CreateProductPage({ onBack }) {
                     }
                     required
                   >
-                    <option value="">Select category</option>
+                    <option value="">Chọn danh mục</option>
                     {categories.map((category) => (
                       <option
                         key={category.productCategoryId}
@@ -205,7 +200,7 @@ function CreateProductPage({ onBack }) {
               {/* Product Tags */}
               <div className="cproduct-form-group">
                 <label htmlFor="productTags" className="cproduct-form-label">
-                  Product Tags
+                  Nhãn sản phẩm
                 </label>
                 <div className="cproduct-tags-input-container">
                   {productTags.map((tag, index) => (
@@ -224,7 +219,7 @@ function CreateProductPage({ onBack }) {
                     id="productTags"
                     type="text"
                     className="cproduct-tags-input"
-                    placeholder="Add more tags..."
+                    placeholder="Thêm các nhãn..."
                     value={newTagInput}
                     onChange={(e) => setNewTagInput(e.target.value)}
                     onKeyDown={handleAddTag}
@@ -242,13 +237,35 @@ function CreateProductPage({ onBack }) {
                     id="price"
                     type="number"
                     className="cproduct-form-input"
-                    placeholder="Enter price"
+                    placeholder="Nhập giá"
                     min={0}
                     value={formData.price}
                     onChange={(e) => handleInputChange("price", e.target.value)}
                     onKeyDown={(e) => {
-                      if (["-", "+", "e"].includes(e.key)) {
-                        e.preventDefault(); // Block - + and scientific notation input
+                      const allowedKeys = [
+                        "Backspace",
+                        "Tab",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "Delete",
+                      ];
+
+                      // Allow Ctrl/Cmd + A/C/V/X for copy/paste
+                      if (
+                        (e.ctrlKey || e.metaKey) &&
+                        ["a", "c", "v", "x"].includes(e.key.toLowerCase())
+                      ) {
+                        return;
+                      }
+
+                      // Allow navigation and editing keys
+                      if (allowedKeys.includes(e.key)) {
+                        return;
+                      }
+
+                      // Allow digits only
+                      if (!/^\d$/.test(e.key)) {
+                        e.preventDefault();
                       }
                     }}
                     required
@@ -257,7 +274,7 @@ function CreateProductPage({ onBack }) {
                 {/* Currency */}
                 <div className="cproduct-form-group-half">
                   <label htmlFor="currency" className="cproduct-form-label">
-                    Currency
+                    Giá
                   </label>
                   <select
                     id="currency"
@@ -277,13 +294,13 @@ function CreateProductPage({ onBack }) {
               {/* Weight Unit */}
               <div className="cproduct-form-group">
                 <label htmlFor="weightUnit" className="cproduct-form-label">
-                  Weight Unit
+                  Đơn vị tính giá
                 </label>
                 <input
                   id="weightUnit"
                   type="text"
                   className="cproduct-form-input"
-                  placeholder="e.g., kg, g"
+                  placeholder="Ví dụ: kg, g"
                   value={formData.weightUnit}
                   onChange={(e) =>
                     handleInputChange("weightUnit", e.target.value)
@@ -291,10 +308,55 @@ function CreateProductPage({ onBack }) {
                 />
               </div>
 
+              {/* In stock quantity
+              <div className="cproduct-form-group">
+                <label htmlFor="quantity" className="cproduct-form-label">
+                  Số lượng dự kiến
+                </label>
+                <input
+                  id="quantity"
+                  type="number"
+                  className="cproduct-form-input"
+                  placeholder="Nhập số lượng sản phẩm"
+                  value={formData.quantity}
+                  onChange={(e) =>
+                    handleInputChange("quantity", e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    const allowedKeys = [
+                      "Backspace",
+                      "Tab",
+                      "ArrowLeft",
+                      "ArrowRight",
+                      "Delete",
+                    ];
+
+                    // Allow Ctrl/Cmd + A/C/V/X for copy/paste
+                    if (
+                      (e.ctrlKey || e.metaKey) &&
+                      ["a", "c", "v", "x"].includes(e.key.toLowerCase())
+                    ) {
+                      return;
+                    }
+
+                    // Allow navigation and editing keys
+                    if (allowedKeys.includes(e.key)) {
+                      return;
+                    }
+
+                    // Allow digits only
+                    if (!/^\d$/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  required
+                />
+              </div> */}
+
               {/* Available Date */}
               <div className="cproduct-form-group">
                 <label htmlFor="availabledDate" className="cproduct-form-label">
-                  Available Date
+                  Ngày áp dụng
                 </label>
                 <input
                   id="availabledDate"
@@ -313,15 +375,13 @@ function CreateProductPage({ onBack }) {
           {activeTab === "certificates" && (
             <div className="cproduct-tab-content">
               <div className="cproduct-certificates-header">
-                <h2 className="cproduct-certificates-title">
-                  Product Certificates
-                </h2>
+                <h2 className="cproduct-certificates-title">Các chứng chỉ</h2>
                 <button
                   type="button"
                   className="cproduct-add-certificate-button"
                   onClick={() => setShowAddCertificateModal(true)}
                 >
-                  + Add Certificate
+                  + Thêm chúng chỉ
                 </button>
               </div>
               <div className="cproduct-certificates-list-container">
@@ -342,8 +402,8 @@ function CreateProductPage({ onBack }) {
                       <circle cx="12" cy="8" r="6" />
                       <path d="M15.477 12.89L17.18 22l-5.15-3.62L6.82 22l1.703-9.11" />
                     </svg>
-                    <p>No certificates added yet</p>
-                    <p>Click &quot;Add Certificate&quot; to get started</p>
+                    <p>Chưa có chứng chỉ nào được thêm vào</p>
+                    <p>Nhấn &quot;Tạo chứng chỉ&quot; để bát đầu</p>
                   </div>
                 ) : (
                   <ul className="cproduct-certificate-list">
@@ -386,10 +446,10 @@ function CreateProductPage({ onBack }) {
               className="cproduct-cancel-button"
               onClick={onBack}
             >
-              Cancel
+              Hủy
             </button>
             <button type="submit" className="cproduct-create-button">
-              Create Product
+              Tạo sản phẩm
             </button>
           </div>
         </form>

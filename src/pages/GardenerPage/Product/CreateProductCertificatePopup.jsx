@@ -1,6 +1,7 @@
 import React from "react";
 import "./CreateProductCertificatePopup.css";
 import { useState } from "react";
+import axios from "axios";
 import { X } from "lucide-react";
 
 function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
@@ -13,12 +14,22 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
     certificateImageUrl: "",
   });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [file, setFile] = useState();
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleInputChange = (field, value) => {
     setCertificateFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleInputImage = (e) => {
+    const chosenFile = e.target.files[0];
+    if (!chosenFile) return;
+
+    setFile(chosenFile);
+    setImagePreview(URL.createObjectURL(chosenFile));
   };
 
   const handleSubmit = (e) => {
@@ -30,7 +41,7 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
       !certificateFormData.certificateNumber ||
       !certificateFormData.issuedDate ||
       !certificateFormData.expirationDate ||
-      !certificateFormData.certificateImageUrl
+      !file
     ) {
       alert("Please fill in all required fields.");
       return;
@@ -38,8 +49,20 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
     setShowConfirmModal(true); // Show confirmation modal
   };
 
-  const handleConfirmAdd = () => {
-    onAddCertificate(certificateFormData);
+  const handleConfirmAdd = async () => {
+    const fileData = new FormData();
+    fileData.append("file", file); // This will work
+    fileData.append("upload_preset", "clean_food_viet");
+
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
+      fileData
+    );
+
+    const certificateData = certificateFormData;
+    certificateData.certificateImageUrl = res.data.url;
+
+    onAddCertificate(certificateData);
     setShowConfirmModal(false);
     onClose(); // Close the main certificate modal
   };
@@ -51,7 +74,7 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="gpcertiadd-modal-header">
-          <h2>Add Certificate</h2>
+          <h2>Thêm chứng chỉ</h2>
           <button className="gpcertiadd-modal-close" onClick={onClose}>
             <X size={20} />
           </button>
@@ -63,13 +86,13 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                 htmlFor="certificateName"
                 className="gpcertiadd-form-label"
               >
-                Certificate Name <span className="gpcertiadd-required">*</span>
+                Tên chứng chỉ <span className="gpcertiadd-required">*</span>
               </label>
               <input
                 id="certificateName"
                 type="text"
                 className="gpcertiadd-form-input"
-                placeholder="Enter certificate name"
+                placeholder="Nhập tên chứng chỉ"
                 value={certificateFormData.certificateName}
                 onChange={(e) =>
                   handleInputChange("certificateName", e.target.value)
@@ -82,14 +105,13 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                 htmlFor="issuingOrganization"
                 className="gpcertiadd-form-label"
               >
-                Issuing Organization{" "}
-                <span className="gpcertiadd-required">*</span>
+                Nơi cấp <span className="gpcertiadd-required">*</span>
               </label>
               <input
                 id="issuingOrganization"
                 type="text"
                 className="gpcertiadd-form-input"
-                placeholder="Enter issuing organization"
+                placeholder="Nhập nơi cấp"
                 value={certificateFormData.issuingOrganization}
                 onChange={(e) =>
                   handleInputChange("issuingOrganization", e.target.value)
@@ -102,14 +124,13 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                 htmlFor="certificateNumber"
                 className="gpcertiadd-form-label"
               >
-                Certificate Number{" "}
-                <span className="gpcertiadd-required">*</span>
+                Số chứng nhận <span className="gpcertiadd-required">*</span>
               </label>
               <input
                 id="certificateNumber"
                 type="text"
                 className="gpcertiadd-form-input"
-                placeholder="Enter certificate number"
+                placeholder="Nhập số chứng chỉ"
                 value={certificateFormData.certificateNumber}
                 onChange={(e) =>
                   handleInputChange("certificateNumber", e.target.value)
@@ -120,7 +141,7 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
             <div className="gpcertiadd-form-group gpcertiadd-form-group-inline">
               <div className="gpcertiadd-form-group-half">
                 <label htmlFor="issuedDate" className="gpcertiadd-form-label">
-                  Issued Date <span className="gpcertiadd-required">*</span>
+                  Ngày cấp <span className="gpcertiadd-required">*</span>
                 </label>
                 <input
                   id="issuedDate"
@@ -138,7 +159,7 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                   htmlFor="expirationDate"
                   className="gpcertiadd-form-label"
                 >
-                  Expiration Date <span className="gpcertiadd-required">*</span>
+                  Ngày hết hạn <span className="gpcertiadd-required">*</span>
                 </label>
                 <input
                   id="expirationDate"
@@ -157,20 +178,26 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                 htmlFor="certificateImageUrl"
                 className="gpcertiadd-form-label"
               >
-                Certificate Image URL{" "}
-                <span className="gpcertiadd-required">*</span>
+                Ảnh chứng chỉ <span className="gpcertiadd-required">*</span>
               </label>
               <input
                 id="certificateImageUrl"
-                type="url"
+                type="file"
                 className="gpcertiadd-form-input"
                 placeholder="Enter image URL"
-                value={certificateFormData.certificateImageUrl}
-                onChange={(e) =>
-                  handleInputChange("certificateImageUrl", e.target.value)
-                }
+                accept="image/*"
+                onChange={(e) => handleInputImage(e)}
                 required
               />
+
+              {/* Show a temp image URL */}
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{ width: 200, height: "auto" }}
+                />
+              )}
             </div>
           </div>
           <div className="gpcertiadd-modal-footer">
@@ -179,10 +206,10 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
               className="gpcertiadd-cancel-button"
               onClick={onClose}
             >
-              Cancel
+              Hủy
             </button>
             <button type="submit" className="gpcertiadd-add-button">
-              Add Certificate
+              Tạo chứng chỉ
             </button>
           </div>
         </form>
@@ -199,7 +226,7 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="gpcertiadd-confirm-header">
-              <h2>Confirm Certificate Data</h2>
+              <h2>Thông báo xác nhận</h2>
               <button
                 className="gpcertiadd-modal-close"
                 onClick={() => setShowConfirmModal(false)}
@@ -208,31 +235,39 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
               </button>
             </div>
             <div className="gpcertiadd-confirm-body">
-              <p>Are you sure you want to add this certificate?</p>
+              <p>Bạn có muốn thêm chứng chỉ với những thông tin đã cung cấp?</p>
               <p className="gpcertiadd-confirm-warning">
-                Once added, certificate data cannot be changed.
+                Một khi chững chỉ được thêm vào hệ thống, bạn sẽ không thể thay
+                đổi thông tin của chứng chỉ.
               </p>
               <div className="gpcertiadd-confirm-details">
                 <p>
-                  <strong>Name:</strong> {certificateFormData.certificateName}
+                  <strong>Tên:</strong> {certificateFormData.certificateName}
                 </p>
                 <p>
-                  <strong>Organization:</strong>{" "}
+                  <strong>Nơi cấp:</strong>{" "}
                   {certificateFormData.issuingOrganization}
                 </p>
                 <p>
-                  <strong>Number:</strong>{" "}
+                  <strong>Số chững chỉ:</strong>{" "}
                   {certificateFormData.certificateNumber}
                 </p>
                 <p>
-                  <strong>Issued:</strong> {certificateFormData.issuedDate}
+                  <strong>Ngày cấp:</strong> {certificateFormData.issuedDate}
                 </p>
                 <p>
-                  <strong>Expires:</strong> {certificateFormData.expirationDate}
+                  <strong>Ngày hết hạn:</strong>{" "}
+                  {certificateFormData.expirationDate}
                 </p>
                 <p>
-                  <strong>Image URL:</strong>{" "}
-                  {certificateFormData.certificateImageUrl}
+                  <strong>Ảnh:</strong> {/* Show a temp image */}
+                  {imagePreview && (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{ width: 200, height: "auto" }}
+                    />
+                  )}
                 </p>
               </div>
             </div>
@@ -242,14 +277,14 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
                 className="gpcertiadd-cancel-button"
                 onClick={() => setShowConfirmModal(false)}
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="button"
                 className="gpcertiadd-add-button"
                 onClick={handleConfirmAdd}
               >
-                Confirm Add
+                Đồng ý
               </button>
             </div>
           </div>
