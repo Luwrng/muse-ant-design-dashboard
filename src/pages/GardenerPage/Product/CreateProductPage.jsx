@@ -88,9 +88,6 @@ function CreateProductPage({ onBack }) {
     try {
       const gardenerId = localStorage.getItem("account_id");
       await productService.createProduct(gardenerId, finalFormData);
-
-      console.log(finalFormData);
-      //Back to List Page
     } catch (err) {
       console.log(err);
     }

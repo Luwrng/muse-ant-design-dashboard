@@ -43,7 +43,6 @@ function GardenerProductPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
@@ -51,8 +50,16 @@ function GardenerProductPage() {
   useEffect(() => {
     setFilterTabs([
       { id: "all", label: "Tất cả", count: products.length },
-      { id: "ACTIVE", label: "Đang bán", count: products.filter((p) => p.status === "ACTIVE").length },
-      { id: "INACTIVE", label: "Hết hàng", count: products.filter((p) => p.status === "INACTIVE").length },
+      {
+        id: "ACTIVE",
+        label: "Đang bán",
+        count: products.filter((p) => p.status === "ACTIVE").length,
+      },
+      {
+        id: "INACTIVE",
+        label: "Hết hàng",
+        count: products.filter((p) => p.status === "INACTIVE").length,
+      },
     ]);
   }, [products]);
 
@@ -84,8 +91,6 @@ function GardenerProductPage() {
     return matchesTab && matchesSearch;
   });
 
-
-
   // Close dropdown when clicking outside
   const dropdownRef = useRef(null);
   useEffect(() => {
@@ -99,7 +104,6 @@ function GardenerProductPage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
-
 
   const SearchIcon = () => (
     <svg
@@ -133,8 +137,6 @@ function GardenerProductPage() {
     </svg>
   );
 
-  
-
   const ChevronLeftIcon = () => (
     <svg
       className="gproduct-icon"
@@ -167,8 +169,6 @@ function GardenerProductPage() {
     </svg>
   );
 
-
-  
   const handleProductClick = (product) => {
     setIsDropdownOpen(false);
     setSelectedProduct(product);
@@ -441,10 +441,8 @@ function GardenerProductPage() {
       </div>
 
       <div className="gorder-pagination">
-          <div className="gorder-pagination-info">
-         
-          </div>
-          <div className="gpost-pagination-controls">
+        <div className="gorder-pagination-info"></div>
+        <div className="gpost-pagination-controls">
           <button className="gpost-pagination-btn">‹</button>
           {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
@@ -458,7 +456,7 @@ function GardenerProductPage() {
           ))}
           <button className="gpost-pagination-btn">›</button>
         </div>
-        </div>
+      </div>
 
       {/* Product Detail */}
       <ProductDetailPage
