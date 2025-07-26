@@ -1,6 +1,6 @@
 import httpService from "./httpService";
 
-const endpoint = "/gadener/payments";
+const endpoint = "/gardener/payments";
 
 const makingPayment = async (data) => {
   return await httpService.post(`${endpoint}`, data);

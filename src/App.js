@@ -78,7 +78,7 @@ function App() {
           <ProtectedRoute
             path="/gardener/service-package"
             component={GServicePackage}
-            allowedRoles={["gardener", "retailer"]}
+            // allowedRoles={["gardener", "retailer"]}
           />
           <ProtectedRoute
             path="/gardener/payment-result"

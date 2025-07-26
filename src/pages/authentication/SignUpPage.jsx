@@ -1,12 +1,13 @@
 // src/pages/SignUpPage.js
 import React, { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "../../firebase/firebase";
 import CloudinaryUpload from "../../cloudinary/CloudinaryUpload";
 import SignUpSuccessModal from "./SignUpSuccessModal";
 import authenticateService from "../services/apiServices/authenticateService";
 
+//Firebase auth service
+import { auth } from "../../firebase/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import "./SignUpPage.css";
 
 function SignUpPage() {
@@ -18,7 +19,6 @@ function SignUpPage() {
     phone: "",
     password: "",
     address: "",
-    otp: "",
     certName: "",
     issuingAuthority: "",
     issueDate: "",
@@ -32,40 +32,18 @@ function SignUpPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
-  const setupRecaptcha = () => {
-    const container = document.getElementById("recaptcha-container");
-    if (!container) {
-      console.error("❌ Không tìm thấy #recaptcha-container trong DOM.");
-      return;
-    }
-  
-    if (!window.recaptchaVerifier) {
-      try {
-        console.log("auth object:", auth);
-        window.recaptchaVerifier = new RecaptchaVerifier(
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: (response) => {
-              console.log("✅ reCAPTCHA verified:", response);
-            },
-          },
-          auth
-        );
-  
-        window.recaptchaVerifier.render().then((widgetId) => {
-          window.recaptchaWidgetId = widgetId;
-        });
-      } catch (err) {
-        console.error("🔥 Lỗi tạo reCAPTCHA:", err);
-      }
-    }
-  };
-  
+  // #region Handle Firebase SMS
+  const [otp, setOtp] = useState();
+  // #endregion
 
   const handleNextStep = async () => {
     if (currentStep === 1) {
-      if (!formData.name || !formData.phone || !formData.password || !formData.address) {
+      if (
+        !formData.name ||
+        !formData.phone ||
+        !formData.password ||
+        !formData.address
+      ) {
         alert("Vui lòng nhập đầy đủ thông tin.");
         return;
       }
@@ -75,7 +53,7 @@ function SignUpPage() {
         alert("Firebase chưa sẵn sàng. Vui lòng thử lại sau.");
         return;
       }
-  
+
       // Chỉ khởi tạo recaptcha một lần
       if (!window.recaptchaVerifier) {
         try {
@@ -98,12 +76,16 @@ function SignUpPage() {
           return;
         }
       }
-  
+
       const appVerifier = window.recaptchaVerifier;
       const fullPhone = "+84" + formData.phone.replace(/^0/, "");
-  
+
       try {
-        const confirmationResult = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          fullPhone,
+          appVerifier
+        );
         window.confirmationResult = confirmationResult;
         alert("✅ OTP đã gửi. Vui lòng kiểm tra tin nhắn!");
         setCurrentStep(2);
@@ -112,15 +94,15 @@ function SignUpPage() {
         alert("Không thể gửi OTP. " + error.message);
       }
     }
-  
+
     // 👉 Xác minh OTP
     else if (currentStep === 2) {
-      if (!formData.otp || formData.otp.length !== 6) {
+      if (!otp || otp.length !== 6) {
         alert("Vui lòng nhập mã OTP hợp lệ.");
         return;
       }
       try {
-        const result = await window.confirmationResult.confirm(formData.otp);
+        const result = await window.confirmationResult.confirm(otp);
         console.log("✅ Xác minh thành công:", result.user);
         setCurrentStep(3);
       } catch (error) {
@@ -129,13 +111,17 @@ function SignUpPage() {
       }
     }
   };
-  
-  
 
   const handlePrevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const handleSubmit = async () => {
-    if (!formData.imageUrl || !formData.certName || !formData.issuingAuthority || !formData.issueDate || !formData.expiryDate) {
+    if (
+      !formData.imageUrl ||
+      !formData.certName ||
+      !formData.issuingAuthority ||
+      !formData.issueDate ||
+      !formData.expiryDate
+    ) {
       alert("Vui lòng nhập đầy đủ thông tin chứng chỉ.");
       return;
     }
@@ -208,14 +194,20 @@ function SignUpPage() {
                     />
                   ) : (
                     <input
-                      type={field === "password" && !showPassword ? "password" : "text"}
+                      type={
+                        field === "password" && !showPassword
+                          ? "password"
+                          : "text"
+                      }
                       className="siup-input-field"
                       placeholder={`Nhập ${field}`}
                       value={formData[field]}
                       onChange={(e) =>
                         handleInputChange(
                           field,
-                          field === "phone" ? e.target.value.replace(/\D/g, "") : e.target.value
+                          field === "phone"
+                            ? e.target.value.replace(/\D/g, "")
+                            : e.target.value
                         )
                       }
                     />
@@ -239,7 +231,10 @@ function SignUpPage() {
 
               <div className="siup-login-link">
                 Đã có tài khoản?{" "}
-                <span className="siup-link" onClick={() => history.push("/sign-in")}>
+                <span
+                  className="siup-link"
+                  onClick={() => history.push("/sign-in")}
+                >
                   Đăng nhập ngay
                 </span>
               </div>
@@ -253,63 +248,88 @@ function SignUpPage() {
 
   const Step2 = () => (
     <div className="siup-page-layout">
+      <div className="siup-sidebar-left"></div>
       <div className="siup-content-center">
         <div className="siup-content-wrapper">
           <CleanFoodVietLogo />
-          <button onClick={handlePrevStep} className="siup-back-button">← Quay lại</button>
-          <h1 className="siup-page-title">Xác minh OTP</h1>
-          <p>OTP đã gửi đến +84{formData.phone}</p>
-          <input
-            type="tel"
-            placeholder="Nhập mã OTP"
-            value={formData.otp}
-            maxLength={6}
-            onChange={(e) => handleInputChange("otp", e.target.value.replace(/\D/g, ""))}
-            className="siup-otp-input"
-          />
-          <button onClick={handleNextStep} className="siup-submit-button">Xác minh</button>
-          <p className="siup-resend-link" onClick={handleNextStep}>Gửi lại mã?</p>
+          <div className="siup-otp-container">
+            <button onClick={handlePrevStep} className="siup-back-button">
+              ← Quay lại
+            </button>
+            <h1 className="siup-page-title">Xác minh OTP</h1>
+            <p>OTP đã gửi đến +84{formData.phone}</p>
+            <input
+              type="tel"
+              placeholder="Nhập mã OTP"
+              value={otp}
+              maxLength={6}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+              className="siup-otp-input"
+            />
+            <button onClick={handleNextStep} className="siup-submit-button">
+              Xác minh
+            </button>
+            <p className="siup-resend-link" onClick={handleNextStep}>
+              Gửi lại mã?
+            </p>
+          </div>
         </div>
       </div>
+      <div className="siup-sidebar-right"></div>
     </div>
   );
 
   const Step3 = () => (
     <div className="siup-page-layout">
+      <div className="siup-sidebar-left"></div>
       <div className="siup-content-center">
         <div className="siup-content-wrapper">
           <CleanFoodVietLogo />
-          <button onClick={handlePrevStep} className="siup-back-button">← Quay lại</button>
-          <h1 className="siup-page-title">Thông tin chứng chỉ</h1>
-          <CloudinaryUpload onUploaded={(url) => handleInputChange("imageUrl", url)} />
-          <input
-            placeholder="Tên chứng chỉ"
-            value={formData.certName}
-            onChange={(e) => handleInputChange("certName", e.target.value)}
-            className="siup-input-field"
-          />
-          <input
-            placeholder="Cơ quan cấp"
-            value={formData.issuingAuthority}
-            onChange={(e) => handleInputChange("issuingAuthority", e.target.value)}
-            className="siup-input-field"
-          />
-          <input
-            type="date"
-            value={formData.issueDate}
-            onChange={(e) => handleInputChange("issueDate", e.target.value)}
-            className="siup-input-field"
-          />
-          <input
-            type="date"
-            value={formData.expiryDate}
-            onChange={(e) => handleInputChange("expiryDate", e.target.value)}
-            className="siup-input-field"
-          />
-          <button onClick={handleSubmit} className="siup-submit-button">Hoàn tất</button>
-          <SignUpSuccessModal isVisible={showSuccessPopup} onClose={handleSignUpSuccess} />
+          <div className="siup-certificate-form ">
+            <button onClick={handlePrevStep} className="siup-back-button">
+              ← Quay lại
+            </button>
+            <h1 className="siup-page-title">Thông tin chứng chỉ</h1>
+            <CloudinaryUpload
+              onUploaded={(url) => handleInputChange("imageUrl", url)}
+            />
+            <input
+              placeholder="Tên chứng chỉ"
+              value={formData.certName}
+              onChange={(e) => handleInputChange("certName", e.target.value)}
+              className="siup-input-field"
+            />
+            <input
+              placeholder="Cơ quan cấp"
+              value={formData.issuingAuthority}
+              onChange={(e) =>
+                handleInputChange("issuingAuthority", e.target.value)
+              }
+              className="siup-input-field"
+            />
+            <input
+              type="date"
+              value={formData.issueDate}
+              onChange={(e) => handleInputChange("issueDate", e.target.value)}
+              className="siup-input-field"
+            />
+            <input
+              type="date"
+              value={formData.expiryDate}
+              onChange={(e) => handleInputChange("expiryDate", e.target.value)}
+              className="siup-input-field"
+            />
+            <button onClick={handleSubmit} className="siup-submit-button">
+              Hoàn tất
+            </button>
+            <SignUpSuccessModal
+              isVisible={showSuccessPopup}
+              onClose={handleSignUpSuccess}
+            />
+          </div>
         </div>
       </div>
+      <div className="siup-sidebar-right"></div>
     </div>
   );
 

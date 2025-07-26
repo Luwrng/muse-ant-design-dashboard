@@ -10,6 +10,8 @@ import { useHistory } from "react-router-dom";
 import GNotificationIcon from "../../pages/GardenerPage/Notification/GNotificationIcon";
 import httpService from "../../pages/services/apiServices/httpService";
 import notificationService from "../../pages/services/apiServices/notificationService";
+import SubscriptionIcon from "../../assets/images/gardener/subscription_icon.png";
+import { Tooltip } from "antd";
 // import UserInfo from "../UserInfo";
 
 function GardenerHeader({
@@ -54,70 +56,6 @@ function GardenerHeader({
 
   const history = useHistory();
 
-  const sampleNotifications = [
-    {
-      id: 1,
-      senderName: "Jackie Monroe",
-      message: "requests permission to change Design System",
-      category: "Project",
-      sendAt: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
-      isRead: false,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: "https://example.com/project/design-system",
-    },
-    {
-      id: 2,
-      senderName: "Chris Graham",
-      message: "has added a new employee",
-      category: "Employee",
-      sendAt: new Date(Date.now() - 28 * 60 * 1000), // 28 minutes ago
-      isRead: false,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: null,
-    },
-    {
-      id: 3,
-      senderName: "Paul Miller",
-      message: "has added a new project Mobile App",
-      category: "Project",
-      sendAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      isRead: true,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: "https://example.com/project/mobile-app",
-    },
-    {
-      id: 4,
-      senderName: "Oliver Wilson",
-      message: "has added a new vendor and changed the client",
-      category: "Vendor & Client",
-      sendAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      isRead: true,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: null,
-    },
-    {
-      id: 5,
-      senderName: "Marilyn Cooper",
-      message:
-        'mentioned you in a comment: "The new UI colors look vibrant and stunning."',
-      category: "Project",
-      sendAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
-      isRead: true,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: "https://example.com/project/ui-colors",
-    },
-    {
-      id: 6,
-      senderName: "Edward Simpson",
-      message: "requests permission to change Keynote Presentation",
-      category: "Project",
-      sendAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 2 weeks ago
-      isRead: true,
-      avatar: "/placeholder.svg?height=40&width=40",
-      link: null,
-    },
-  ];
-
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -147,8 +85,26 @@ function GardenerHeader({
           fontSize: "20px",
         }}
       >
+        <Tooltip title="Gói dịch vụ">
+          <img
+            src={SubscriptionIcon}
+            alt="Access Package"
+            style={{
+              width: 30,
+              height: 30,
+              marginBottom: "0.6rem",
+              marginRight: "0.8rem",
+            }}
+            onClick={() => {
+              // handle click event here
+              history.push("/gardener/service-package");
+            }}
+          />
+        </Tooltip>
+
         <GNotificationIcon notifications={notifications} />
       </div>
+
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
           <Breadcrumb>
@@ -159,7 +115,6 @@ function GardenerHeader({
               {pageTitle}
             </Breadcrumb.Item>
           </Breadcrumb>
-
         </Col>
       </Row>
     </>

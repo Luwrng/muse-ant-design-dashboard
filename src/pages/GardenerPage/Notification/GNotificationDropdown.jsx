@@ -22,12 +22,12 @@ function GNotificationDropdown({ notifications, unreadCount, onClose }) {
   return (
     <div className="gnotidropdown-notification-dropdown" ref={dropdownRef}>
       <div className="gnotidropdown-notification-header">
-        <h3>Notifications</h3>
+        <h3>Các thông báo</h3>
       </div>
       <div className="gnotidropdown-notification-list">
         {notifications.length === 0 ? (
           <div className="gnotidropdown-no-notifications">
-            <p>No notifications</p>
+            <p>Hiện bạn chưa có thông báo.</p>
           </div>
         ) : (
           notifications.map((notification) => (
