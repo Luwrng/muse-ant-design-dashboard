@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import React, { useEffect, useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Card,
   Col,
@@ -22,6 +22,7 @@ import Paragraph from "antd/lib/typography/Paragraph";
 
 import Echart from "../components/chart/EChart";
 import LineChart from "../components/chart/LineChart";
+import { cleanfood } from "../api_admin";
 
 import ava1 from "../assets/images/logo-shopify.svg";
 import ava2 from "../assets/images/logo-atlassian.svg";
@@ -35,12 +36,24 @@ import team3 from "../assets/images/team-3.jpg";
 import team4 from "../assets/images/team-4.jpg";
 import card from "../assets/images/info-card-1.jpg";
 
+
+
 function Home() {
   const { Title, Text } = Typography;
-
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
+
   const [reverse, setReverse] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    gardener: 0,
+    retailer: 0,
+    servicePackage: 0,
+    revenue: 0,
+  });
+  const [activePackages, setActivePackages] = useState([]);
+  const history = useHistory();
+
 
   const dollor = [
     <svg
@@ -128,36 +141,46 @@ function Home() {
       ></path>
     </svg>,
   ];
-  const count = [
+  const initialCount = useMemo(() => [
     {
-      today: "Today’s Sales",
-      title: "$53,000",
-      persent: "+30%",
-      icon: dollor,
-      bnb: "bnb2",
-    },
-    {
-      today: "Today’s Users",
-      title: "3,200",
-      persent: "+20%",
+      key: "gardener",
+      today: "Nhà Vườn",
+      title: (stats.gardener ?? 0).toLocaleString(),
       icon: profile,
       bnb: "bnb2",
+      persent: "",
     },
     {
-      today: "New Clients",
-      title: "+1,200",
-      persent: "-20%",
-      icon: heart,
-      bnb: "redtext",
-    },
-    {
-      today: "New Orders",
-      title: "$13,200",
-      persent: "10%",
-      icon: cart,
+      key: "retailer",
+      today: "Nhà bán lẻ",
+      title: (stats.retailer ?? 0).toLocaleString(),
+      icon: profile,
       bnb: "bnb2",
+      persent: "",
     },
-  ];
+    {
+      key: "servicePackage",
+      today: "Gói dịch vụ",
+      title: (stats.servicePackage ?? 0).toLocaleString(),
+      icon: cart,
+      bnb: "redtext",
+      persent: "",
+    },
+    {
+      key: "revenue",
+      today: "Doanh thu",
+      title: `${(stats.orderAmount ?? 0).toLocaleString()} VND`,
+      icon: dollor,
+      bnb: "bnb2",
+      persent: "",
+    },
+  ], [stats]);
+
+
+
+
+  const [count, setCount] = useState(initialCount);
+
 
   const list = [
     {
@@ -280,37 +303,9 @@ function Home() {
       ),
     },
   ];
+  const [timelineList, setTimelineList] = useState([
 
-  const timelineList = [
-    {
-      title: "$2,400 - Redesign store",
-      time: "09 JUN 7:20 PM",
-      color: "green",
-    },
-    {
-      title: "New order #3654323",
-      time: "08 JUN 12:20 PM",
-      color: "green",
-    },
-    {
-      title: "Company server payments",
-      time: "04 JUN 3:10 PM",
-    },
-    {
-      title: "New card added for order #4826321",
-      time: "02 JUN 2:45 PM",
-    },
-    {
-      title: "Unlock folders for development",
-      time: "18 MAY 1:30 PM",
-    },
-    {
-      title: "New order #46282344",
-      time: "14 MAY 3:30 PM",
-      color: "gray",
-    },
-  ];
-
+  ]);
   const uploadProps = {
     name: "file",
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
@@ -329,11 +324,90 @@ function Home() {
     },
   };
 
+
+  const fetchStats = async () => {
+    try {
+      const page = 1;
+      const size = 1000;
+      const search = "";
+
+      const [
+        gardenerRes,
+        retailerRes,
+        packageRes,
+        contractRes,
+        orderRes,
+        serviceRes
+      ] = await Promise.all([
+        cleanfood.gardener.getAll({ page: 1, size: 1 }),
+        cleanfood.retailer.getAll(1, 1),
+        cleanfood.admin.getPackage({ page: 1, size: 1 }),
+        cleanfood.admin.getContract({ page, size }),
+        cleanfood.admin.getServicePackageOrders({ page, size, search }),
+        cleanfood.admin.getPackage({ page, size, search })
+      ]);
+
+      const revenue = contractRes.items?.reduce(
+        (sum, contract) => sum + (contract.price || 0),
+        0
+      );
+      const orderTotalAmount = orderRes.items?.reduce(
+        (sum, order) => sum + (order.totalAmount || 0),
+        0
+      );
+      const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order, idx) => {
+        return {
+          title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()}VND`,
+          time: order.createdAt
+            ? new Date(order.createdAt).toLocaleString("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })
+            : "Không xác định",
+          color: "green", // Hoặc logic nếu có status: order.status === "SUCCESS" ? "green" : "gray"
+        };
+      });
+
+      // 👇 Gộp thêm vào cuối danh sách timeline có sẵn
+      setTimelineList((prev) => [...prev, ...newTimelineItems]);
+
+      const active = (serviceRes.items || [])
+        .filter((pkg) => pkg.status === "ACTIVE")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Mới nhất trước
+        .slice(0, 5); // Giới hạn số lượng nếu muốn
+
+      setActivePackages(active);
+
+      const orderCount = orderRes.total || 0;
+      setStats({
+        gardener: gardenerRes.total || 0,
+        retailer: retailerRes.total || 0,
+        servicePackage: packageRes.total || 0,
+        revenue: revenue || 0,
+        orderAmount: orderTotalAmount || 0,
+      });
+    } catch (err) {
+      console.error("❌ Lỗi fetch data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
     <>
       <div className="layout-content">
         <Row className="rowgap-vbox" gutter={[24, 0]}>
-          {count.map((c, index) => (
+          {initialCount.map((c, index) => (
             <Col
               key={index}
               xs={24}
@@ -343,13 +417,14 @@ function Home() {
               xl={6}
               className="mb-24"
             >
-              <Card bordered={false} className="criclebox ">
+              <Card bordered={false} className="criclebox">
                 <div className="number">
                   <Row align="middle" gutter={[24, 0]}>
                     <Col xs={18}>
                       <span>{c.today}</span>
                       <Title level={3}>
-                        {c.title} <small className={c.bnb}>{c.persent}</small>
+                        {c.title}{" "}
+                        <small className={c.bnb}>{c.persent}</small>
                       </Title>
                     </Col>
                     <Col xs={6}>
@@ -370,7 +445,7 @@ function Home() {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <LineChart />
+              <LineChart orderAmount={stats.orderAmount} />
             </Card>
           </Col>
         </Row>
@@ -380,52 +455,47 @@ function Home() {
             <Card bordered={false} className="criclebox cardbody h-full">
               <div className="project-ant">
                 <div>
-                  <Title level={5}>Projects</Title>
-                  <Paragraph className="lastweek">
-                    done this month<span className="blue">40%</span>
-                  </Paragraph>
+                  <Title level={5}>Các gói dịch vụ</Title>
                 </div>
                 <div className="ant-filtertabs">
                   <div className="antd-pro-pages-dashboard-analysis-style-salesExtra">
-                    <Radio.Group onChange={onChange} defaultValue="a">
-                      <Radio.Button value="a">ALL</Radio.Button>
-                      <Radio.Button value="b">ONLINE</Radio.Button>
-                      <Radio.Button value="c">STORES</Radio.Button>
-                    </Radio.Group>
+
                   </div>
                 </div>
               </div>
               <div className="ant-list-box table-responsive">
                 <table className="width-100">
-                  <thead>
-                    <tr>
-                      <th>COMPANIES</th>
-                      <th>MEMBERS</th>
-                      <th>BUDGET</th>
-                      <th>COMPLETION</th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {list.map((d, index) => (
-                      <tr key={index}>
+                    {activePackages.map((pkg, index) => (
+                      <tr key={pkg.servicePackageId}>
                         <td>
                           <h6>
-                            <img
-                              src={d.img}
-                              alt=""
-                              className="avatar-sm mr-10"
-                            />{" "}
-                            {d.Title}
+                            {pkg.packageName}
                           </h6>
                         </td>
-                        <td>{d.member}</td>
+                        <td>
+                          {pkg.features?.map((f) => (
+                            <div key={f.serviceFeatureId}>
+                              <Tooltip title={f.description}>
+                                <span className="text-xs">{f.serviceFeatureName}</span>
+                              </Tooltip>
+                            </div>
+                          ))}
+                        </td>
                         <td>
                           <span className="text-xs font-weight-bold">
-                            {d.bud}{" "}
+                            {pkg.price.toLocaleString()} VND
                           </span>
                         </td>
                         <td>
-                          <div className="percent-progress">{d.progress}</div>
+                          <div className="percent-progress">
+                            <Progress
+                              percent={100}
+                              size="small"
+                              status="active"
+                              format={() => `${pkg.duration} ngày`}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -433,28 +503,19 @@ function Home() {
                 </table>
               </div>
               <div className="uploadfile shadow-none">
-                <Upload {...uploadProps}>
-                  <Button
-                    type="dashed"
-                    className="ant-full-box"
-                    icon={<ToTopOutlined />}
-                  >
-                    <span className="click">Click to Upload</span>
-                  </Button>
-                </Upload>
+
               </div>
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
-                <Title level={5}>Orders History</Title>
+                <Title level={5}>Lịch sử giao dịch</Title>
                 <Paragraph className="lastweek" style={{ marginBottom: 24 }}>
-                  this month <span className="bnb2">20%</span>
-                </Paragraph>
 
+                </Paragraph>
                 <Timeline
-                  pending="Recording..."
+                  // pending="Recording..."
                   className="timelinelist"
                   reverse={reverse}
                 >
@@ -468,76 +529,10 @@ function Home() {
                 <Button
                   type="primary"
                   className="width-100"
-                  onClick={() => setReverse(!reverse)}
+                  onClick={() => history.push("/subscription-orders")}
                 >
-                  {<MenuUnfoldOutlined />} REVERSE
+                  {<MenuUnfoldOutlined />} Đi đến trang giao dịch
                 </Button>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row gutter={[24, 0]}>
-          <Col xs={24} md={12} sm={24} lg={12} xl={14} className="mb-24">
-            <Card bordered={false} className="criclebox h-full">
-              <Row gutter>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={14}
-                  className="mobile-24"
-                >
-                  <div className="h-full col-content p-20">
-                    <div className="ant-muse">
-                      <Text>Built by developers</Text>
-                      <Title level={5}>Muse Dashboard for Ant Design</Title>
-                      <Paragraph className="lastweek mb-36">
-                        From colors, cards, typography to complex elements, you
-                        will find the full documentation.
-                      </Paragraph>
-                    </div>
-                    <div className="card-footer">
-                      <a className="icon-move-right" href="#pablo">
-                        Read More
-                        {<RightOutlined />}
-                      </a>
-                    </div>
-                  </div>
-                </Col>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={10}
-                  className="col-img"
-                >
-                  <div className="ant-cret text-right">
-                    <img src={card} alt="" className="border10" />
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-
-          <Col xs={24} md={12} sm={24} lg={12} xl={10} className="mb-24">
-            <Card bordered={false} className="criclebox card-info-2 h-full">
-              <div className="gradent h-full col-content">
-                <div className="card-content">
-                  <Title level={5}>Work with the best</Title>
-                  <p>
-                    Wealth creation is an evolutionarily recent positive-sum
-                    game. It is all about who take the opportunity first.
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <a className="icon-move-right" href="#pablo">
-                    Read More
-                    <RightOutlined />
-                  </a>
-                </div>
               </div>
             </Card>
           </Col>

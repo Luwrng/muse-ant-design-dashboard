@@ -87,7 +87,7 @@ function App() {
             path="/gardener"
             render={() => (
               <GardenerMain>
-                <Switch>
+                <Switch>dashboard
                   <ProtectedRoute
                     path="/gardener/product"
                     component={GardenerProductPage}
