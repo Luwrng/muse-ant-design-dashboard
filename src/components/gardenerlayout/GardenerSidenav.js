@@ -117,7 +117,7 @@ function GardenerSidenav() {
             </NavLink>
           </Menu.Item>
           <Menu.Item
-            key="sign-in"
+            key="log-out"
             onClick={() => {
               localStorage.clear();
               window.location.href = "/";

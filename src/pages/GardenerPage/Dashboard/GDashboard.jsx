@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -13,6 +13,7 @@ import { Pie, Bar } from "react-chartjs-2";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./GDashboard.css";
+import statisticService from "../../services/apiServices/statisticService";
 
 // Register ChartJS components
 ChartJS.register(
@@ -27,21 +28,19 @@ ChartJS.register(
 
 function GDashboard() {
   const [date, setDate] = useState(new Date());
-
-  // Sample data for the dashboard
-  const dashboardData = {
-    totalOrders: 245,
-    orderDelivery: 189,
-    appointments: 32,
-    products: 78,
-    posts: 124,
+  const [dashboardData, setDashboardData] = useState({
+    totalOrders: 0,
+    orderDelivery: 0,
+    appointments: 0,
+    products: 0,
+    posts: 0,
 
     // Data for pie chart - order status
     orderStatus: {
       labels: ["Pending", "Prepared", "Delivering", "Completed", "Cancelled"],
       datasets: [
         {
-          data: [35, 42, 28, 125, 15],
+          data: [0, 0, 0, 0, 0],
           backgroundColor: [
             "#FF9F40",
             "#36A2EB",
@@ -73,58 +72,117 @@ function GDashboard() {
       datasets: [
         {
           label: "Orders",
-          data: [18, 25, 30, 22, 17, 29, 32, 35, 28, 20, 15, 24],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           backgroundColor: "#36A2EB",
         },
       ],
     },
 
     // Sample upcoming appointments
-    upcomingAppointments: [
-      {
-        id: 1,
-        title: "Garden Consultation",
-        client: "John Smith",
-        date: "2025-07-16",
-        time: "10:00 AM",
-      },
-      {
-        id: 2,
-        title: "Lawn Maintenance",
-        client: "Sarah Johnson",
-        date: "2025-07-17",
-        time: "2:30 PM",
-      },
-      {
-        id: 3,
-        title: "Tree Pruning",
-        client: "Michael Brown",
-        date: "2025-07-18",
-        time: "9:00 AM",
-      },
-      {
-        id: 4,
-        title: "Flower Bed Design",
-        client: "Emily Davis",
-        date: "2025-07-20",
-        time: "1:00 PM",
-      },
-      {
-        id: 5,
-        title: "Pest Control Check",
-        client: "David Lee",
-        date: "2025-07-22",
-        time: "11:00 AM",
-      },
-      {
-        id: 6,
-        title: "Irrigation System Repair",
-        client: "Olivia Wilson",
-        date: "2025-07-23",
-        time: "3:00 PM",
-      },
-    ],
-  };
+    upcomingAppointments: [{}],
+  });
+
+  useEffect(() => {
+    const statusOrder = [
+      "PENDING",
+      "PREPARED",
+      "DELIVERING",
+      "COMPLETED",
+      "CANCELLED",
+    ];
+
+    const fetchStatistic = async () => {
+      try {
+        const gardenerId = localStorage.getItem("account_id");
+        var generalStat = await statisticService.getGeneralDashboardInfo(
+          gardenerId
+        );
+        var yearlyOrder = await statisticService.getYearOrderStatistic(
+          gardenerId
+        );
+        var upcommingAppointmentsData =
+          await statisticService.getUpcommingAppointment(gardenerId);
+
+        const countsByStatus = statusOrder.map(
+          (status) =>
+            generalStat.orderList.filter((order) => order.status === status)
+              .length
+        );
+
+        const monthlyData = Array(12).fill(0);
+        upcommingAppointmentsData.array.forEach((item) => {
+          monthlyData[item.month - 1] = item.amount;
+        });
+
+        // Sample data for the dashboard
+        const dashboardDataDetail = {
+          totalOrders: generalStat.totalOrders,
+          orderDelivery: generalStat.totalOrderDeliveries,
+          appointments: generalStat.totalAppointments,
+          products: generalStat.totalProducts,
+          posts: generalStat.totalPosts,
+
+          // Data for pie chart - order status
+          orderStatus: {
+            labels: [
+              "Pending",
+              "Prepared",
+              "Delivering",
+              "Completed",
+              "Cancelled",
+            ],
+            datasets: [
+              {
+                data: countsByStatus,
+                backgroundColor: [
+                  "#FF9F40",
+                  "#36A2EB",
+                  "#4BC0C0",
+                  "#97CA00",
+                  "#E74C3C",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+
+          // Data for bar chart - monthly orders
+          monthlyOrders: {
+            labels: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            datasets: [
+              {
+                label: "Orders",
+                data: monthlyData,
+                backgroundColor: "#36A2EB",
+              },
+            ],
+          },
+
+          // Sample upcoming appointments
+          upcomingAppointments: upcommingAppointmentsData,
+        };
+
+        setDashboardData(dashboardDataDetail);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchStatistic();
+  }, []);
 
   // Options for bar chart
   const barOptions = {
@@ -162,7 +220,9 @@ function GDashboard() {
     if (view === "month") {
       const dateStr = date.toISOString().split("T")[0];
       const hasAppointment = dashboardData.upcomingAppointments.some(
-        (appointment) => appointment.date === dateStr
+        (appointment) =>
+          new Date(appointment.appointmentDate).toISOString.split("T")[0] ===
+          dateStr
       );
       return hasAppointment ? "gdashboard-appointment-date" : null;
     }
@@ -170,36 +230,38 @@ function GDashboard() {
 
   return (
     <div className="gdashboard-container">
-      <h1 className="gdashboard-title">Gardener Dashboard</h1>
+      <h1 className="gdashboard-title">Bảng điều khiển</h1>
 
       {/* Stats Cards */}
       <div className="gdashboard-stats-container">
         <div className="gdashboard-stat-card">
-          <h3>Total Orders</h3>
+          <h3>Tổng đơn hàng trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.totalOrders}</p>
           <span className="gdashboard-stat-icon order-icon">📦</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Order Delivery</h3>
+          <h3>Tổng đơn giao hàng trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.orderDelivery}</p>
           <span className="gdashboard-stat-icon delivery-icon">🚚</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Appointments</h3>
+          <h3>Số lượng các cuộc hẹn trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.appointments}</p>
           <span className="gdashboard-stat-icon appointment-icon">📅</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Products</h3>
+          <h3>Tổng sản phẩm</h3>
+          <br />
           <p className="gdashboard-stat-value">{dashboardData.products}</p>
           <span className="gdashboard-stat-icon product-icon">🌱</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Posts</h3>
+          <h3>Tổng số bài đăng</h3>
+          <br />
           <p className="gdashboard-stat-value">{dashboardData.posts}</p>
           <span className="gdashboard-stat-icon post-icon">📝</span>
         </div>
@@ -222,23 +284,26 @@ function GDashboard() {
             />
             <div className="gdashboard-upcoming-appointments">
               <ul className="gdashboard-appointment-list">
-                {dashboardData.upcomingAppointments.map((appointment) => (
-                  <li
-                    key={appointment.id}
-                    className="gdashboard-appointment-item"
-                  >
-                    <div className="gdashboard-appointment-title">
-                      {appointment.title}
-                    </div>
-                    <div className="gdashboard-appointment-client">
-                      {appointment.client}
-                    </div>
-                    <div className="gdashboard-appointment-time">
-                      {new Date(appointment.date).toLocaleDateString()} at{" "}
-                      {appointment.time}
-                    </div>
-                  </li>
-                ))}
+                {dashboardData.upcomingAppointments.length > 0 &&
+                  dashboardData.upcomingAppointments.map((appointment) => (
+                    <li
+                      key={appointment.appointmentId}
+                      className="gdashboard-appointment-item"
+                    >
+                      <div className="gdashboard-appointment-title">
+                        {appointment.appointmentType}
+                      </div>
+                      <div className="gdashboard-appointment-client">
+                        {appointment.accountName}
+                      </div>
+                      <div className="gdashboard-appointment-time">
+                        {new Date(
+                          appointment.appointmentDate
+                        ).toLocaleDateString()}{" "}
+                        từ {appointment.startTime} đến {appointment.endTime}
+                      </div>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>
@@ -270,3 +335,100 @@ function GDashboard() {
 }
 
 export default GDashboard;
+
+// const dashboardDataDetail = {
+//   totalOrders: 245,
+//   orderDelivery: 189,
+//   appointments: 32,
+//   products: 78,
+//   posts: 124,
+
+//   // Data for pie chart - order status
+//   orderStatus: {
+//     labels: ["Pending", "Prepared", "Delivering", "Completed", "Cancelled"],
+//     datasets: [
+//       {
+//         data: [35, 42, 28, 125, 15],
+//         backgroundColor: [
+//           "#FF9F40",
+//           "#36A2EB",
+//           "#4BC0C0",
+//           "#97CA00",
+//           "#E74C3C",
+//         ],
+//         borderWidth: 1,
+//       },
+//     ],
+//   },
+
+//   // Data for bar chart - monthly orders
+//   monthlyOrders: {
+//     labels: [
+//       "Jan",
+//       "Feb",
+//       "Mar",
+//       "Apr",
+//       "May",
+//       "Jun",
+//       "Jul",
+//       "Aug",
+//       "Sep",
+//       "Oct",
+//       "Nov",
+//       "Dec",
+//     ],
+//     datasets: [
+//       {
+//         label: "Orders",
+//         data: [18, 25, 30, 22, 17, 29, 32, 35, 28, 20, 15, 24],
+//         backgroundColor: "#36A2EB",
+//       },
+//     ],
+//   },
+
+//   // Sample upcoming appointments
+//   upcomingAppointments: [
+//     {
+//       id: 1,
+//       title: "Garden Consultation",
+//       client: "John Smith",
+//       date: "2025-07-16",
+//       time: "10:00 AM",
+//     },
+//     {
+//       id: 2,
+//       title: "Lawn Maintenance",
+//       client: "Sarah Johnson",
+//       date: "2025-07-17",
+//       time: "2:30 PM",
+//     },
+//     {
+//       id: 3,
+//       title: "Tree Pruning",
+//       client: "Michael Brown",
+//       date: "2025-07-18",
+//       time: "9:00 AM",
+//     },
+//     {
+//       id: 4,
+//       title: "Flower Bed Design",
+//       client: "Emily Davis",
+//       date: "2025-07-20",
+//       time: "1:00 PM",
+//     },
+//     {
+//       id: 5,
+//       title: "Pest Control Check",
+//       client: "David Lee",
+//       date: "2025-07-22",
+//       time: "11:00 AM",
+//     },
+//     {
+//       id: 6,
+//       title: "Irrigation System Repair",
+//       client: "Olivia Wilson",
+//       date: "2025-07-23",
+//       time: "3:00 PM",
+//     },
+//   ],
+// };

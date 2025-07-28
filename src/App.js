@@ -78,7 +78,7 @@ function App() {
           <ProtectedRoute
             path="/gardener/service-package"
             component={GServicePackage}
-            // allowedRoles={["gardener", "retailer"]}
+            allowedRoles={["gardener", "retailer"]}
           />
           <ProtectedRoute
             path="/gardener/payment-result"
@@ -104,12 +104,12 @@ function App() {
                   <ProtectedRoute
                     path="/gardener/product"
                     component={GardenerProductPage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/order"
                     component={GOrderPage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   {/* <ProtectedRoute
                     path="/gardener/product-category"
@@ -119,37 +119,37 @@ function App() {
                   <ProtectedRoute
                     path="/gardener/post"
                     component={GPostPage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/appointment"
                     component={GAppointmentPage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/message"
                     component={GChatPage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/profile"
                     component={GProfilePage}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/dashboard"
                     component={GDashboard}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/package-payment"
                     component={GPackageOrderHistory}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/subscription-history"
                     component={GSubscriptionHistory}
-                    // allowedRoles={["gardener", "retailer"]}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <Route path="/gardener/report" component={GReportPage} />
                 </Switch>

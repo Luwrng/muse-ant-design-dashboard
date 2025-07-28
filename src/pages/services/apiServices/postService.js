@@ -26,9 +26,13 @@ const updatePost = async (postId, data) => {
 };
 
 const changePostStatus = async (postId, status) => {
-  return await httpService.patch(`${postEndpoint}/${postId}/status`, {
-    params: { status },
-  });
+  return await httpService.patch(
+    `${postEndpoint}/${postId}/status`,
+    {},
+    {
+      params: { status },
+    }
+  );
 };
 
 const postService = {

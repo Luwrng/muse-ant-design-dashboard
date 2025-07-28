@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import "./GCreatePostModal.css";
 import QuillTestbox from "../../../components/textarea/QuillTextbox";
+import dayjs from "dayjs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -77,7 +78,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
         uploadedAt,
       });
 
-      const thumbnailUrl = `https://res.cloudinary.com/your_cloud_name/video/upload/so_1/${publicId}.jpg`;
+      const thumbnailUrl = `https://res.cloudinary.com/dhin0zlf7/video/upload/so_1/${publicId}.jpg`;
       mediaList.push({
         mediumUrl: thumbnailUrl,
         mediumType: "THUMBNAIL",
@@ -85,7 +86,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
       });
 
       //Upload images
-      createImages.map(async (image) => {
+      const imageUploadPromises = createImages.map(async (image) => {
         fileData.set("file", image);
 
         const imageRes = await axios.post(
@@ -93,17 +94,30 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           fileData
         );
 
-        mediaList.push({
+        return {
           mediumUrl: imageRes.data.secure_url,
           mediumType: "IMAGE",
           uploadedAt,
-        });
+        };
       });
 
-      setFormData((prev) => ({ ...prev, postMediaDTOs: mediaList }));
-      setFormData((prev) => ({ ...prev, content: contentValue }));
+      // Wait for all uploads to finish
+      const imageMedia = await Promise.all(imageUploadPromises);
 
-      onCreate(formData);
+      // Push them to mediaList
+      mediaList.push(...imageMedia);
+
+      const createData = formData;
+      createData.content = contentValue;
+      createData.postMediaDTOs = mediaList;
+      createData.harvestDate = dayjs(formData.harvestDate, "D/M/YYYY").format(
+        "YYYY-MM-DD"
+      );
+      createData.postEndDate = dayjs(formData.postEndDate, "D/M/YYYY").format(
+        "YYYY-MM-DD"
+      );
+
+      onCreate(createData);
     } catch (err) {
       console.log(err);
     } finally {
@@ -116,6 +130,9 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
         productId: "",
         gardenerId: localStorage.getItem("account_id"),
       });
+      setContentValue("");
+      setCreateVideo();
+      setCreateImages([]);
       onClose();
     }
   };

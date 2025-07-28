@@ -46,7 +46,7 @@ function GPostPage() {
         10,
         "Status"
       );
-      setPosts(gardenerPosts);
+      setPosts(gardenerPosts.items);
       setTotalPages(gardenerPosts.totalPages);
       setTotalResults(gardenerPosts.total);
     } catch (err) {
@@ -128,15 +128,16 @@ function GPostPage() {
   const handleCreate = async (newPostData) => {
     try {
       const newPost = {
-        id: posts.length + 1,
         title: newPostData.title,
         content: newPostData.content,
-        harvestDate: new Date().toLocaleDateString("vi-VN"),
-        postEndDate: new Date().toLocaleDateString("vi-VN"),
+        harvestDate: newPostData.harvestDate,
+        postEndDate: newPostData.postEndDate,
         productId: newPostData.productId,
         gardenerId: newPostData.gardenerId,
         postMediaDTOs: newPostData.postMediaDTOs,
       };
+
+      // console.log(newPostData.postMediaDTOs);
 
       await postService.createPost(newPost.gardenerId, newPost);
       await fetchData(1);
@@ -243,7 +244,8 @@ function GPostPage() {
                   </div>
                 </div>
                 <div className="gpost-article-date">
-                  Ngày tạo: {article.createdAt}
+                  Ngày tạo:{" "}
+                  {new Date(article.createdAt).toISOString().split("T")[0]}
                 </div>
               </div>
             </div>
@@ -251,10 +253,8 @@ function GPostPage() {
       </div>
 
       <div className="gorder-pagination">
-          <div className="gorder-pagination-info">
-         
-          </div>
-          <div className="gpost-pagination-controls">
+        <div className="gorder-pagination-info"></div>
+        <div className="gpost-pagination-controls">
           <button className="gpost-pagination-btn">‹</button>
           {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
             <button
@@ -268,7 +268,7 @@ function GPostPage() {
           ))}
           <button className="gpost-pagination-btn">›</button>
         </div>
-        </div>
+      </div>
       {/* Post Detail Popup */}
       {selectedPost && (
         <GPostDetailModal

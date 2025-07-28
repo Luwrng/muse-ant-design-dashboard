@@ -17,11 +17,14 @@ const getGardenerOrderDetail = async (accountId, orderId) => {
 const updateGardenerOrderStatus = async () => {};
 
 const getOrderDeliveries = async (orderId) => {
-  return await httpService.get(`${orderEndpoint}/${orderId}/order-deliveies`);
+  return await httpService.get(`${orderEndpoint}/${orderId}/order-deliveries`);
 };
 
-const createOrderDelivery = async (orderId) => {
-  return await httpService.post(`${orderEndpoint}/${orderId}/order-deliveies`);
+const createOrderDelivery = async (orderId, data) => {
+  return await httpService.post(
+    `${orderEndpoint}/${orderId}/order-deliveries`,
+    data
+  );
 };
 
 const updateOrderDeliveryStatus = async () => {};

@@ -1,5 +1,8 @@
 // src/pages/SignUpPage.js
 import React, { useState, useCallback } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
 import { useHistory } from "react-router-dom";
 import CloudinaryUpload from "../../cloudinary/CloudinaryUpload";
 import SignUpSuccessModal from "./SignUpSuccessModal";
@@ -25,6 +28,8 @@ function SignUpPage() {
     expiryDate: "",
     imageUrl: "",
   });
+
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -54,38 +59,55 @@ function SignUpPage() {
         return;
       }
 
-      // Chỉ khởi tạo recaptcha một lần
-      if (!window.recaptchaVerifier) {
+      // 🔄 Reset reCAPTCHA if already initialized in Step 1
+      if (window.recaptchaVerifier) {
         try {
-          window.recaptchaVerifier = new RecaptchaVerifier(
-            auth,
-            "recaptcha-container",
-            {
-              size: "invisible",
-              callback: (response) => {
-                console.log("reCAPTCHA resolved:", response);
-              },
-              "expired-callback": () => {
-                console.warn("reCAPTCHA hết hạn");
-              },
-            }
-          );
+          window.recaptchaVerifier.clear();
         } catch (err) {
-          console.error("🔥 Lỗi tạo reCAPTCHA:", err);
-          alert("Lỗi reCAPTCHA. Không thể tiếp tục.");
-          return;
+          console.warn("Không thể xóa reCAPTCHA:", err);
         }
+        window.recaptchaVerifier = null;
+      }
+
+      // ✅ Initialize reCAPTCHA (Step 1 only)
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              console.log("reCAPTCHA resolved:", response);
+            },
+            "expired-callback": () => {
+              console.warn("reCAPTCHA hết hạn");
+            },
+          }
+        );
+      } catch (err) {
+        console.error("🔥 Lỗi tạo reCAPTCHA:", err);
+        alert("Lỗi reCAPTCHA. Không thể tiếp tục.");
+        return;
       }
 
       const appVerifier = window.recaptchaVerifier;
       const fullPhone = "+84" + formData.phone.replace(/^0/, "");
 
       try {
-        const confirmationResult = await signInWithPhoneNumber(
-          auth,
-          fullPhone,
-          appVerifier
-        );
+        // const confirmationResult = await signInWithPhoneNumber(
+        //   auth,
+        //   fullPhone,
+        //   appVerifier
+        // );
+        const confirmationResult = await Promise.race([
+          signInWithPhoneNumber(auth, fullPhone, appVerifier),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error("Yêu cầu gửi OTP quá thời gian")),
+              60000
+            )
+          ),
+        ]);
         window.confirmationResult = confirmationResult;
         alert("✅ OTP đã gửi. Vui lòng kiểm tra tin nhắn!");
         setCurrentStep(2);
@@ -102,7 +124,16 @@ function SignUpPage() {
         return;
       }
       try {
-        const result = await window.confirmationResult.confirm(otp);
+        // const result = await window.confirmationResult.confirm(otp);
+        const result = await Promise.race([
+          window.confirmationResult.confirm(otp),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error("Xác minh OTP quá thời gian")),
+              60000
+            )
+          ),
+        ]);
         console.log("✅ Xác minh thành công:", result.user);
         setCurrentStep(3);
       } catch (error) {
@@ -143,9 +174,11 @@ function SignUpPage() {
     };
 
     try {
-      const res = await authenticateService.gardenerRegister(payload);
-      console.log("Đăng ký thành công:", res.data);
-      setShowSuccessPopup(true);
+      console.log(payload);
+
+      // const res = await authenticateService.gardenerRegister(payload);
+      // console.log("Đăng ký thành công:", res.data);
+      // setShowSuccessPopup(true);
     } catch (err) {
       console.error("Lỗi đăng ký:", err);
       alert("Đăng ký thất bại.");
@@ -191,14 +224,33 @@ function SignUpPage() {
                       placeholder={`Nhập ${field}`}
                       value={formData[field]}
                       onChange={(e) => handleInputChange(field, e.target.value)}
+                      required
                     />
+                  ) : field === "password" ? (
+                    <div className="siup-password-container">
+                      <input
+                        type={!showPassword ? "password" : "text"}
+                        className="siup-input-field siup-password-input"
+                        placeholder={`Nhập ${field}`}
+                        value={formData[field]}
+                        onChange={(e) =>
+                          handleInputChange(field, e.target.value)
+                        }
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="siup-password-toggle"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        <FontAwesomeIcon
+                          icon={showPassword ? faEyeSlash : faEye}
+                        />
+                      </button>
+                    </div>
                   ) : (
                     <input
-                      type={
-                        field === "password" && !showPassword
-                          ? "password"
-                          : "text"
-                      }
+                      type={"text"}
                       className="siup-input-field"
                       placeholder={`Nhập ${field}`}
                       value={formData[field]}
@@ -210,20 +262,35 @@ function SignUpPage() {
                             : e.target.value
                         )
                       }
+                      required
                     />
                   )}
                 </div>
               ))}
 
               <div className="siup-checkbox-container">
-                <input type="checkbox" id="terms" className="siup-checkbox" />
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="siup-checkbox"
+                  checked={isAgreed}
+                  onChange={(e) => setIsAgreed(e.target.checked)}
+                />
                 <label htmlFor="terms" className="siup-checkbox-label">
                   Tôi đồng ý với{" "}
                   <span className="siup-link">điều khoản và dịch vụ</span>
                 </label>
               </div>
 
-              <button onClick={handleNextStep} className="siup-submit-button">
+              <button
+                onClick={handleNextStep}
+                className="siup-submit-button"
+                disabled={!isAgreed}
+                style={{
+                  backgroundColor: isAgreed ? "#10b981" : "#d1d5db",
+                  cursor: isAgreed ? "pointer" : "not-allowed",
+                }}
+              >
                 Đăng ký
               </button>
 
@@ -257,7 +324,7 @@ function SignUpPage() {
               ← Quay lại
             </button>
             <h1 className="siup-page-title">Xác minh OTP</h1>
-            <p>OTP đã gửi đến +84{formData.phone}</p>
+            <p>OTP đã gửi đến +84{formData.phone.replace(/^0/, "")}</p>
             <input
               type="tel"
               placeholder="Nhập mã OTP"
