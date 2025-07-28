@@ -15,6 +15,9 @@ const DeleteButton = ({ record, tooltip, type, onDeleteSuccess }) => {
           record.servicePackageId || record.key
         );
         message.success("✅ Đã vô hiệu hóa gói dịch vụ thành công");
+      } else if (type === "category") {
+        await cleanfood.productCategory.delete(record.productCategoryId);
+        message.success("✅ Xóa danh mục sản phẩm thành công");
       } else {
         message.warning("❗ Loại xóa không được hỗ trợ");
         return;
@@ -24,7 +27,7 @@ const DeleteButton = ({ record, tooltip, type, onDeleteSuccess }) => {
         onDeleteSuccess();
       }
     } catch (err) {
-      console.error("❌ Lỗi khi vô hiệu hóa:", err);
+      console.error("❌ Lỗi khi xóa:", err);
 
       if (err?.response?.data?.errors) {
         const errors = err.response.data.errors;
@@ -33,10 +36,11 @@ const DeleteButton = ({ record, tooltip, type, onDeleteSuccess }) => {
           .join("\n");
         message.error(msg);
       } else {
-        message.error("❌ Vô hiệu hóa thất bại");
+        message.error("❌ Xóa thất bại");
       }
     }
   };
+
 
   const showConfirm = () => {
     Modal.confirm({

@@ -294,14 +294,12 @@ export const cleanfood = {
         throw error;
       }
     },
-    getReports: async ({ page = 1, size = 10, search = "" } = {}) => {
+    getReports: async ({ page = 1, size = 10 } = {}) => {
       try {
         const response = await api.get("/api/v1/reports", {
           params: {
             page,
             size,
-            search,
-            sortOrder: "asc",
           },
         });
         return response.data;
@@ -311,5 +309,65 @@ export const cleanfood = {
       }
     },
   },
+  productCategory: {
+    // Lấy danh sách tất cả category, có hỗ trợ phân trang và fetchAll
+    getAll: async ({ page = 1, size = 10, fetchAll = false } = {}) => {
+      try {
+        const response = await api.get("/api/v1/categories", {
+          params: { page, size, fetchAll },
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi getAllProductCategories:", error);
+        throw error;
+      }
+    },
+
+    // Tạo mới category
+    create: async (data) => {
+      try {
+        const response = await api.post("/api/v1/categories", data);
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi createProductCategory:", error);
+        throw error;
+      }
+    },
+
+    // Lấy chi tiết category theo id
+    getById: async (id) => {
+      try {
+        const response = await api.get(`/api/v1/categories/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi getProductCategoryById:", error);
+        throw error;
+      }
+    },
+
+    // Cập nhật thông tin category theo id
+    update: async (id, data) => {
+      try {
+        const response = await api.patch(`/api/v1/categories/${id}`, data);
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi updateProductCategory:", error);
+        throw error;
+      }
+    },
+
+    // Xóa category theo id (chỉ khi không có sản phẩm liên quan)
+    delete: async (id) => {
+      try {
+        const response = await api.delete(`/api/v1/categories/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error("Lỗi deleteProductCategory:", error);
+        throw error;
+      }
+    }
+
+  }
 };
+
 export default api;

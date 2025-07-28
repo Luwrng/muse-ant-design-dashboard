@@ -12,40 +12,43 @@ const { Option } = Select;
 
 
 
-const contracts = [/* giữ nguyên như bạn đã gửi ở trên */];
-const customers = [/* giữ nguyên như bạn đã gửi ở trên */];
-
-
-function getCustomersByPackage(contracts, packages, customers) {
-    const today = new Date();
-    const activeContracts = contracts.filter(contract => contract.status === "Active" && new Date(contract.endDate) >= today);
-    const result = {};
-    packages.forEach(pkg => {
-        const gardenerIds = activeContracts.filter(c => c.packageId === pkg.servicePackageId || c.packageId === pkg.key).map(c => c.gardenerId);
-        result[pkg.servicePackageId || pkg.key] = customers.filter(cus => gardenerIds.includes(cus.gardenerId));
-    });
-    return result;
-}
-
 const ActivePackageCustomers = () => {
     const [packages, setPackages] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activePackageKey, setActivePackageKey] = useState(null);
+    const [orders, setOrders] = useState(null);
 
+
+    const getFilteredOrdersByPackage = () => {
+        if (!orders || !activePackageKey) return [];
+
+        return orders
+            .filter(order =>
+                order.servicePackageId === activePackageKey &&
+                (order.gardenerName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                    order.gardenerPhone?.includes(searchText) ||
+                    order.gardenerEmail?.toLowerCase().includes(searchText))
+            );
+    };
 
     useEffect(() => {
         const fetchPackages = async () => {
             try {
                 const res = await cleanfood.admin.getPackage({ page: 1, size: 100 });
                 setPackages(res.items || []);
+                const ord = await cleanfood.admin.getServicePackageOrders({ page: 1, size: 100 });
+                setOrders(ord.items || [])
             } catch (err) {
                 console.error("Lỗi khi lấy danh sách gói dịch vụ:", err);
+                console.error("Lỗi khi lấy thông tin khách hàng: ", err)
             }
         };
         fetchPackages();
     }, []);
+
+
 
     const showCustomerDetails = (customer) => {
         setSelectedCustomer(customer);
@@ -60,22 +63,22 @@ const ActivePackageCustomers = () => {
     const columns = [
         {
             title: "Mã KH",
-            dataIndex: "customerId",
+            dataIndex: "gardenerId",
             align: "center",
         },
         {
             title: "Họ Tên",
-            dataIndex: "name",
+            dataIndex: "gardenerName",
             align: "center",
         },
         {
             title: "Số Điện Thoại",
-            dataIndex: "phone",
+            dataIndex: "gardenerPhone",
             align: "center",
         },
         {
             title: "Email",
-            dataIndex: "email",
+            dataIndex: "gardenerEmail",
             align: "center",
         },
         {
@@ -83,8 +86,8 @@ const ActivePackageCustomers = () => {
             dataIndex: "status",
             align: "center",
             render: (status) => (
-                <Tag color={status === "active" ? "green" : "red"}>
-                    {status === "active" ? "Hoạt Động" : "Đã Khóa"}
+                <Tag color={status === "SUCCESS" ? "green" : "red"}>
+                    {status === "SUCCESS" ? "Hoạt Động" : "Đã Khóa"}
                 </Tag>
             ),
         },
@@ -102,7 +105,6 @@ const ActivePackageCustomers = () => {
         },
     ];
 
-    const customersByPackage = getCustomersByPackage(contracts, packages, customers);
     const filterCustomers = (list) =>
         list.filter(cus =>
             cus.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -145,18 +147,17 @@ const ActivePackageCustomers = () => {
 
                     {activePackageKey && (
                         <>
-
-
                             <Table
                                 columns={columns}
-                                dataSource={filterCustomers(customersByPackage[activePackageKey] || [])}
+                                dataSource={getFilteredOrdersByPackage()}
                                 locale={{
                                     emptyText: <Empty description="Không có khách hàng nào sử dụng gói này" />,
                                 }}
                                 pagination={false}
-                                rowKey="customerId"
+                                rowKey="servicePackageOrderId"
                                 scroll={{ x: "max-content" }}
                             />
+
                         </>
                     )}
                 </Card>
@@ -171,23 +172,21 @@ const ActivePackageCustomers = () => {
             >
                 {selectedCustomer && (
                     <Descriptions bordered column={1}>
-                        <Descriptions.Item label="Mã Khách Hàng">{selectedCustomer.customerId}</Descriptions.Item>
-                        <Descriptions.Item label="Họ Tên">{selectedCustomer.name}</Descriptions.Item>
-                        <Descriptions.Item label="Số Điện Thoại">{selectedCustomer.phone}</Descriptions.Item>
-                        <Descriptions.Item label="Email">{selectedCustomer.email}</Descriptions.Item>
-                        <Descriptions.Item label="Địa Chỉ">{selectedCustomer.address}</Descriptions.Item>
-                        <Descriptions.Item label="Ngày Tham Gia">{selectedCustomer.joinDate}</Descriptions.Item>
-                        <Descriptions.Item label="Tổng Số Đơn Hàng">{selectedCustomer.totalOrders}</Descriptions.Item>
-                        <Descriptions.Item label="Tổng Chi Tiêu">
-                            {`${Number(selectedCustomer.totalSpent).toLocaleString()} đ`}
-                        </Descriptions.Item>
+                        <Descriptions.Item label="Mã KH">{selectedCustomer.gardenerId}</Descriptions.Item>
+                        <Descriptions.Item label="Họ Tên">{selectedCustomer.gardenerName}</Descriptions.Item>
+                        <Descriptions.Item label="Số Điện Thoại">{selectedCustomer.gardenerPhone}</Descriptions.Item>
+                        <Descriptions.Item label="Email">{selectedCustomer.gardenerEmail}</Descriptions.Item>
+                        <Descriptions.Item label="Mã Gói">{selectedCustomer.servicePackageId}</Descriptions.Item>
+                        <Descriptions.Item label="Tổng Thanh Toán">{`${Number(selectedCustomer.totalAmount).toLocaleString()} đ`}</Descriptions.Item>
+                        <Descriptions.Item label="Ngày Mua">{new Date(selectedCustomer.createdAt).toLocaleString("vi-VN")}</Descriptions.Item>
                         <Descriptions.Item label="Trạng Thái">
-                            <Tag color={selectedCustomer.status === "active" ? "green" : "red"}>
-                                {selectedCustomer.status === "active" ? "Hoạt Động" : "Đã Khóa"}
+                            <Tag color={selectedCustomer.status === "SUCCESS" ? "green" : "red"}>
+                                {selectedCustomer.status === "SUCCESS" ? "Thành công" : "Thất bại"}
                             </Tag>
                         </Descriptions.Item>
                     </Descriptions>
                 )}
+
             </Modal>
         </>
 

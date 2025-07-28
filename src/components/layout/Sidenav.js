@@ -92,7 +92,7 @@ function Sidenav() {
           </Menu.Item>
         </Menu.SubMenu>
 
-       
+
         <Menu.SubMenu
           key="subscription-management"
           icon={<FontAwesomeIcon icon={faFileContract} />}
@@ -111,6 +111,12 @@ function Sidenav() {
             </NavLink>
           </Menu.Item>
         </Menu.SubMenu>
+        <Menu.Item key="productcategory">
+          <NavLink to="/productcategory">
+            <FontAwesomeIcon icon={faUserGroup} />
+            <span>Danh mục sản phẩm</span>
+          </NavLink>
+        </Menu.Item>
 
         <Menu.Item key="active-package-customers">
           <NavLink to="/active-package-customers">
@@ -118,6 +124,7 @@ function Sidenav() {
             <span>Danh Sách Khách Hàng Đang Sử Dụng Gói</span>
           </NavLink>
         </Menu.Item>
+
 
         {/* FE-09: Quản lý báo cáo */}
         <Menu.SubMenu
@@ -141,7 +148,7 @@ function Sidenav() {
 
         <Menu.Divider />
 
-       
+
       </Menu>
     </>
   );

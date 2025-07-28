@@ -366,4 +366,184 @@ body {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
   }
+
+ 
 }
+/* Layout tổng thể */
+.siup-page-layout {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+/* Logo */
+.siup-logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.siup-logo-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #10b981;
+}
+
+/* Cột giữa */
+.siup-content-center {
+  flex: 1;
+  max-width: 500px;
+  padding: 2rem;
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  margin: auto;
+}
+
+/* Wrapper */
+.siup-content-wrapper {
+  width: 100%;
+}
+
+/* Sidebar nếu cần */
+.siup-sidebar-left,
+.siup-sidebar-right {
+  flex: 0 0 1fr;
+}
+
+/* Tiêu đề */
+.siup-page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Nhóm field */
+.siup-form-fields,
+.siup-certificate-form,
+.siup-otp-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Nhóm mỗi input */
+.siup-field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.siup-field-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.siup-required {
+  color: red;
+}
+
+/* Input chung */
+.siup-input-field,
+.siup-textarea-field,
+.siup-otp-input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  transition: 0.2s;
+}
+
+.siup-input-field:focus,
+.siup-textarea-field:focus,
+.siup-otp-input:focus {
+  border-color: #10b981;
+  outline: none;
+}
+
+/* Password */
+.siup-password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.siup-password-input {
+  flex: 1;
+}
+
+.siup-password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* Button */
+.siup-submit-button {
+  background-color: #10b981;
+  color: white;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.siup-submit-button:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+/* Checkbox */
+.siup-checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.siup-checkbox-label {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.siup-link {
+  color: #10b981;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* OTP */
+.siup-otp-input {
+  text-align: center;
+  font-size: 1.25rem;
+  letter-spacing: 4px;
+}
+
+/* Quay lại */
+.siup-back-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* Link dưới form */
+.siup-login-link,
+.siup-resend-link {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
+  color: #6b7280;
+}
+
+

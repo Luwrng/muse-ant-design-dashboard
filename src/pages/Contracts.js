@@ -30,30 +30,46 @@ const columns = [
     key: "gardenerId",
     align: "center",
   },
-  {
-    title: "Loại dịch vụ",
-    dataIndex: "subscriptionType",
-    key: "subscriptionType",
-    align: "center",
-    render: (type) => {
-      const labelMap = {
-        POST_LIMIT: "Giới hạn đăng bài",
-        PRIORITY_POST: "Đăng bài ưu tiên",
-      };
-      return labelMap[type] || type;
-    },
-  },
+  // {
+  //   title: "Loại dịch vụ",
+  //   dataIndex: "subscriptionType",
+  //   key: "subscriptionType",
+  //   align: "center",
+  //   render: (type) => {
+  //     const labelMap = {
+  //       POST_LIMIT: "Giới hạn đăng bài",
+  //       PRIORITY_POST: "Đăng bài ưu tiên",
+  //     };
+  //     return labelMap[type] || type;
+  //   },
+  // },
   {
     title: "Ngày bắt đầu",
     dataIndex: "startDate",
     key: "startDate",
     align: "center",
+    render: (date) =>
+      date
+        ? new Date(date).toLocaleDateString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+        : "-",
   },
   {
     title: "Ngày kết thúc",
     dataIndex: "endDate",
     key: "endDate",
     align: "center",
+    render: (date) =>
+      date
+        ? new Date(date).toLocaleDateString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+        : "-",
   },
   {
     title: "Trạng thái",
@@ -148,12 +164,12 @@ const ContractTable = () => {
         />
       </Card>
 
-      <div>
+      {/* <div>
         <Button type="link" onClick={showModal} style={{ padding: 0 }}>
           Xem điều khoản & chính sách
         </Button>
-      </div>
-
+      </div> */}
+      {/* 
       <Modal
         title="Điều khoản sử dụng & Chính sách gia hạn"
         open={visible}
@@ -180,7 +196,7 @@ const ContractTable = () => {
             - Người dùng có thể hủy gia hạn tự động bất cứ lúc nào. <b>Sẽ không được hoàn tiền lại</b>.
           </Paragraph>
         </Typography>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
