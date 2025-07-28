@@ -79,7 +79,7 @@ function GDashboard() {
     },
 
     // Sample upcoming appointments
-    upcomingAppointments: [{}],
+    upcomingAppointments: [],
   });
 
   useEffect(() => {
@@ -219,9 +219,16 @@ function GDashboard() {
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
       const dateStr = date.toISOString().split("T")[0];
+
+      if (
+        !Array.isArray(dashboardData.upcomingAppointments) ||
+        dashboardData.upcomingAppointments.length <= 0
+      )
+        return null;
+
       const hasAppointment = dashboardData.upcomingAppointments.some(
         (appointment) =>
-          new Date(appointment.appointmentDate).toISOString.split("T")[0] ===
+          new Date(appointment.appointmentDate).toISOString().split("T")[0] ===
           dateStr
       );
       return hasAppointment ? "gdashboard-appointment-date" : null;
