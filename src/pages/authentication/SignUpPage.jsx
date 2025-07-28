@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import CloudinaryUpload from "../../cloudinary/CloudinaryUpload";
 import SignUpSuccessModal from "./SignUpSuccessModal";
 import authenticateService from "../services/apiServices/authenticateService";
+import AddressSelector from "./AddressSelector";
 
 //Firebase auth service
 import { auth } from "../../firebase/firebase";
@@ -22,6 +23,10 @@ function SignUpPage() {
     phone: "",
     password: "",
     address: "",
+    country: "",
+    city: "",
+    province: "",
+    postalCode: "",
     certName: "",
     issuingAuthority: "",
     issueDate: "",
@@ -39,7 +44,7 @@ function SignUpPage() {
 
   // #region Handle Firebase SMS
   const [otp, setOtp] = useState();
-  // #endregion
+
 
   const handleNextStep = async () => {
     if (currentStep === 1) {
@@ -169,6 +174,10 @@ function SignUpPage() {
       addresses: [
         {
           addressLine: formData.address,
+    country: formData.country,
+    city: formData.city,
+    province: formData.province,
+    postalCode: formData.postalCode,
         },
       ],
     };
@@ -205,68 +214,103 @@ function SignUpPage() {
           <div className="siup-form-container">
             <h1 className="siup-page-title">Đăng ký</h1>
             <div className="siup-form-fields">
-              {["name", "phone", "address", "password"].map((field) => (
-                <div className="siup-field-group" key={field}>
-                  <label className="siup-field-label">
-                    {field === "name"
-                      ? "Tên"
-                      : field === "phone"
-                      ? "Số điện thoại"
-                      : field === "address"
-                      ? "Địa chỉ"
-                      : "Mật khẩu"}{" "}
-                    <span className="siup-required">*</span>
-                  </label>
-                  {field === "address" ? (
-                    <textarea
-                      rows={2}
-                      className="siup-textarea-field"
-                      placeholder={`Nhập ${field}`}
-                      value={formData[field]}
-                      onChange={(e) => handleInputChange(field, e.target.value)}
-                      required
-                    />
-                  ) : field === "password" ? (
-                    <div className="siup-password-container">
-                      <input
-                        type={!showPassword ? "password" : "text"}
-                        className="siup-input-field siup-password-input"
-                        placeholder={`Nhập ${field}`}
-                        value={formData[field]}
-                        onChange={(e) =>
-                          handleInputChange(field, e.target.value)
-                        }
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="siup-password-toggle"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                      >
-                        <FontAwesomeIcon
-                          icon={showPassword ? faEyeSlash : faEye}
-                        />
-                      </button>
-                    </div>
-                  ) : (
-                    <input
-                      type={"text"}
-                      className="siup-input-field"
-                      placeholder={`Nhập ${field}`}
-                      value={formData[field]}
-                      onChange={(e) =>
-                        handleInputChange(
-                          field,
-                          field === "phone"
-                            ? e.target.value.replace(/\D/g, "")
-                            : e.target.value
-                        )
-                      }
-                      required
-                    />
-                  )}
-                </div>
-              ))}
+
+            {["name", "phone", "password"].map((field) => (
+    <div className="siup-field-group" key={field}>
+      <label className="siup-field-label">
+        {field === "name"
+          ? "Tên"
+          : field === "phone"
+          ? "Số điện thoại"
+          : "Mật khẩu"}{" "}
+        <span className="siup-required">*</span>
+      </label>
+
+      {field === "password" ? (
+        <div className="siup-password-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            className="siup-input-field siup-password-input"
+            placeholder="Nhập mật khẩu"
+            value={formData.password}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="siup-password-toggle"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+          </button>
+        </div>
+      ) : (
+        <input
+          type="text"
+          className="siup-input-field"
+          placeholder={`Nhập ${field}`}
+          value={formData[field]}
+          onChange={(e) =>
+            handleInputChange(
+              field,
+              field === "phone" ? e.target.value.replace(/\D/g, "") : e.target.value
+            )
+          }
+          required
+        />
+      )}
+  </div>
+))}
+ {/* Địa chỉ: tỉnh - quận - xã */}
+<div className="siup-field-group">
+  <label className="siup-field-label">
+    Địa chỉ (Tỉnh / Huyện / Phường) <span className="siup-required">*</span>
+  </label>
+  <AddressSelector
+    onChange={(address) =>
+      setFormData((prev) => ({
+        ...prev,
+        province: address.province,
+        city: address.district,
+        postalCode: address.postalCode || "",
+        country: "Vietnam",
+      }))
+    }
+  />
+</div>
+
+{/* Số nhà, tên đường */}
+<div className="siup-field-group">
+  <label className="siup-field-label">
+    Số nhà / Tên đường <span className="siup-required">*</span>
+  </label>
+  <input
+    type="text"
+    className="siup-input-field"
+    placeholder="Nhập số nhà, tên đường"
+    value={formData.address}
+    onChange={(e) => handleInputChange("address", e.target.value)}
+    required
+  />
+</div>
+
+{/* Postal Code nếu muốn người dùng nhập */}
+<div className="siup-field-group">
+  <label className="siup-field-label">
+    Mã bưu điện (Postal Code) <span className="siup-required">*</span>
+  </label>
+  <input
+    type="text"
+    className="siup-input-field"
+    placeholder="VD: 700000"
+    value={formData.postalCode}
+    onChange={(e) => handleInputChange("postalCode", e.target.value)}
+    required
+  />
+</div>
+    
+
+
 
               <div className="siup-checkbox-container">
                 <input
