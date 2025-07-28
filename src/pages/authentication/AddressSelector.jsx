@@ -6,8 +6,12 @@ function AddressSelector({ onChange, initialValue = {} }) {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
 
-  const [selectedProvince, setSelectedProvince] = useState(initialValue.provinceCode || "");
-  const [selectedDistrict, setSelectedDistrict] = useState(initialValue.districtCode || "");
+  const [selectedProvince, setSelectedProvince] = useState(
+    initialValue.provinceCode || ""
+  );
+  const [selectedDistrict, setSelectedDistrict] = useState(
+    initialValue.districtCode || ""
+  );
   const [selectedWard, setSelectedWard] = useState(initialValue.wardCode || "");
 
   useEffect(() => {
@@ -42,9 +46,17 @@ function AddressSelector({ onChange, initialValue = {} }) {
 
   useEffect(() => {
     if (selectedProvince && selectedDistrict && selectedWard) {
-      const province = provinces.find((p) => p.code === selectedProvince);
-      const district = districts.find((d) => d.code === selectedDistrict);
-      const ward = wards.find((w) => w.code === selectedWard);
+      const province = provinces.find(
+        (p) => p.code === Number(selectedProvince)
+      );
+      const district = districts.find(
+        (d) => d.code === Number(selectedDistrict)
+      );
+      const ward = wards.find((w) => w.code === Number(selectedWard));
+
+      onChange("province", province.name);
+      onChange("city", district.name);
+      onChange("ward", ward.name);
 
       onChange &&
         onChange({

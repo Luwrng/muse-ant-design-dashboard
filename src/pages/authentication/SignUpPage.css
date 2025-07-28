@@ -22,7 +22,7 @@ body {
 .siup-sidebar-left,
 .siup-sidebar-right {
   width: 32%;
-  max-height: 100vh;
+  /* max-height: 100vh; */
   background-color: #0fda96;
   background-image: url("https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg");
   background-size: cover;
@@ -366,8 +366,6 @@ body {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
   }
-
- 
 }
 /* Layout tổng thể */
 .siup-page-layout {
@@ -392,7 +390,7 @@ body {
 /* Cột giữa */
 .siup-content-center {
   flex: 1;
-  max-width: 500px;
+  max-width: 50vw;
   padding: 2rem;
   background: #ffffff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
@@ -545,5 +543,3 @@ body {
   margin-top: 1rem;
   color: #6b7280;
 }
-
-
