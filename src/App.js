@@ -48,8 +48,21 @@ import FailPaymentResult from "./pages/GardenerPage/PaymentResult/FailPaymentRes
 
 //Auth
 import SignUpPage from "./pages/authentication/SignUpPage";
+import AuthService from "./pages/services/AuthService";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const isOnUnAuthPage =
+      window.location.pathname === "/sign-up" ||
+      window.location.pathname === "/sign-in" ||
+      window.location.pathname === "/";
+
+    if (!isOnUnAuthPage && AuthService.isTokenExpired()) {
+      AuthService.logout();
+    }
+  }, []);
+
   return (
     <div className="App">
       <AuthCheck>
@@ -65,12 +78,12 @@ function App() {
           <ProtectedRoute
             path="/gardener/service-package"
             component={GServicePackage}
-            allowedRoles={['gardener', 'retailer']}
+            allowedRoles={["gardener", "retailer"]}
           />
           <ProtectedRoute
             path="/gardener/payment-result"
             component={PaymentResult}
-            allowedRoles={['gardener', 'retailer']}
+            allowedRoles={["gardener", "retailer"]}
           />
 
           {/* Payment Result Routes */}
@@ -91,93 +104,167 @@ function App() {
                   <ProtectedRoute
                     path="/gardener/product"
                     component={GardenerProductPage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/order"
                     component={GOrderPage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
-                  <ProtectedRoute
+                  {/* <ProtectedRoute
                     path="/gardener/product-category"
                     component={GProductCategory}
-                    allowedRoles={['gardener', 'retailer']}
-                  />
+                    // allowedRoles={["gardener", "retailer"]}
+                  /> */}
                   <ProtectedRoute
                     path="/gardener/post"
                     component={GPostPage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/appointment"
                     component={GAppointmentPage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/message"
                     component={GChatPage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/profile"
                     component={GProfilePage}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/dashboard"
                     component={GDashboard}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/package-payment"
                     component={GPackageOrderHistory}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <ProtectedRoute
                     path="/gardener/subscription-history"
                     component={GSubscriptionHistory}
-                    allowedRoles={['gardener', 'retailer']}
+                    allowedRoles={["gardener", "retailer"]}
                   />
                   <Route path="/gardener/report" component={GReportPage} />
                 </Switch>
               </GardenerMain>
             )}
+            s
           ></Route>
 
           {/* Admin routes */}
           <Main>
-            <ProtectedRoute exact path="/dashboard" component={Home} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/account" component={Account} allowedRoles={['admin']} />
-            <ProtectedRoute path="/services" component={Services} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/package" component={ServicesPackage} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/transaction" component={Transaction} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/reports-list" component={ReportList} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/productcategory" component={ProductCategory} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/gardener-posts" component={GardenerPosts} allowedRoles={['admin']} />
+            <ProtectedRoute
+              exact
+              path="/dashboard"
+              component={Home}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/account"
+              component={Account}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              path="/services"
+              component={Services}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/package"
+              component={ServicesPackage}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/transaction"
+              component={Transaction}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/reports-list"
+              component={ReportList}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/productcategory"
+              component={ProductCategory}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/gardener-posts"
+              component={GardenerPosts}
+              allowedRoles={["admin"]}
+            />
             <ProtectedRoute
               exact
               path="/gardener-verification"
               component={GardenerVerification}
-              allowedRoles={['admin']}
+              allowedRoles={["admin"]}
             />
-            <ProtectedRoute path="/statistics" component={StatisticsPage} allowedRoles={['admin']} />
+            <ProtectedRoute
+              path="/statistics"
+              component={StatisticsPage}
+              allowedRoles={["admin"]}
+            />
             <ProtectedRoute
               exact
               path="/servicespackage/Packages_add"
               component={Packages_add}
-              allowedRoles={['admin']}
+              allowedRoles={["admin"]}
             />
-            <ProtectedRoute exact path="/notifications" component={NotificationPage} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/subscription-contracts" component={Contracts} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/subscription-orders" component={Orders} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/revenue" component={Revenue} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/rtl" component={Rtl} allowedRoles={['admin']} />
-            <ProtectedRoute exact path="/profile" component={Profile} allowedRoles={['admin']} />
+            <ProtectedRoute
+              exact
+              path="/notifications"
+              component={NotificationPage}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/subscription-contracts"
+              component={Contracts}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/subscription-orders"
+              component={Orders}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/revenue"
+              component={Revenue}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/rtl"
+              component={Rtl}
+              allowedRoles={["admin"]}
+            />
+            <ProtectedRoute
+              exact
+              path="/profile"
+              component={Profile}
+              allowedRoles={["admin"]}
+            />
             <ProtectedRoute
               exact
               path="/active-package-customers"
               component={ActivePackageCustomers}
-              allowedRoles={['admin']}
+              allowedRoles={["admin"]}
             />
 
             <Redirect from="*" to="/dashboard" />

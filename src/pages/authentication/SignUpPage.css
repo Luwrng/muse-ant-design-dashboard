@@ -6,8 +6,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -23,7 +24,7 @@ body {
   width: 32%;
   max-height: 100vh;
   background-color: #0fda96;
-  background-image: url('https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg');
+  background-image: url("https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -220,7 +221,7 @@ body {
   color: #1f2937;
 }
 
-.siup-back-button:focus{
+.siup-back-button:focus {
   outline: none;
 }
 

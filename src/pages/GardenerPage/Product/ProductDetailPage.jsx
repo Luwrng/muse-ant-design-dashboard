@@ -15,6 +15,7 @@ function ProductDetailPage({
 
   useEffect(() => {
     if (!product || !product.productId) return;
+
     const fetchReviews = async () => {
       try {
         const result = await productService.getProductReview(product.productId);
@@ -35,6 +36,7 @@ function ProductDetailPage({
     }
   };
 
+  // In UI created Icons
   const BackIcon = () => (
     <svg
       className="gpd-icon"
@@ -67,6 +69,38 @@ function ProductDetailPage({
     </svg>
   );
 
+  const CertificateIcon = () => (
+    <svg
+      className="gpd-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      />
+    </svg>
+  );
+
+  const CloseIcon = () => (
+    <svg
+      className="gpd-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  );
+
   return (
     <div className="gpd-modal-overlay" onClick={handleOverlayClick}>
       <div className="gpd-modal-content">
@@ -87,18 +121,23 @@ function ProductDetailPage({
                 product.status === "ACTIVE" ? "hide" : "show"
               }-button`}
               onClick={() => {
+                const newStatus =
+                  product.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
                 onChangeStatus(
                   product,
-                  product.status === "ACTIVE" ? "hide" : "show"
+                  newStatus === "INACTIVE" ? "hide" : "show"
                 );
                 setProduct({
                   ...product,
-                  status: product.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+                  status: product,
                 });
               }}
             >
               {product.status === "ACTIVE" ? "Ẩn" : "Hiện"} sản phẩm
             </button>
+            {/* <button className="gpd-close-button" onClick={onClose}>
+              <CloseIcon />
+            </button> */}
           </div>
         </div>
 
@@ -133,6 +172,20 @@ function ProductDetailPage({
                   {product.productCategory}
                 </div>
               </div>
+
+              {/* Product Tags Section */}
+              {product.productTags && product.productTags.length > 0 && (
+                <div className="gpd-tags-section">
+                  <div className="gpd-tags-title">Các nhãn:</div>
+                  <div className="gpd-tags-list">
+                    {product.productTags.map((tag, index) => (
+                      <span key={index} className="gpd-tag-item">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="gpd-date-info">
                 <div className="gpd-date-item">
@@ -191,6 +244,79 @@ function ProductDetailPage({
               <p className="gpd-no-reviews">Chưa có đánh giá nào.</p>
             )}
           </div>
+
+          {/* Product Certificates Section */}
+          {product.certificates && product.certificates.length > 0 && (
+            <div className="gpd-certificates-section">
+              <h2 className="gpd-certificates-title">
+                <CertificateIcon />
+                Các chứng chỉ
+              </h2>
+              <div className="gpd-certificates-list">
+                {product.certificates.map((cert) => (
+                  <div
+                    key={cert.productCertificateId}
+                    className="gpd-certificate-item"
+                  >
+                    <div className="gpd-certificate-header">
+                      <div className="gpd-certificate-icon-container">
+                        <img
+                          src={
+                            cert.imageUrl ||
+                            "/placeholder.svg?height=40&width=40&query=certificate icon"
+                          }
+                          alt={`Icon for ${cert.title}`}
+                          width={40}
+                          height={80}
+                          className="gpd-certificate-icon"
+                        />
+                      </div>
+                      <div className="gpd-certificate-details">
+                        <div className="gpd-certificate-title">
+                          {cert.certificateName}
+                        </div>
+                        <div className="gpd-certificate-description">
+                          {cert.issuingOrganization}
+                        </div>
+                        <div className="gpd-certificate-id">
+                          #{cert.certificateNumber}
+                        </div>
+                        <div className="gpd-certificate-dates">
+                          <div className="gpd-certificate-date-item">
+                            <span className="gpd-certificate-date-label">
+                              Ngày cấp:{" "}
+                            </span>
+                            <span className="gpd-certificate-date-value">
+                              {
+                                new Date(cert.issuedDate)
+                                  .toISOString()
+                                  .split("T")[0]
+                              }
+                            </span>
+                          </div>
+                          <div className="gpd-certificate-date-item">
+                            <span className="gpd-certificate-date-label">
+                              Ngày hết hạn:{" "}
+                            </span>
+                            <span className="gpd-certificate-date-value">
+                              {
+                                new Date(cert.expirationDate)
+                                  .toISOString()
+                                  .split("T")[0]
+                              }
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      {cert.isExpired && (
+                        <span className="gpd-expired-badge">Hết hạn</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

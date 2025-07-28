@@ -204,6 +204,7 @@ import signinbg from "../assets/images/img-signin.jpg";
 import styled from "styled-components";
 import authenticateService from "./services/apiServices/authenticateService";
 import CloudinaryUpload from "../cloudinary/CloudinaryUpload";
+import AuthService from "./services/AuthService";
 
 const { Title } = Typography;
 const { Header, Content } = Layout;
@@ -238,7 +239,8 @@ export default function SignIn() {
       localStorage.clear();
       const result = await authenticateService.login(values);
       //Set value
-      localStorage.setItem("auth_token", result.token);
+      AuthService.saveToken(result.token);
+      // localStorage.setItem("auth_token", result.token);
       localStorage.setItem("account_id", result.accountId);
       localStorage.setItem("account_name", result.name);
       localStorage.setItem("account_avatar", result.avatar);
@@ -256,7 +258,8 @@ export default function SignIn() {
         console.log("📋 Thông tin user nhận được:", userInfo);
 
         // Kiểm tra role từ nhiều field khác nhau
-        let userRole = userInfo.roleName?.toLowerCase() ||
+        let userRole =
+          userInfo.roleName?.toLowerCase() ||
           userInfo.role?.toLowerCase() ||
           userInfo.roleId?.toLowerCase() ||
           "guest";
@@ -383,5 +386,4 @@ export default function SignIn() {
       </Content>
     </Layout>
   );
-
 }

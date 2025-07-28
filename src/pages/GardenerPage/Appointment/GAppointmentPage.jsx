@@ -115,14 +115,14 @@ const timeSlots = [
   //   "4:30",
   //   "5:00",
   //   "5:30",
-  "6:00",
-  "6:30",
-  "7:00",
-  "7:30",
-  "8:00",
-  "8:30",
-  "9:00",
-  "9:30",
+  "06:00",
+  "06:30",
+  "07:00",
+  "07:30",
+  "08:00",
+  "08:30",
+  "09:00",
+  "09:30",
   "10:00",
   "10:30",
   "11:00",
@@ -405,6 +405,33 @@ function GAppointmentPage() {
     setSelectedAppointment(null);
   };
 
+  const getClosestTimeSlot = (startTime, timeSlots) => {
+    const start = new Date(`1970-01-01T${startTime}:00`);
+
+    let closest = timeSlots[0];
+    let minDiff = Infinity;
+
+    for (const slot of timeSlots) {
+      const slotTime = new Date(`1970-01-01T${slot}:00`);
+      const diff = Math.abs(start - slotTime);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = slot;
+      }
+    }
+
+    return closest;
+  };
+
+  const getVisualOffset = (slotTime, appointmentStartTime, slotHeight = 50) => {
+    const slotDate = new Date(`1970-01-01T${slotTime}:00`);
+    const startDate = new Date(`1970-01-01T${appointmentStartTime}:00`);
+    const diffMinutes = (startDate - slotDate) / 60000;
+
+    // Ensure only positive offset (don't offset backward)
+    return (diffMinutes / 30) * slotHeight;
+  };
+
   return (
     <div className="gappointment-appointment-container">
       <div className="gappointment-appointment-header">
@@ -582,7 +609,13 @@ function GAppointmentPage() {
                           dayInfo.fullDate,
                           time
                         );
-                        const isFirstSlot = appointment ? true : false;
+
+                        const isFirstSlot =
+                          appointment &&
+                          getClosestTimeSlot(
+                            appointment.startTime,
+                            timeSlots
+                          ) === time;
 
                         return (
                           <div
@@ -600,6 +633,10 @@ function GAppointmentPage() {
                                   height: `${
                                     getAppointmentHeight(appointment) * 50 - 4
                                   }px`,
+                                  top: `${getVisualOffset(
+                                    time,
+                                    appointment.startTime
+                                  )}px`,
                                 }}
                                 onClick={() => openDetailModal(appointment)}
                               >

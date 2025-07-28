@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import "./GPostDetailModal.css";
 import postService from "../../services/apiServices/postService";
@@ -6,6 +6,9 @@ import postService from "../../services/apiServices/postService";
 function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentPost, setCurrentPost] = useState();
+
+  const [playButton, setPlayButton] = useState(true);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -21,6 +24,12 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
   }, [postId]);
 
   if (!isOpen) return null;
+
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
 
   return (
     <div className="gpdetail-overlay" onClick={onClose}>
@@ -42,17 +51,18 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
               >
                 {/* Video slide */}
                 {currentPost?.video && (
-                  <div className="gpdetail-media-slide">
+                  <div className="gpdetail-media-slide" onClick={handlePlay}>
                     <video
-                      src={currentPost.video.mediumUrl}
+                      ref={videoRef}
+                      src={currentPost.video}
                       className="gpdetail-media-item"
-                      controls={false}
+                      controls={true}
                       poster={
-                        currentPost?.thumbNail?.mediumUrl ||
+                        currentPost?.thumbNail ||
                         "/placeholder.svg?height=300&width=400"
                       }
                     />
-                    <div className="gpdetail-play-button">
+                    {/* <div className="gpdetail-play-button">
                       <svg
                         width="60"
                         height="60"
@@ -67,7 +77,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                         />
                         <path d="M25 20L40 30L25 40V20Z" fill="#333" />
                       </svg>
-                    </div>
+                    </div> */}
                   </div>
                 )}
 
@@ -75,10 +85,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                 {currentPost?.images?.map((image, index) => (
                   <div key={index} className="gpdetail-media-slide">
                     <img
-                      src={
-                        image.mediumUrl ||
-                        "/placeholder.svg?height=300&width=400"
-                      }
+                      src={image || "/placeholder.svg?height=300&width=400"}
                       alt={`${currentPost?.title} - ${index + 1}`}
                       className="gpdetail-media-item"
                     />
@@ -142,16 +149,17 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
 
           <div className="gpdetail-info-section">
             <h3 className="gpdetail-post-title">{currentPost?.title}</h3>
-            <p className="gpdetail-description">{currentPost?.content}</p>
+            {/* <p className="gpdetail-description">{currentPost?.content}</p> */}
+            <div dangerouslySetInnerHTML={{ __html: currentPost?.content }} />
 
             <div className="gpdetail-meta">
               <div className="gpdetail-status">
                 <span
                   className={`gpdetail-status-badge ${
-                    currentPost?.status === "ACTIVE" ? "active" : "inactive"
+                    currentPost?.postStatus === "ACTIVE" ? "active" : "inactive"
                   }`}
                 >
-                  {currentPost?.status}
+                  {currentPost?.postStatus}
                 </span>
               </div>
 
@@ -174,7 +182,11 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
               </div>
 
               <div className="gpdetail-date">
-                <span>Ngày tạo: {currentPost?.createdAt}</span>
+                <span>
+                  Ngày tạo:{" "}
+                  {/* {new Date(currentPost?.createdAt).toISOString().split("T")[0]} */}
+                  {currentPost?.createdAt}
+                </span>
               </div>
             </div>
 
@@ -218,6 +230,11 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                       Ngày thu hoạch:
                     </span>
                     <span className="gpdetail-product-info-value">
+                      {/* {
+                        new Date(currentPost?.harvestDate)
+                          .toISOString()
+                          .split("T")[0]
+                      } */}
                       {currentPost?.harvestDate}
                     </span>
                   </div>

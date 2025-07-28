@@ -19,7 +19,7 @@ function GOrderPage() {
         const gardenerId = localStorage.getItem("account_id");
         const result = await gardenerOrderService.getGardenerOrder(gardenerId);
 
-        setOrders(result);
+        setOrders(result.items);
       } catch (err) {
         console.log(err);
       }
@@ -27,7 +27,6 @@ function GOrderPage() {
 
     fetchOrder();
   }, []);
-
 
   const filterTabs = [
     { key: "all", label: "Tất cả", count: 6 },
@@ -82,7 +81,7 @@ function GOrderPage() {
             <thead>
               <tr className="gorder-table-header">
                 <th className="gorder-th">ID</th>
-                <th className="gorder-th">TÊN NHÀ BÁN LẺ</th>
+                <th className="gorder-th">ID NHÀ BÁN LẺ</th>
                 <th className="gorder-th">TỔNG TIỀN</th>
                 <th className="gorder-th">SỐ LƯỢNG SẢN PHẨM</th>
                 <th className="gorder-th">NGÀY TẠO</th>
@@ -94,23 +93,23 @@ function GOrderPage() {
               {Array.isArray(filteredOrders) &&
                 filteredOrders.map((order) => (
                   <tr key={order.id} className="gorder-table-row">
-                    <td className="gorder-td">{order.id}</td>
-                    <td className="gorder-td">{order.store}</td>
-                    <td className="gorder-td">{order.total} ₫</td>
-                    <td className="gorder-td">{order.items}</td>
-                    <td className="gorder-td">{order.date}</td>
+                    <td className="gorder-td">{order.orderId}</td>
+                    <td className="gorder-td">{order.retailerId}</td>
+                    <td className="gorder-td">{order.totalAmount} ₫</td>
+                    <td className="gorder-td">{order.productTypeAmount}</td>
+                    <td className="gorder-td">{order.createdAt}</td>
                     <td className="gorder-td">
                       <span
                         className={`gorder-status gorder-status-${order.status}`}
                       >
-                        {order.statusText}
+                        {order.status}
                       </span>
                     </td>
                     <td className="gorder-td">
                       <div className="gorder-actions">
                         <button
                           className="gorder-action-btn gorder-view-btn"
-                          onClick={() => handleView(order.id)}
+                          onClick={() => handleView(order.orderId)}
                           title="Xem chi tiết"
                         >
                           <EyeFilled />
@@ -125,23 +124,21 @@ function GOrderPage() {
 
         {/* Pagination */}
         <div className="gorder-pagination">
-          <div className="gorder-pagination-info">
-         
-          </div>
+          <div className="gorder-pagination-info"></div>
           <div className="gpost-pagination-controls">
-          <button className="gpost-pagination-btn">‹</button>
-          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-            <button
-              key={index}
-              className={`gpost-pagination-btn ${
-                page === 1 ? "gpost-active" : ""
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button className="gpost-pagination-btn">›</button>
-        </div>
+            <button className="gpost-pagination-btn">‹</button>
+            {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
+              <button
+                key={index}
+                className={`gpost-pagination-btn ${
+                  page === 1 ? "gpost-active" : ""
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            <button className="gpost-pagination-btn">›</button>
+          </div>
         </div>
       </div>
       {showOrderDetail && (

@@ -11,7 +11,6 @@
   z-index: 1000;
   padding: 1rem;
 }
-
 .gpd-modal-content {
   background-color: white;
   border-radius: 0.5rem;
@@ -23,7 +22,6 @@
   display: flex;
   flex-direction: column;
 }
-
 .gpd-modal-header {
   display: flex;
   justify-content: space-between;
@@ -32,7 +30,6 @@
   border-bottom: 1px solid #e5e7eb;
   flex-shrink: 0; /* Prevent header from shrinking */
 }
-
 .gpd-back-button {
   display: flex;
   align-items: center;
@@ -46,16 +43,14 @@
   border-radius: 0.25rem;
   transition: background-color 0.2s;
 }
-
 .gpd-back-button:hover {
   background-color: #f3f4f6;
 }
-
 .gpd-header-actions {
   display: flex;
   gap: 0.75rem;
+  align-items: center; /* Align items vertically */
 }
-
 .gpd-edit-button {
   background-color: #3b82f6;
   color: white;
@@ -66,11 +61,9 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .gpd-edit-button:hover {
   background-color: #2563eb;
 }
-
 .gpd-hide-button {
   background-color: #dc2626;
   color: white;
@@ -81,11 +74,9 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .gpd-hide-button:hover {
   background-color: #b91c1c;
 }
-
 .gpd-show-button {
   background-color: #26dc3e;
   color: white;
@@ -96,11 +87,24 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .gpd-show-button:hover {
   background-color: #1cb950;
 }
-
+.gpd-close-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gpd-close-button:hover {
+  background-color: #f3f4f6;
+}
 .gpd-modal-body {
   padding: 1.5rem;
   display: grid;
@@ -109,118 +113,97 @@
   flex-grow: 1; /* Allow body to grow */
   overflow-y: auto; /* Allow body content to scroll if needed */
 }
-
 @media (min-width: 768px) {
   .gpd-modal-body {
     grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
     gap: 2rem;
   }
 }
-
 @media (max-width: 767px) {
   .gpd-modal-body {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 }
-
 .gpd-product-info-section {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .gpd-product-title {
   font-size: 2rem;
   font-weight: bold;
   color: #111827;
   margin: 0;
 }
-
 .gpd-product-id-section {
-  margin-top: 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-
 .gpd-product-id-title {
   color: #6b7280;
   font-size: 1.25rem;
   font-weight: 500;
 }
-
 .gpd-product-id-value {
   color: #6b7280;
   font-size: 1.2rem;
 }
-
 .gpd-product-status-section {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-
 .gpd-status-badge {
   margin-left: 7.2rem;
   border-radius: 0.25rem;
   font-size: 1.25rem;
   font-weight: 500;
 }
-
 .gpd-status-badge-value {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 1rem;
   font-weight: 500;
 }
-
 .gpd-status-badge-value.active {
   background-color: #dcfce7;
   color: #166534;
 }
-
 .gpd-status-badge-value.inactive {
   background-color: #fce3dc;
   color: #652616;
 }
-
 .gpd-price-section {
   background-color: #dcfce7;
   padding: 1rem;
   border-radius: 0.5rem;
   margin-top: 1rem;
 }
-
 .gpd-price {
   font-size: 2rem;
   font-weight: bold;
   color: #111827;
   margin: 0 0 0.25rem 0;
 }
-
 .gpd-price-unit {
   margin-top: 0.5rem;
   color: #16a34a;
   font-size: 0.875rem;
   font-weight: 500;
 }
-
 .gpd-info-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   margin-top: 0.5rem;
 }
-
 .gpd-info-label {
   font-weight: 500;
   color: #374151;
-  margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
 }
-
 .gpd-category-tag {
   display: inline-flex;
   align-items: center;
@@ -232,14 +215,12 @@
   font-size: 0.875rem;
   width: fit-content;
 }
-
 .gpd-date-info {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .gpd-date-item {
   margin-top: 0.5rem;
   display: flex;
@@ -248,46 +229,188 @@
   gap: 0.2rem;
   font-size: 1rem;
 }
-
 .gpd-date-label {
   min-width: 7.5rem;
   color: #6b7280;
 }
-
 .gpd-date-value {
   color: #111827;
 }
-
 .gpd-icon {
   width: 1rem;
   height: 1rem;
 }
 
-/* Review Section Styles */
+/* Product Tags Section Styles */
+.gpd-tags-section {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.gpd-tags-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.gpd-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gpd-tag-item {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Product Certificates Section Styles */
+.gpd-certificates-section {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 60vh;
+}
+
+.gpd-certificates-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gpd-certificates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.gpd-certificate-item {
+  background-color: #f9fafb; /* Light background for each certificate */
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.gpd-certificate-header {
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
+  gap: 1rem;
+  position: relative; /* For positioning the expired badge */
+}
+
+.gpd-certificate-icon-container {
+  width: 3rem; /* 48px */
+  height: 3rem; /* 48px */
+  flex-shrink: 0;
+  border-radius: 0.25rem; /* Slightly rounded corners for the icon container */
+  overflow: hidden;
+  background-color: #e5e7eb; /* Placeholder background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gpd-certificate-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gpd-certificate-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gpd-certificate-title {
+  font-weight: 600;
+  color: #111827;
+  font-size: 1rem;
+}
+
+.gpd-certificate-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.gpd-certificate-id {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.gpd-certificate-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.gpd-certificate-date-item {
+  display: flex;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.gpd-certificate-date-label {
+  font-weight: 500;
+  margin-right: 0.25rem;
+}
+
+.gpd-certificate-date-value {
+  color: #374151;
+}
+
+.gpd-expired-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #fef2f2; /* Light red background */
+  color: #ef4444; /* Red text */
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Review Section Styles (existing, kept for context) */
 .gpd-reviews-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding-top: 1rem; /* Add some padding from the info section */
-  border-top: 1px solid #e5e7eb; /* Separator line */
   margin-top: 1rem; /* Margin above the separator */
   overflow: scroll;
   scrollbar-width: thin;
 }
-
 .gpd-reviews-title {
   font-size: 1.5rem;
   font-weight: bold;
   color: #111827;
   margin-bottom: 0.5rem;
 }
-
 .gpd-reviews-list {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
-
 .gpd-review-item {
   background-color: #f9fafb; /* Light background for each review */
   border: 1px solid #e5e7eb;
@@ -297,7 +420,6 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .gpd-reviewer-header {
   display: flex;
   justify-content: flex-end; /* Align avatar and name to the right */
@@ -305,7 +427,6 @@
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
-
 .gpd-reviewer-avatar-container {
   width: 2.5rem; /* 40px */
   height: 2.5rem; /* 40px */
@@ -313,53 +434,44 @@
   overflow: hidden;
   flex-shrink: 0;
 }
-
 .gpd-reviewer-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .gpd-reviewer-name {
   font-weight: 600;
   color: #111827;
   font-size: 0.9rem;
 }
-
 .gpd-review-comment {
   font-size: 0.875rem;
   color: #374151;
   line-height: 1.5;
   margin-top: 0.5rem; /* Space below header */
 }
-
 .gpd-review-rating {
   display: flex;
   gap: 0.25rem;
   margin-top: 0.5rem;
 }
-
 .gpd-star-icon {
   width: 1rem;
   height: 1rem;
 }
-
 .gpd-star-filled {
   color: #facc15; /* yellow-500 */
   fill: #facc15; /* fill yellow */
 }
-
 .gpd-star-empty {
   color: #d1d5db; /* gray-300 */
   fill: none; /* no fill */
 }
-
 .gpd-review-date {
   font-size: 0.75rem;
   color: #6b7280;
   margin-top: 0.25rem;
 }
-
 .gpd-no-reviews {
   text-align: center;
   color: #6b7280;
