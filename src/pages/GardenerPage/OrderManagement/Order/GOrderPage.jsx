@@ -4,42 +4,53 @@ import { EyeFilled } from "@ant-design/icons";
 import GOrderDetail from "./GOrderDetail";
 import "./GOrderPage.css";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
+import Paginate from "../../../../components/paginate/Paginate";
 
 function GOrderPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeFilter, setActiveFilter] = useState("PENDING");
   const [showOrderDetail, setShowOrderDetail] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-
   const [orders, setOrders] = useState([]);
 
+  //Paginate variable
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalResult, setTotalResult] = useState();
+
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await gardenerOrderService.getGardenerOrder(gardenerId);
-
-        setOrders(result.items);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchOrder();
-  }, []);
+  }, [currentPage, activeFilter]);
+
+  const fetchOrder = async () => {
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await gardenerOrderService.getGardenerOrder(
+        gardenerId,
+        currentPage,
+        10,
+        "Status",
+        activeFilter
+      );
+
+      setOrders(result.items);
+      setTotalPage(result.totalPages);
+      setTotalResult(result.total);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlePagChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const filterTabs = [
-    { key: "all", label: "Tất cả", count: 6 },
-    { key: "pending", label: "Chờ xử lý", count: 1 },
-    { key: "delivering", label: "Đang giao", count: 1 },
-    { key: "completed", label: "Hoàn thành", count: 4 },
+    { key: "PENDING", label: "Chờ xử lý" },
+    { key: "PREPARING", label: "Chuẩn bị hàng" },
+    { key: "DELIVERING", label: "Đang giao" },
+    { key: "COMPLETED", label: "Hoàn thành" },
+    { key: "CANCELLED", label: "Đã hủy" },
   ];
-
-  const filteredOrders = Array.isArray(orders)
-    ? activeFilter === "all"
-      ? orders || []
-      : (orders || []).filter((order) => order.status === activeFilter)
-    : [];
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
@@ -61,18 +72,21 @@ function GOrderPage() {
         <h1 className="gorder-page-title">Quản lý đơn hàng</h1>
 
         {/* Filter Tabs */}
-        <div className="gorder-filter-tabs">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.key}
-              className={`gorder-filter-tab ${
-                activeFilter === tab.key ? "gorder-active" : ""
-              }`}
-              onClick={() => handleFilterChange(tab.key)}
-            >
-              {tab.label} ({tab.count})
-            </button>
-          ))}
+        <div className="gorder-header-bottom">
+          <div className="gorder-filter-tabs">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`gorder-filter-tab ${
+                  activeFilter === tab.key ? "gorder-active" : ""
+                }`}
+                onClick={() => handleFilterChange(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="gorder-search-container"></div>
         </div>
 
         {/* Orders Table */}
@@ -90,8 +104,8 @@ function GOrderPage() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(filteredOrders) &&
-                filteredOrders.map((order) => (
+              {Array.isArray(orders) &&
+                orders.map((order) => (
                   <tr key={order.id} className="gorder-table-row">
                     <td className="gorder-td">{order.orderId}</td>
                     <td className="gorder-td">{order.retailerId}</td>
@@ -122,7 +136,7 @@ function GOrderPage() {
           </table>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination
         <div className="gorder-pagination">
           <div className="gorder-pagination-info"></div>
           <div className="gpost-pagination-controls">
@@ -139,7 +153,14 @@ function GOrderPage() {
             ))}
             <button className="gpost-pagination-btn">›</button>
           </div>
-        </div>
+        </div> */}
+
+        <Paginate
+          currentPage={currentPage}
+          totalPages={totalPage}
+          totalResults={totalResult}
+          onPageChange={handlePagChange}
+        />
       </div>
       {showOrderDetail && (
         <GOrderDetail

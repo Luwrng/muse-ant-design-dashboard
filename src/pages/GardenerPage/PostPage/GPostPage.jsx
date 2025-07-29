@@ -4,6 +4,7 @@ import GPostDetailModal from "./GPostDetailModal";
 import GDisableConfirmModal from "./GDisableConfirmModal";
 import GCreatePostModal from "./GCreatePostModal";
 import GUpdatePostModal from "./GUpdatePostModal";
+import Paginate from "../../../components/paginate/Paginate";
 
 import productService from "../../services/apiServices/productService";
 
@@ -11,44 +12,56 @@ import "./GPostPage.css";
 import postService from "../../services/apiServices/postService";
 
 function GPostPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("ACTIVE");
   const [selectedPost, setSelectedPost] = useState(null);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const [showDisablePopup, setShowDisablePopup] = useState(false);
 
-  // const [filterPosts, setFilterPosts] = useState([]);
   const [posts, setPosts] = useState([]);
   const [productList, setProducts] = useState([]);
 
-  const [totalPages, setTotalPages] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [activeFilter, setActiveFilter] = useState("ACTIVE");
+
+  //Paginate variable
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalResult, setTotalResult] = useState();
 
   // #region Fetching data
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    const fetchProducts = async () => {
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await productService.getAllGardenerProducts(
+        gardenerId,
+        true
+      );
+      setProducts(result);
+    };
 
-  const fetchData = async (currentPage) => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, searchTerm, activeFilter]);
+
+  const fetchData = async () => {
     try {
       const gardenerId = localStorage.getItem("account_id");
-      const gardenerProducts = await productService.getGardenerProducts(
-        gardenerId
-      );
-      setProducts(gardenerProducts.items);
-
       const gardenerPosts = await postService.getGardenerPosts(
         gardenerId,
         currentPage,
         10,
-        "Status"
+        "Status",
+        activeFilter,
+        searchTerm
       );
       setPosts(gardenerPosts.items);
-      setTotalPages(gardenerPosts.totalPages);
-      setTotalResults(gardenerPosts.total);
+      setTotalPage(gardenerPosts.totalPages);
+      setTotalResult(gardenerPosts.total);
     } catch (err) {
       console.log(err);
     }
@@ -56,17 +69,10 @@ function GPostPage() {
   // #endregion
 
   const filterTabs = [
-    { id: "all", label: "Hoạt động", count: 2 },
-    { id: "expired", label: "Ngưng hoạt động" },
-    { id: "banned", label: "Bị cấm" },
+    { id: "ACTIVE", label: "Hoạt động" },
+    { id: "INACTIVE", label: "Ngưng hoạt động" },
+    { id: "BANNED", label: "Bị cấm" },
   ];
-
-  const validPosts = Array.isArray(posts) ? posts : [];
-
-  const filteredPosts =
-    activeFilter === "ACTIVE"
-      ? validPosts
-      : validPosts.filter((post) => post.status === activeFilter);
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
@@ -169,6 +175,22 @@ function GPostPage() {
     setSelectedPost(null);
   };
 
+  const SearchIcon = () => (
+    <svg
+      className="gpost-icon gpost-search-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+      />
+    </svg>
+  );
+
   return (
     <div className="gpost-article-management">
       <div className="gpost-header">
@@ -194,22 +216,29 @@ function GPostPage() {
               <button
                 key={tab.id}
                 className={`gpost-filter-tab ${
-                  activeFilter === tab.label ? "active" : ""
+                  activeFilter === tab.id ? "active" : ""
                 }`}
-                onClick={() => handleFilterChange(tab.label)}
+                onClick={() => handleFilterChange(tab.id)}
               >
-                {tab.label} ({tab.count})
+                {tab.label}
               </button>
             ))}
           </div>
 
           <div className="gpost-search-filter-tabs">
             <div className="gpost-search-container">
+              <SearchIcon className="gpost-search-icon" />
               <input
                 type="text"
-                placeholder="Tìm kiếm bài viết..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Tìm kiếm bài viết theo tiêu đề ..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setSearchTerm(searchInput); // this triggers the real search
+                    setCurrentPage(1); // reset pagination
+                  }
+                }}
                 className="gpost-search-input"
               />
             </div>
@@ -219,8 +248,8 @@ function GPostPage() {
       </div>
 
       <div className="gpost-articles-grid">
-        {Array.isArray(filteredPosts) &&
-          filteredPosts.map((article) => (
+        {Array.isArray(posts) &&
+          posts.map((article) => (
             <div
               key={article.postId}
               className="gpost-article-card"
@@ -252,23 +281,13 @@ function GPostPage() {
           ))}
       </div>
 
-      <div className="gorder-pagination">
-        <div className="gorder-pagination-info"></div>
-        <div className="gpost-pagination-controls">
-          <button className="gpost-pagination-btn">‹</button>
-          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-            <button
-              key={index}
-              className={`gpost-pagination-btn ${
-                page === 1 ? "gpost-active" : ""
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button className="gpost-pagination-btn">›</button>
-        </div>
-      </div>
+      <Paginate
+        currentPage={currentPage}
+        totalPages={totalPage}
+        totalResults={totalResult}
+        onPageChange={handlePageChange}
+      />
+
       {/* Post Detail Popup */}
       {selectedPost && (
         <GPostDetailModal

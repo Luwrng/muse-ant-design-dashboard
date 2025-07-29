@@ -1,0 +1,35 @@
+.subscription-tabs-container {
+  max-width: 90vw;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+.subscription-tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+.subscription-tab-button {
+  padding: 12px 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+.subscription-tab-button:hover {
+  color: #00ad0e;
+}
+.subscription-tab-button.active {
+  color: #108600;
+  border-bottom-color: #108600;
+  font-weight: 600;
+}
+.subscription-tabs-content {
+  padding-top: 10px;
+}

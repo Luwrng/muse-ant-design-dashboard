@@ -2,7 +2,7 @@ import React from "react";
 import "./Paginate.css";
 
 function Paginate({ currentPage, totalPages, totalResults, onPageChange }) {
-  if (totalPages <= 1) return null;
+  if (totalPages < 1) return null;
 
   const renderPageNumbers = () => {
     const pages = [];

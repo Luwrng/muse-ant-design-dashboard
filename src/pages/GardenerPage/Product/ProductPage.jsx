@@ -7,13 +7,15 @@ import UpdateProductPrice from "./UpdateProductPrice";
 import LoadingPage from "./Loading/LoadingPage";
 import PErrorModal from "./ErrorModal/PErrorModal";
 import PSuccessModal from "./SuccessModal/PSuccessModal";
+import Paginate from "../../../components/paginate/Paginate";
 
 import "./ProductPage.css";
 import productService from "../../services/apiServices/productService";
 
 function GardenerProductPage() {
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("ACTIVE");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState(null); // State to manage open dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -30,47 +32,30 @@ function GardenerProductPage() {
   const [showError, setShowError] = useState(false);
   const [errorData, setErrorData] = useState({ title: "", message: "" });
 
-  const [activeFilter, setActiveFilter] = useState("all");
-
   const [filterTabs, setFilterTabs] = useState([
-    { id: "all", label: "Tất cả", count: 0 },
-    { id: "ACTIVE", label: "Đang bán", count: 0 },
-    { id: "INACTIVE", label: "Hết hàng", count: 0 },
+    { id: "ACTIVE", label: "Đang bán" },
+    { id: "INACTIVE", label: "Hết hàng" },
   ]);
 
   const [products, setProducts] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPage, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  const [totalResult, setTotalResults] = useState(0);
 
   useEffect(() => {
-    fetchProducts(currentPage);
-  }, [currentPage]);
+    fetchProducts();
+  }, [currentPage, activeTab, searchTerm]);
 
-  useEffect(() => {
-    setFilterTabs([
-      { id: "all", label: "Tất cả", count: products.length },
-      {
-        id: "ACTIVE",
-        label: "Đang bán",
-        count: products.filter((p) => p.status === "ACTIVE").length,
-      },
-      {
-        id: "INACTIVE",
-        label: "Hết hàng",
-        count: products.filter((p) => p.status === "INACTIVE").length,
-      },
-    ]);
-  }, [products]);
-
-  const fetchProducts = async (currentPage) => {
+  const fetchProducts = async () => {
     try {
       const gardenerId = localStorage.getItem("account_id");
       const result = await productService.getGardenerProducts(
         gardenerId,
         currentPage,
         10,
-        "Status"
+        "Status",
+        activeTab,
+        searchTerm
       );
 
       setProducts(result.items);
@@ -81,15 +66,6 @@ function GardenerProductPage() {
       //Add modal later
     }
   };
-
-  //Filter products based on active filter
-  const filteredProducts = products.filter((product) => {
-    const matchesTab = activeTab === "all" || product.status === activeTab;
-    const matchesSearch = product.productName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
 
   // Close dropdown when clicking outside
   const dropdownRef = useRef(null);
@@ -137,38 +113,6 @@ function GardenerProductPage() {
     </svg>
   );
 
-  const ChevronLeftIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="m15 18-6-6 6-6"
-      />
-    </svg>
-  );
-
-  const ChevronRightIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="m9 18 6-6-6-6"
-      />
-    </svg>
-  );
-
   const handleProductClick = (product) => {
     setIsDropdownOpen(false);
     setSelectedProduct(product);
@@ -178,6 +122,11 @@ function GardenerProductPage() {
   const handleCloseDetail = () => {
     setIsDetailModalOpen(false);
     setSelectedProduct(null);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchProducts(page);
   };
 
   //Create Product
@@ -309,7 +258,7 @@ function GardenerProductPage() {
               }`}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label} ({tab.count})
+              {tab.label}
             </button>
           ))}
         </div>
@@ -319,8 +268,14 @@ function GardenerProductPage() {
             type="search"
             placeholder="Tìm kiếm sản phẩm..."
             className="gproduct-input gproduct-search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearchTerm(searchInput); // this triggers the real search
+                setCurrentPage(1); // reset pagination
+              }
+            }}
           />
         </div>
       </div>
@@ -340,8 +295,8 @@ function GardenerProductPage() {
             </tr>
           </thead>
           <tbody className="gproduct-table-body">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
+            {products.length > 0 ? (
+              products.map((product) => (
                 <tr key={product.productId} className="gproduct-table-row">
                   <td className="gproduct-table-cell gproduct-cell-name">
                     {product.productName}
@@ -440,7 +395,7 @@ function GardenerProductPage() {
         </table>
       </div>
 
-      <div className="gorder-pagination">
+      {/* <div className="gorder-pagination">
         <div className="gorder-pagination-info"></div>
         <div className="gpost-pagination-controls">
           <button className="gpost-pagination-btn">‹</button>
@@ -456,7 +411,13 @@ function GardenerProductPage() {
           ))}
           <button className="gpost-pagination-btn">›</button>
         </div>
-      </div>
+      </div> */}
+      <Paginate
+        currentPage={currentPage}
+        totalPages={totalPage}
+        totalResults={totalResult}
+        onPageChange={handlePageChange}
+      />
 
       {/* Product Detail */}
       <ProductDetailPage

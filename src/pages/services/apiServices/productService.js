@@ -5,9 +5,22 @@ const productEndpoint = "/products";
 const productCateEndpoint = "/categories";
 
 //Products
-const getGardenerProducts = async (gardenerId, page, size, sortField) => {
+const getGardenerProducts = async (
+  gardenerId,
+  page,
+  size,
+  filterField,
+  filterValue,
+  search
+) => {
   return await httpService.get(`${gardenerEndpoint}/${gardenerId}/products`, {
-    params: { page, size, sortField },
+    params: { page, size, filterField, filterValue, search },
+  });
+};
+
+const getAllGardenerProducts = async (gardenerId, getAll) => {
+  return await httpService.get(`${gardenerEndpoint}/${gardenerId}/products`, {
+    params: { getAll },
   });
 };
 
@@ -83,6 +96,7 @@ const deleteProductCategory = async (categoryId) => {
 const productService = {
   //Product
   getGardenerProducts,
+  getAllGardenerProducts,
   changeProductStatus,
   createProduct,
 
