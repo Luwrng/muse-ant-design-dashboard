@@ -4,7 +4,7 @@ const accountEndpoint = "/accounts";
 const orderEndpoint = "/orders";
 
 //Get, Update (change sstatus), have order delivery(Create, update status)
-const getGardenerOrder = async (accountId) => {
+const getGardenerOrder = async (accountId, page, size) => {
   return await httpService.get(`${accountEndpoint}/${accountId}/orders`);
 };
 

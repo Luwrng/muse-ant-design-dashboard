@@ -5,6 +5,7 @@ import { EyeFilled, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import GRequestAppointment from "./GRequestAppointment";
 import GAppointmentDetail from "./GAppointmentDetail";
 import GAppointmentCancelModal from "./GAppointmentCancelModal";
+import Paginate from "../../../components/paginate/Paginate";
 import "./GAppointmentPage.css";
 import appointmentService from "../../services/apiServices/appointmentService";
 
@@ -165,35 +166,51 @@ function GAppointmentPage() {
   const [pendingAppointment, setPendingAppointments] = useState([]);
   const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
+  //Paginate variables
+  const [totalPage, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResult, setTotalResults] = useState(0);
+
   const today = new Date();
 
   useEffect(() => {
-    const fetchPendingAppointment = async () => {
-      try {
-        if (activeTab === "wait-approve") {
-          const gardenerId = localStorage.getItem("account_id");
-          const result =
-            await appointmentService.getAccountRequestedAppointments(
-              gardenerId
-            );
+    fetchPendingAppointment(currentPage);
+  }, [activeTab, currentPage]);
 
-          setPendingAppointments(result.items);
-        } else if (activeTab === "schedule") {
-          const gardenerId = localStorage.getItem("account_id");
-          const result =
-            await appointmentService.getAccountScheduledAppointments(
-              gardenerId
-            );
+  const fetchPendingAppointment = async (page) => {
+    try {
+      if (activeTab === "wait-approve") {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await appointmentService.getAccountRequestedAppointments(
+          gardenerId,
+          currentPage,
+          10
+        );
 
-          setScheduledAppointments(result);
-        }
-      } catch (err) {
-        console.log(err);
+        setPendingAppointments(result.items);
+        setTotalPages(result.totalPages);
+        setTotalResults(result.total);
+      } else if (activeTab === "schedule") {
+        const gardenerId = localStorage.getItem("account_id");
+        const result = await appointmentService.getAccountScheduledAppointments(
+          gardenerId
+        );
+
+        setScheduledAppointments(result);
       }
-    };
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    fetchPendingAppointment();
+  useEffect(() => {
+    // Reset page to 1 when switching tab
+    setCurrentPage(1);
   }, [activeTab]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   // #region Calendar functions
   // Function to get the start of the week (Monday)
@@ -546,6 +563,13 @@ function GAppointmentPage() {
                     ))}
                 </tbody>
               </table>
+
+              <Paginate
+                currentPage={currentPage}
+                totalPages={totalPage}
+                totalResults={totalResult}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         )}

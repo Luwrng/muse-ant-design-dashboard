@@ -7,6 +7,7 @@ import UpdateProductPrice from "./UpdateProductPrice";
 import LoadingPage from "./Loading/LoadingPage";
 import PErrorModal from "./ErrorModal/PErrorModal";
 import PSuccessModal from "./SuccessModal/PSuccessModal";
+import Paginate from "../../../components/paginate/Paginate";
 
 import "./ProductPage.css";
 import productService from "../../services/apiServices/productService";
@@ -39,9 +40,9 @@ function GardenerProductPage() {
   ]);
 
   const [products, setProducts] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPage, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  const [totalResult, setTotalResults] = useState(0);
 
   useEffect(() => {
     fetchProducts(currentPage);
@@ -137,38 +138,6 @@ function GardenerProductPage() {
     </svg>
   );
 
-  const ChevronLeftIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="m15 18-6-6 6-6"
-      />
-    </svg>
-  );
-
-  const ChevronRightIcon = () => (
-    <svg
-      className="gproduct-icon"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="m9 18 6-6-6-6"
-      />
-    </svg>
-  );
-
   const handleProductClick = (product) => {
     setIsDropdownOpen(false);
     setSelectedProduct(product);
@@ -178,6 +147,11 @@ function GardenerProductPage() {
   const handleCloseDetail = () => {
     setIsDetailModalOpen(false);
     setSelectedProduct(null);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchProducts(page);
   };
 
   //Create Product
@@ -309,7 +283,7 @@ function GardenerProductPage() {
               }`}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label} ({tab.count})
+              {tab.label}
             </button>
           ))}
         </div>
@@ -440,7 +414,7 @@ function GardenerProductPage() {
         </table>
       </div>
 
-      <div className="gorder-pagination">
+      {/* <div className="gorder-pagination">
         <div className="gorder-pagination-info"></div>
         <div className="gpost-pagination-controls">
           <button className="gpost-pagination-btn">‹</button>
@@ -456,7 +430,13 @@ function GardenerProductPage() {
           ))}
           <button className="gpost-pagination-btn">›</button>
         </div>
-      </div>
+      </div> */}
+      <Paginate
+        currentPage={currentPage}
+        totalPages={totalPage}
+        totalResults={totalResult}
+        onPageChange={handlePageChange}
+      />
 
       {/* Product Detail */}
       <ProductDetailPage

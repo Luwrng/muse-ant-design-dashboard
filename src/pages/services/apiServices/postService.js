@@ -4,9 +4,16 @@ const gardenerEndpoint = "/gardener";
 const postEndpoint = "/posts";
 
 //Get, Create, Update
-const getGardenerPosts = async (gardenerId, page, size, sortField) => {
+const getGardenerPosts = async (
+  gardenerId,
+  page,
+  size,
+  filterField,
+  filterValue,
+  search
+) => {
   return await httpService.get(`${gardenerEndpoint}/${gardenerId}/posts`, {
-    params: { page, size, sortField },
+    params: { page, size, filterField, filterValue, search },
   });
 };
 

@@ -4,41 +4,57 @@ import { EyeFilled } from "@ant-design/icons";
 import GOrderDetail from "./GOrderDetail";
 import "./GOrderPage.css";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
+import Paginate from "../../../../components/paginate/Paginate";
 
 function GOrderPage() {
   const [activeFilter, setActiveFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
   const [showOrderDetail, setShowOrderDetail] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-
   const [orders, setOrders] = useState([]);
 
+  //Paginate variable
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalResult, setTotalResult] = useState();
+
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const gardenerId = localStorage.getItem("account_id");
-        const result = await gardenerOrderService.getGardenerOrder(gardenerId);
+    fetchOrder(currentPage);
+  }, [currentPage]);
 
-        setOrders(result.items);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const fetchOrder = async (currentPage) => {
+    try {
+      const gardenerId = localStorage.getItem("account_id");
+      const result = await gardenerOrderService.getGardenerOrder(
+        gardenerId,
+        currentPage,
+        10
+      );
 
-    fetchOrder();
-  }, []);
+      setOrders(result.items);
+      setTotalPage(result.totalPages);
+      setTotalResult(result.total);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlePagChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const filterTabs = [
-    { key: "all", label: "Tất cả", count: 6 },
-    { key: "pending", label: "Chờ xử lý", count: 1 },
-    { key: "delivering", label: "Đang giao", count: 1 },
-    { key: "completed", label: "Hoàn thành", count: 4 },
+    { key: "all", label: "Tất cả" },
+    { key: "pending", label: "Chờ xử lý" },
+    { key: "delivering", label: "Đang giao" },
+    { key: "completed", label: "Hoàn thành" },
   ];
 
   const filteredOrders = Array.isArray(orders)
     ? activeFilter === "all"
       ? orders || []
-      : (orders || []).filter((order) => order.status === activeFilter)
+      : (orders || []).filter(
+          (order) => order.status.toLowerCase() === activeFilter
+        )
     : [];
 
   const handleFilterChange = (filterKey) => {
@@ -70,7 +86,7 @@ function GOrderPage() {
               }`}
               onClick={() => handleFilterChange(tab.key)}
             >
-              {tab.label} ({tab.count})
+              {tab.label}
             </button>
           ))}
         </div>
@@ -122,7 +138,7 @@ function GOrderPage() {
           </table>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination
         <div className="gorder-pagination">
           <div className="gorder-pagination-info"></div>
           <div className="gpost-pagination-controls">
@@ -139,7 +155,14 @@ function GOrderPage() {
             ))}
             <button className="gpost-pagination-btn">›</button>
           </div>
-        </div>
+        </div> */}
+
+        <Paginate
+          currentPage={currentPage}
+          totalPages={totalPage}
+          totalResults={totalResult}
+          onPageChange={handlePagChange}
+        />
       </div>
       {showOrderDetail && (
         <GOrderDetail

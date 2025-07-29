@@ -13,9 +13,12 @@ const getAccountAppointments = async (accountId, filterField, filterValue) => {
   );
 };
 
-const getAccountRequestedAppointments = async (accountId) => {
+const getAccountRequestedAppointments = async (accountId, page, size) => {
   return await httpService.get(
-    `${accountEndpoint}/${accountId}/appointments/requested`
+    `${accountEndpoint}/${accountId}/appointments/requested`,
+    {
+      params: { page, size },
+    }
   );
 };
 
