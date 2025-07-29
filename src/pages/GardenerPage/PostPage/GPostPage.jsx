@@ -34,8 +34,11 @@ function GPostPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       const gardenerId = localStorage.getItem("account_id");
-      const result = await productService.getGardenerProducts(gardenerId);
-      setProducts(result.items);
+      const result = await productService.getAllGardenerProducts(
+        gardenerId,
+        true
+      );
+      setProducts(result);
     };
 
     fetchProducts();
@@ -172,6 +175,22 @@ function GPostPage() {
     setSelectedPost(null);
   };
 
+  const SearchIcon = () => (
+    <svg
+      className="gpost-icon gpost-search-icon"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+      />
+    </svg>
+  );
+
   return (
     <div className="gpost-article-management">
       <div className="gpost-header">
@@ -208,6 +227,7 @@ function GPostPage() {
 
           <div className="gpost-search-filter-tabs">
             <div className="gpost-search-container">
+              <SearchIcon className="gpost-search-icon" />
               <input
                 type="text"
                 placeholder="Tìm kiếm bài viết theo tiêu đề ..."

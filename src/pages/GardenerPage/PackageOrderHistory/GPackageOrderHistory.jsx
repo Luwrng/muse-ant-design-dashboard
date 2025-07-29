@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { CreditCard, Eye } from "lucide-react";
 import { useState, useMemo } from "react";
 import GPackageOrderHistoryDetail from "./GPackageOrderHistoryDetail";
+import Paginate from "../../../components/paginate/Paginate";
 
 import gardenerHistoryService from "../../services/apiServices/gardenerHistoryService";
 import "./GPackageOrderHistory.css";
@@ -13,28 +14,40 @@ function GPackageOrderHistory() {
   const [selectedPaymentDetail, setSelectedPaymentDetail] = useState(null);
 
   const [paymentHistory, setPaymentHistory] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
   useEffect(() => {
     const fetchPaymentHistory = async () => {
       try {
         const gardenerId = localStorage.getItem("account_id");
         const result = await gardenerHistoryService.getPaymentHistory(
-          gardenerId
+          gardenerId,
+          currentPage,
+          10
         );
         setPaymentHistory(result.items);
+        setTotalPages(result.totalPages);
+        setTotalResults(result.total);
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchPaymentHistory();
-  }, []);
+  }, [currentPage]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // const handleSearchChange = (event) => {
+  //   setSearchTerm(event.target.value);
+  // };
 
-  const handleStatusFilterChange = (event) => {
-    setFilterStatus(event.target.value);
+  // const handleStatusFilterChange = (event) => {
+  //   setFilterStatus(event.target.value);
+  // };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const handleViewDetails = (payment) => {
@@ -47,36 +60,35 @@ function GPackageOrderHistory() {
     setSelectedPaymentDetail(null);
   };
 
-  const filteredPayments = useMemo(() => {
-    // console.log(paymentHistory);
-    let filtered = paymentHistory;
+  // const filteredPayments = useMemo(() => {
+  //   // console.log(paymentHistory);
+  //   let filtered = paymentHistory;
 
-    if (searchTerm && Array.isArray(filtered)) {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (payment) =>
-          payment.packageName.toLowerCase().includes(lowerCaseSearchTerm) ||
-          payment.paymentId.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-    }
+  //   if (searchTerm && Array.isArray(filtered)) {
+  //     const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  //     filtered = filtered.filter(
+  //       (payment) =>
+  //         payment.packageName.toLowerCase().includes(lowerCaseSearchTerm) ||
+  //         payment.paymentId.toLowerCase().includes(lowerCaseSearchTerm)
+  //     );
+  //   }
 
-    if (filterStatus !== "All Status") {
-      filtered = filtered.filter((payment) => payment.status === filterStatus);
-    }
+  //   if (filterStatus !== "All Status") {
+  //     filtered = filtered.filter((payment) => payment.status === filterStatus);
+  //   }
 
-    return filtered;
-  }, [searchTerm, filterStatus, paymentHistory]);
+  //   return filtered;
+  // }, [searchTerm, filterStatus, paymentHistory]);
 
   return (
     <div className="gpayhistory-container">
-      <header className="gpayhistory-header">
+      {/* <header className="gpayhistory-header">
         <div className="gpayhistory-title-section">
-          {/* <CreditCard className="gpayhistory-icon" /> */}
           <h1 className="gpayhistory-title">Lịch sử thanh toán</h1>
         </div>
-      </header>
+      </header> */}
 
-      <div className="gpayhistory-controls">
+      {/* <div className="gpayhistory-controls">
         <input
           type="text"
           placeholder="Tìm kiếm theo tên gói dịch vụ và id thanh toán..."
@@ -94,13 +106,13 @@ function GPackageOrderHistory() {
           <option value="FAILED">Failed</option>
           <option value="SUCCESS">Success</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="gpayhistory-table-wrapper">
         <table className="gpayhistory-table">
           <thead>
             <tr>
-              <th>Payment Id</th>
+              <th>Id thanh toán</th>
               <th>Tên gói dịch vụ</th>
               <th>Phương thức thanh toán</th>
               <th>Tổng tiền thanh toán</th>
@@ -110,14 +122,16 @@ function GPackageOrderHistory() {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(filteredPayments) &&
-              filteredPayments.map((payment) => (
+            {Array.isArray(paymentHistory) &&
+              paymentHistory.map((payment) => (
                 <tr key={payment.paymentId}>
                   <td>{payment.paymentId}</td>
                   <td>{payment.packageName}</td>
                   <td>{payment.paymentMethod}</td>
                   <td>{payment.paymentAmount}</td>
-                  <td>{payment.paymentDate}</td>
+                  <td>
+                    {new Date(payment.paymentDate).toISOString().split("T")[0]}
+                  </td>
                   <td>
                     <span
                       className={`gpayhistory-status-badge gpayhistory-status-${payment.status.toLowerCase()}`}
@@ -139,6 +153,12 @@ function GPackageOrderHistory() {
           </tbody>
         </table>
       </div>
+      <Paginate
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalResults={totalResults}
+        onPageChange={handlePageChange}
+      />
 
       {showDetailModal && selectedPaymentDetail && (
         <GPackageOrderHistoryDetail

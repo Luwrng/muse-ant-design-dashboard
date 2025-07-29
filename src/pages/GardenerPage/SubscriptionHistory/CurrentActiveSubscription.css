@@ -1,0 +1,95 @@
+.active-subscription-detail-container {
+  font-family: sans-serif;
+  padding: 20px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  max-width: 800px; /* Adjust max-width for a single card view */
+}
+
+.active-subscription-detail-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.active-subscription-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.active-subscription-info p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.active-subscription-info strong {
+  color: #222;
+  min-width: 150px; /* Align labels */
+  display: inline-block;
+}
+
+.active-subscription-status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: #e6ffe6;
+  color: #008000;
+}
+
+.active-subscription-view-details-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  align-self: flex-end; /* Align button to the right */
+  margin-top: 15px;
+}
+
+.active-subscription-view-details-button:hover {
+  background-color: #0056b3;
+}
+
+.no-active-subscription-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #777;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

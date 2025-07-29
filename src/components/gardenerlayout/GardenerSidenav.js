@@ -88,15 +88,7 @@ function GardenerSidenav() {
         <Menu.Item key="package-payment">
           <NavLink to="/gardener/package-payment">
             <FontAwesomeIcon icon={faCreditCard} />
-            <span>Lịch sử thanh toán gói</span>
-          </NavLink>
-        </Menu.Item>
-
-        {/* Quản lý tin nhắn */}
-        <Menu.Item key="subscription-history">
-          <NavLink to="/gardener/subscription-history">
-            <FontAwesomeIcon icon={faClockRotateLeft} />
-            <span>Gói đã mua</span>
+            <span>Thông tin mua gói</span>
           </NavLink>
         </Menu.Item>
 

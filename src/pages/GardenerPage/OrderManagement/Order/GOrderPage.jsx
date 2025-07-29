@@ -7,7 +7,7 @@ import gardenerOrderService from "../../../services/apiServices/gardenerOrderSer
 import Paginate from "../../../../components/paginate/Paginate";
 
 function GOrderPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState("PENDING");
   const [showOrderDetail, setShowOrderDetail] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -18,16 +18,18 @@ function GOrderPage() {
   const [totalResult, setTotalResult] = useState();
 
   useEffect(() => {
-    fetchOrder(currentPage);
-  }, [currentPage]);
+    fetchOrder();
+  }, [currentPage, activeFilter]);
 
-  const fetchOrder = async (currentPage) => {
+  const fetchOrder = async () => {
     try {
       const gardenerId = localStorage.getItem("account_id");
       const result = await gardenerOrderService.getGardenerOrder(
         gardenerId,
         currentPage,
-        10
+        10,
+        "Status",
+        activeFilter
       );
 
       setOrders(result.items);
@@ -43,19 +45,12 @@ function GOrderPage() {
   };
 
   const filterTabs = [
-    { key: "all", label: "Tất cả" },
-    { key: "pending", label: "Chờ xử lý" },
-    { key: "delivering", label: "Đang giao" },
-    { key: "completed", label: "Hoàn thành" },
+    { key: "PENDING", label: "Chờ xử lý" },
+    { key: "PREPARING", label: "Chuẩn bị hàng" },
+    { key: "DELIVERING", label: "Đang giao" },
+    { key: "COMPLETED", label: "Hoàn thành" },
+    { key: "CANCELLED", label: "Đã hủy" },
   ];
-
-  const filteredOrders = Array.isArray(orders)
-    ? activeFilter === "all"
-      ? orders || []
-      : (orders || []).filter(
-          (order) => order.status.toLowerCase() === activeFilter
-        )
-    : [];
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
@@ -77,18 +72,21 @@ function GOrderPage() {
         <h1 className="gorder-page-title">Quản lý đơn hàng</h1>
 
         {/* Filter Tabs */}
-        <div className="gorder-filter-tabs">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.key}
-              className={`gorder-filter-tab ${
-                activeFilter === tab.key ? "gorder-active" : ""
-              }`}
-              onClick={() => handleFilterChange(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="gorder-header-bottom">
+          <div className="gorder-filter-tabs">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`gorder-filter-tab ${
+                  activeFilter === tab.key ? "gorder-active" : ""
+                }`}
+                onClick={() => handleFilterChange(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="gorder-search-container"></div>
         </div>
 
         {/* Orders Table */}
@@ -106,8 +104,8 @@ function GOrderPage() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(filteredOrders) &&
-                filteredOrders.map((order) => (
+              {Array.isArray(orders) &&
+                orders.map((order) => (
                   <tr key={order.id} className="gorder-table-row">
                     <td className="gorder-td">{order.orderId}</td>
                     <td className="gorder-td">{order.retailerId}</td>

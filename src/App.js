@@ -30,7 +30,6 @@ import GardenerMain from "./components/gardenerlayout/GardenerMain";
 import GardenerLandingPage from "./pages/GardenerPage/Landing/LandingPage";
 import GardenerProductPage from "./pages/GardenerPage/Product/ProductPage";
 import GOrderPage from "./pages/GardenerPage/OrderManagement/Order/GOrderPage";
-import GProductCategory from "./pages/GardenerPage/ProductCategory/GProductCategory";
 import GPostPage from "./pages/GardenerPage/PostPage/GPostPage";
 import GAppointmentPage from "./pages/GardenerPage/Appointment/GAppointmentPage";
 import GServicePackage from "./pages/GardenerPage/ServicePackage/GServicePackage";
@@ -38,8 +37,8 @@ import GChatPage from "./pages/GardenerPage/Chatting/GChatPage";
 import GProfilePage from "./pages/GardenerPage/Profile/GProfilePage";
 import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
 import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
-import GSubscriptionHistory from "./pages/GardenerPage/SubscriptionHistory/GSubscriptionHistory";
 import GReportPage from "./pages/GardenerPage/Report/GReportPage";
+import SubscriptionTabs from "./pages/GardenerPage/SubscriptionHistory/SubscriptionTabs";
 
 //Payment
 import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
@@ -100,7 +99,8 @@ function App() {
             path="/gardener"
             render={() => (
               <GardenerMain>
-                <Switch>dashboard
+                <Switch>
+                  dashboard
                   <ProtectedRoute
                     path="/gardener/product"
                     component={GardenerProductPage}
@@ -143,14 +143,14 @@ function App() {
                   />
                   <ProtectedRoute
                     path="/gardener/package-payment"
-                    component={GPackageOrderHistory}
+                    component={SubscriptionTabs}
                     allowedRoles={["gardener", "retailer"]}
                   />
-                  <ProtectedRoute
+                  {/* <ProtectedRoute
                     path="/gardener/subscription-history"
-                    component={GSubscriptionHistory}
+                    component={SubscriptionTabs}
                     allowedRoles={["gardener", "retailer"]}
-                  />
+                  /> */}
                   <Route path="/gardener/report" component={GReportPage} />
                 </Switch>
               </GardenerMain>

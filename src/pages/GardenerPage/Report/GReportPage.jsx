@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Typography, message as AntMessage, Card, Select } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  message as AntMessage,
+  Card,
+  Select,
+} from "antd";
 import reportService from "../../services/apiServices/reportService";
 
 const { Title } = Typography;
@@ -8,7 +16,7 @@ const { TextArea } = Input;
 const GReportPage = () => {
   const [formData, setFormData] = useState({
     reportType: "",
-    targetId: "",
+    phoneNumber: "",
     targetType: "",
     subject: "",
     description: "",
@@ -26,11 +34,11 @@ const GReportPage = () => {
 
   const handleSubmit = async () => {
     try {
-      await reportService.reportGardener(formData);
+      await reportService.createUserReport(formData);
       AntMessage.success("Gửi báo cáo thành công!");
       setFormData({
         reportType: "",
-        targetId: "",
+        phoneNumber: "",
         targetType: "",
         subject: "",
         description: "",
@@ -44,25 +52,48 @@ const GReportPage = () => {
   };
 
   return (
-    <Card style={{ maxWidth: 700, margin: "40px auto", padding: 24, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+    <Card
+      style={{
+        maxWidth: 700,
+        margin: "40px auto",
+        padding: 24,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+      }}
+    >
       <Title level={3} style={{ textAlign: "center", marginBottom: 32 }}>
         Gửi Báo Cáo Đến Quản Trị Viên
       </Title>
       <Form layout="vertical" onFinish={handleSubmit}>
         <Form.Item label="Loại báo cáo" required>
-          <Input name="reportType" value={formData.reportType} onChange={handleChange} />
+          <Input
+            name="reportType"
+            value={formData.reportType}
+            onChange={handleChange}
+          />
         </Form.Item>
 
-        <Form.Item label="ID đối tượng" required>
-          <Input name="targetId" value={formData.targetId} onChange={handleChange} />
+        <Form.Item label="Số điện thoại" required>
+          <Input
+            name="targetId"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+          />
         </Form.Item>
 
         <Form.Item label="Loại đối tượng" required>
-          <Input name="targetType" value={formData.targetType} onChange={handleChange} />
+          <Input
+            name="targetType"
+            value={formData.targetType}
+            onChange={handleChange}
+          />
         </Form.Item>
 
         <Form.Item label="Tiêu đề" required>
-          <Input name="subject" value={formData.subject} onChange={handleChange} />
+          <Input
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+          />
         </Form.Item>
 
         <Form.Item label="Mô tả" required>
@@ -75,7 +106,11 @@ const GReportPage = () => {
         </Form.Item>
 
         <Form.Item label="Mức độ nghiêm trọng" required>
-          <Select name="severity" value={formData.severity} onChange={handleSelectChange}>
+          <Select
+            name="severity"
+            value={formData.severity}
+            onChange={handleSelectChange}
+          >
             <Select.Option value="low">Thấp</Select.Option>
             <Select.Option value="medium">Trung bình</Select.Option>
             <Select.Option value="high">Cao</Select.Option>
