@@ -228,7 +228,7 @@ function CreateProductPage({ onBack }) {
               <div className="cproduct-form-group cproduct-form-group-inline">
                 <div className="cproduct-form-group-half">
                   <label htmlFor="price" className="cproduct-form-label">
-                    Price <span className="cproduct-required">*</span>
+                  Giá<span className="cproduct-required">*</span>
                   </label>
                   <input
                     id="price"
@@ -271,7 +271,7 @@ function CreateProductPage({ onBack }) {
                 {/* Currency */}
                 <div className="cproduct-form-group-half">
                   <label htmlFor="currency" className="cproduct-form-label">
-                    Giá
+Tiền tệ
                   </label>
                   <select
                     id="currency"
@@ -446,7 +446,7 @@ function CreateProductPage({ onBack }) {
               Hủy
             </button>
             <button type="submit" className="cproduct-create-button">
-              Tạo sản phẩm
+              Tạo
             </button>
           </div>
         </form>

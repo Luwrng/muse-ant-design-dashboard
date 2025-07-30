@@ -237,24 +237,24 @@ function GDashboard() {
 
   return (
     <div className="gdashboard-container">
-      <h1 className="gdashboard-title">Bảng điều khiển</h1>
+      <h1 className="gdashboard-title">Tổng quan</h1>
 
       {/* Stats Cards */}
       <div className="gdashboard-stats-container">
         <div className="gdashboard-stat-card">
-          <h3>Tổng đơn hàng trong tháng</h3>
+          <h3> Đơn hàng trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.totalOrders}</p>
           <span className="gdashboard-stat-icon order-icon">📦</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Tổng đơn giao hàng trong tháng</h3>
+          <h3>Đơn giao hàng trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.orderDelivery}</p>
           <span className="gdashboard-stat-icon delivery-icon">🚚</span>
         </div>
 
         <div className="gdashboard-stat-card">
-          <h3>Số lượng các cuộc hẹn trong tháng</h3>
+          <h3>Các cuộc hẹn trong tháng</h3>
           <p className="gdashboard-stat-value">{dashboardData.appointments}</p>
           <span className="gdashboard-stat-icon appointment-icon">📅</span>
         </div>

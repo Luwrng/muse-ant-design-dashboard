@@ -74,6 +74,20 @@ function GPostPage() {
     { id: "BANNED", label: "Bị cấm" },
   ];
 
+  const translateStatus = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "Hoạt động";
+      case "INACTIVE":
+        return "Ngưng hoạt động";
+      case "BANNED":
+        return "Bị cấm";
+      default:
+        return status; // fallback nếu không khớp
+    }
+  };
+  
+
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
     setCurrentPage(1);
@@ -157,7 +171,7 @@ function GPostPage() {
   const handleConfirmDisable = async () => {
     try {
       const updatedStatus =
-        selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+      selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
       await postService.changePostStatus(selectedPost.postId, updatedStatus);
 
       setPosts(
@@ -266,7 +280,7 @@ function GPostPage() {
                 <h3 className="gpost-article-title">{article.title}</h3>
                 <p className="gpost-article-description">{article.content}</p>
                 <div className="gpost-article-meta">
-                  <span className="gpost-status">{article.status}</span>
+                 <span className="gpost-status">{translateStatus(article.status)}</span>
                   <div className="gpost-rating">
                     {renderStars(article.rating)}
                     <span className="gpost-rating-value">{article.rating}</span>

@@ -90,7 +90,7 @@
 
 .gpost-filter-tabs-options {
   display: grid;
-  width: 25%; /* w-full */
+  width: 40%; /* w-full */
   grid-template-columns: repeat(3, minmax(0, 1fr)); /* grid-cols-3 */
   background-color: #f0f2f5; /* --muted */
   border-radius: 0.375rem; /* rounded-md */

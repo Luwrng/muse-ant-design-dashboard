@@ -224,7 +224,7 @@ function GAppointmentPage() {
   // Function to get week days with dates
   const getWeekDays = (weekStart) => {
     const days = [];
-    const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    const dayNames = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
     const fullDayNames = [
       "MONDAY",
       "TUESDAY",
@@ -255,18 +255,18 @@ function GAppointmentPage() {
     weekEnd.setDate(weekStart.getDate() + 6);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      "Tháng 1",  // Jan
+      "Tháng 2",  // Feb
+      "Tháng 3",  // Mar
+      "Tháng 4",  // Apr
+      "Tháng 5",  // May
+      "Tháng 6",  // Jun
+      "Tháng 7",  // Jul
+      "Tháng 8",  // Aug
+      "Tháng 9",  // Sep
+      "Tháng 10", // Oct
+      "Tháng 11", // Nov
+      "Tháng 12"  // Dec
     ];
 
     const startMonth = monthNames[weekStart.getMonth()];
@@ -468,7 +468,7 @@ function GAppointmentPage() {
             onClick={() => setActiveTab("wait-approve")}
           >
             <span className="gappointment-tab-icon">⏰</span>
-            Wait for Approve
+           Chờ được duyệt
           </button>
           <button
             className={`gappointment-tab-trigger ${
@@ -477,7 +477,7 @@ function GAppointmentPage() {
             onClick={() => setActiveTab("schedule")}
           >
             <span className="gappointment-tab-icon">📅</span>
-            Schedule
+         Lịch hẹn
           </button>
         </div>
 
