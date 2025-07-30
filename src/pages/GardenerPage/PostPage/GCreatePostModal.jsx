@@ -240,7 +240,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
 
           {/* Havest Date */}
           <div className="gpcreate-field">
-            <label className="gpcreate-label">Ngày thu hoạch *</label>
+            <label className="gpcreate-label">Ngày bắt đầu thu hoạch *</label>
             <input
               type="date"
               id="harvestDate"
