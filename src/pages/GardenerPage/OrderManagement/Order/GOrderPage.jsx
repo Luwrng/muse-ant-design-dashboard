@@ -99,7 +99,6 @@ function GOrderPage() {
                 <th className="gorder-th">Tổng tiền</th>
                 <th className="gorder-th">Số lượng sản phẩm</th>
                 <th className="gorder-th">Ngày tạo</th>
-                <th className="gorder-th">Trạng thái</th>
                 <th className="gorder-th">Hành động</th>
               </tr>
             </thead>
@@ -111,14 +110,22 @@ function GOrderPage() {
                     <td className="gorder-td">{order.retailerId}</td>
                     <td className="gorder-td">{order.totalAmount} ₫</td>
                     <td className="gorder-td">{order.productTypeAmount}</td>
-                    <td className="gorder-td">{order.createdAt}</td>
                     <td className="gorder-td">
+                      {new Date(order.createdAt).toISOString().split("T")[0]},{" "}
+                      {
+                        new Date(order.createdAt)
+                          .toISOString()
+                          .split("T")[1]
+                          .split(".")[0]
+                      }
+                    </td>
+                    {/* <td className="gorder-td">
                       <span
                         className={`gorder-status gorder-status-${order.status}`}
                       >
                         {order.status}
                       </span>
-                    </td>
+                    </td> */}
                     <td className="gorder-td">
                       <div className="gorder-actions">
                         <button

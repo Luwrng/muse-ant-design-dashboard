@@ -294,8 +294,8 @@ function GardenerProductPage() {
               <th className="gproduct-table-head">Tên sản phẩm</th>
               <th className="gproduct-table-head">Danh mục</th>
               <th className="gproduct-table-head">Giá</th>
-              <th className="gproduct-table-head">Đơn vị khối lượng</th>
-              <th className="gproduct-table-head">Trạng thái</th>
+              <th className="gproduct-table-head">Đơn vị tính giá</th>
+              <th className="gproduct-table-head">Chứng chỉ sản phẩm</th>
               <th className="gproduct-table-head gproduct-action-header">
                 Action
               </th>
@@ -318,13 +318,14 @@ function GardenerProductPage() {
                   <td className="gproduct-table-cell">
                     <span
                       className={`gproduct-status-badge ${
-                        product.status === "ACTIVE"
+                        product.certificates && product.certificates.length > 0
                           ? "gproduct-status-selling"
                           : "gproduct-status-out-of-stock"
                       }`}
                     >
-                     
-                      {mapstatus(product.status)}
+                      {product.certificates.length > 0
+                        ? "Có chứng chỉ"
+                        : "Không có chứng chỉ"}
                     </span>
                   </td>
                   <td className="gproduct-table-cell gproduct-action-cell">
@@ -394,7 +395,8 @@ function GardenerProductPage() {
                   colSpan={6}
                   className="gproduct-table-cell gproduct-no-products"
                 >
-                  No products found.
+                  Hiện không có sản phẩm{" "}
+                  {activeTab === "ACTIVE" ? "đang bán" : "hết hàng"}
                 </td>
               </tr>
             )}
