@@ -115,8 +115,10 @@ function GardenerSidenav() {
               window.location.href = "/";
             }}
           >
-            <FontAwesomeIcon icon={faSignInAlt} />
-            <span>Đăng Xuất</span>
+            <div className="gnav-bar">
+              <FontAwesomeIcon icon={faSignInAlt} />
+              <span>Đăng Xuất</span>
+            </div>
           </Menu.Item>
         </Menu.ItemGroup>
       </Menu>

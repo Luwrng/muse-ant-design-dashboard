@@ -201,3 +201,18 @@ hr {
   text-overflow: ellipsis !important;
   overflow: hidden !important;
 }
+
+.gnav-bar {
+  display: flex;
+  align-items: center;
+  /* gap: 8px; */
+  padding: 8px 16px;
+  color: #4b5563; /* text-gray-700 */
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.gnav-bar:hover {
+  background-color: #f3f4f6; /* hover:bg-gray-100 */
+}

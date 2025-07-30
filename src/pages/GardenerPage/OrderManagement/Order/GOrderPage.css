@@ -105,10 +105,10 @@
 }
 
 .gorder-th:nth-child(1) {
-  width: 60px;
+  width: 12rem;
 }
 .gorder-th:nth-child(2) {
-  width: 150px;
+  width: 12rem;
 }
 .gorder-th:nth-child(3) {
   width: 120px;
@@ -120,11 +120,11 @@
   width: 140px;
 }
 .gorder-th:nth-child(6) {
-  width: 120px;
+  width: 80px;
 }
-.gorder-th:nth-child(7) {
+/* .gorder-th:nth-child(7) {
   width: 3.6rem;
-}
+} */
 
 .gorder-table-row {
   border-bottom: 1px solid #f0f0f0;
