@@ -36,6 +36,13 @@ function GardenerProductPage() {
     { id: "ACTIVE", label: "Đang bán" },
     { id: "INACTIVE", label: "Hết hàng" },
   ]);
+  const mapstatus=(status)=>{
+    switch(status){
+      case "ACTIVE":return "Đang bán";
+      case "INACTIVE":return "Hết hàng";
+      default : return"Không xác định";
+    }
+  };
 
   const [products, setProducts] = useState([]);
   const [totalPage, setTotalPages] = useState(0);

@@ -294,7 +294,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
             >
               Hủy
             </button>
-            <button type="submit" className="gpcreate-btn gpcreate-btn-create">
+            <button type="submit" className="cproduct-create-button">
               Tạo
             </button>
           </div>

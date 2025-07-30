@@ -30,6 +30,11 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
       videoRef.current.play();
     }
   };
+  const statusMap={
+    ACTIVE:"Hoạt Động",
+    INACTIVE:"Ngưng họat động",
+    BANNED:"Bị cấm"
+  }
 
   return (
     <div className="gpdetail-overlay" onClick={onClose}>
@@ -159,7 +164,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                     currentPost?.postStatus === "ACTIVE" ? "active" : "inactive"
                   }`}
                 >
-                  {currentPost?.postStatus}
+                  {statusMap[currentPost?.postStatus]}
                 </span>
               </div>
 

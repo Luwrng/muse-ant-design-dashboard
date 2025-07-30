@@ -47,7 +47,10 @@ function GardenerHeader({
     feedback: "Danh Sách Phản Hồi",
     profile: "Hồ Sơ",
     "sign-up": "Đăng Ký",
+    "package-payment": "Quản Lý Gói Dịch Vụ",     // 👈 mới thêm
+    report: "Báo Cáo",                            // 👈 mới thêm
   };
+
 
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);

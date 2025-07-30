@@ -67,6 +67,7 @@ function Account() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [hoveredStatus, setHoveredStatus] = useState(null);
   const [hoveredVerify, setHoveredVerify] = useState(null);
+  const [dataSource, setDataSource] = useState([]);
   const [modalInfo, setModalInfo] = useState({
     visible: false,
     recordKey: null,
@@ -349,10 +350,14 @@ function Account() {
                 <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Đang chờ duyệt </span>} key="1">
                   <div className="table-responsive">
                     <Table
-                      columns={approveColumns({ handleApprove, openRejectModal, handleViewImage })}
+                      columns={approveColumns({
+                        handleViewImage,
+                        openRejectModal,
+                        setDataSource,
+                      })}
 
                       dataSource={statusData.filter(
-                        (item) => item.RoleId === "guest",
+                        (item) => item.Status === "PENDING",
                       )}
                       pagination={false}
                       className="ant-border-space"

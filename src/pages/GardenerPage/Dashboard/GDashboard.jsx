@@ -185,8 +185,7 @@ function GDashboard() {
 
   return (
     <div className="gdashboard-container">
-      <h1 className="gdashboard-title">Bảng điều khiển</h1>
-
+      <h1 className="gdashboard-title">Tổng quan</h1>
       {dashboardData && (
         <>
           {/* Stats Cards */}
@@ -206,7 +205,6 @@ function GDashboard() {
               </p>
               <span className="gdashboard-stat-icon delivery-icon">🚚</span>
             </div>
-
             <div className="gdashboard-stat-card">
               <h3>Số lượng các cuộc hẹn trong tháng</h3>
               <p className="gdashboard-stat-value">

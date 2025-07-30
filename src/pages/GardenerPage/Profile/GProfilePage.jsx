@@ -67,6 +67,19 @@ function GProfilePage() {
     (cert) => cert.name === selectedCertificate
   );
 
+ const Statusmap = (status)=>{
+    switch(status){  case "ACTIVE": return "Đang hoạt động";
+      case "INACTIVE": return "Ngưng hoạt động";
+    default :return "Bị cấm";}
+   }
+  const Gendermap = (gender) =>{
+    switch(gender){
+      case "Male" : return "Nam";
+      case "Female": return "Nữ";
+      default : return "Không xác định"
+    }
+  }
+
   return (
     <div className="gprofile-profile">
       <div className="gprofile-tabs">
@@ -114,12 +127,12 @@ function GProfilePage() {
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
                   <label>Giới tính</label>
-                  <span>{profile.gender}</span>
+                  <span>{Gendermap(profile.gender)}</span>
                 </div>
                 <div className="gprofile-detail-item">
                   <label>Trạng thái</label>
                   <span className="gprofile-status active">
-                    {profile.status}
+                    {Statusmap(profile.status)}
                   </span>
                 </div>
               </div>
@@ -132,7 +145,7 @@ function GProfilePage() {
                       profile.isVerified ? "verified" : "unverified"
                     }`}
                   >
-                    {profile.isVerified ? "Verified" : "Unverified"}
+                    {profile.isVerified ? "Đã xác minh" : "Chưa xác minh"}
                   </span>
                 </div>
                 <div className="gprofile-detail-item">

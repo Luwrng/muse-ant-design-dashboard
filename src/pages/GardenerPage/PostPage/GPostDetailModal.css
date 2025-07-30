@@ -183,7 +183,10 @@
   margin-bottom: 24px;
 }
 
-.gpdetail-status-badge {
+.gpdetail-status-badge { 
+  flex:auto;
+  gap: 3px;
+
   display: inline-block;
   padding: 4px 12px;
   border-radius: 16px;

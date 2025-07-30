@@ -73,7 +73,7 @@ function GOrderPage() {
 
         {/* Filter Tabs */}
         <div className="gorder-header-bottom">
-          <div className="gorder-filter-tabs">
+          <div className="gorder-filter-tabs" >
             {filterTabs.map((tab) => (
               <button
                 key={tab.key}
@@ -95,12 +95,11 @@ function GOrderPage() {
             <thead>
               <tr className="gorder-table-header">
                 <th className="gorder-th">ID</th>
-                <th className="gorder-th">ID NHÀ BÁN LẺ</th>
-                <th className="gorder-th">TỔNG TIỀN</th>
-                <th className="gorder-th">SỐ LƯỢNG SẢN PHẨM</th>
-                <th className="gorder-th">NGÀY TẠO</th>
-                {/* <th className="gorder-th">TRẠNG THÁI</th> */}
-                <th className="gorder-th">HÀNH ĐỘNG</th>
+                <th className="gorder-th">ID Nhà bán lẻ</th>
+                <th className="gorder-th">Tổng tiền</th>
+                <th className="gorder-th">Số lượng sản phẩm</th>
+                <th className="gorder-th">Ngày tạo</th>
+                <th className="gorder-th">Hành động</th>
               </tr>
             </thead>
             <tbody>
