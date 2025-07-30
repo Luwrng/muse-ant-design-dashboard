@@ -6,8 +6,30 @@ import { useState } from "react";
 import { message } from "antd";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import DetailButton from "../../components/button/DetailButton";
+import { cleanfood } from "../../api_admin";
 
-const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => [
+const updateRecordStatus = async (record, newStatus, setDataSource) => {
+  try {
+    await cleanfood.admin.updateAccountStatus(record.key, newStatus);
+    message.success(`Đã cập nhật trạng thái thành ${newStatus}`);
+
+    // ✅ Cập nhật local state để thay đổi hiển thị ngay
+    setDataSource((prev) =>
+      prev.map((item) =>
+        item.key === record.key
+          ? { ...item, Status: newStatus }
+          : item
+      )
+    );
+  } catch (error) {
+    console.error("Lỗi cập nhật:", error);
+    message.error("Cập nhật trạng thái thất bại");
+  }
+};
+
+
+
+const approveColumns = ({ handleViewImage, openRejectModal, setDataSource }) => [
   {
     title: "Hình đại diện",
     dataIndex: "Avatar",
@@ -62,7 +84,9 @@ const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => 
       <Space>
         <FontAwesomeIcon
           icon={faCheck}
-          onClick={() => handleApprove(record)}
+          onClick={() =>
+            updateRecordStatus(record, "ACTIVE", setDataSource)
+          }
           title="Duyệt"
           style={{
             fontSize: "16px",
@@ -70,15 +94,13 @@ const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => 
             cursor: "pointer",
             transition: "all 0.3s",
           }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.transform = "scale(1.2)")
-          }
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         />
         <FontAwesomeIcon
           icon={faTimes}
           onClick={() => openRejectModal(record)}
-           title="Không duyệt"
+          title="Không duyệt"
           style={{
             fontSize: "16px",
             color: "#ff4d4f",
@@ -90,6 +112,7 @@ const approveColumns = ({ handleApprove, handleViewImage, openRejectModal }) => 
         />
       </Space>
     ),
-  },
+  }
+
 ];
 export default approveColumns;

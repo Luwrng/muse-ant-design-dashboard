@@ -600,7 +600,7 @@ function GAppointmentPage() {
               <div className="gappointment-schedule-grid">
                 {/* Header Row - Days of Week (Columns) */}
                 <div className="gappointment-schedule-header">
-                  <div className="gappointment-time-header-cell">TIME</div>
+                  <div className="gappointment-time-header-cell">Thời gian</div>
                   {weekDays.map((dayInfo) => (
                     <div
                       key={dayInfo.day}

@@ -15,6 +15,12 @@ function GPackageOrderHistoryDetail({ isOpen, onClose, paymentDetail }) {
       return dateString;
     }
   };
+   const Statusmap = (status)=>{
+    switch(status){  case "SUCCESS": return "Thành công";
+      case "PENDING": return "Chờ duyệt";
+    default :return "Không xác định";}
+  
+   }
 
   return (
     <div className="gpayhistorydetail-modal-overlay" onClick={onClose}>
@@ -76,7 +82,7 @@ function GPackageOrderHistoryDetail({ isOpen, onClose, paymentDetail }) {
             <span
               className={`gpayhistorydetail-value gpayhistorydetail-status-${paymentDetail.status.toLowerCase()}`}
             >
-              {paymentDetail.status}
+              {Statusmap(paymentDetail.status)}
             </span>
           </div>
           <div className="gpayhistorydetail-field">
@@ -92,7 +98,7 @@ function GPackageOrderHistoryDetail({ isOpen, onClose, paymentDetail }) {
               Trạng thái đơn hàng:
             </span>
             <span className="gpayhistorydetail-value">
-              {paymentDetail.orderStatus}
+              {Statusmap(paymentDetail.orderStatus)}
             </span>
           </div>
         </div>

@@ -59,7 +59,12 @@ function GPackageOrderHistory() {
     setShowDetailModal(false);
     setSelectedPaymentDetail(null);
   };
+ const Statusmap = (status)=>{
+  switch(status){  case "SUCCESS": return "Thành công";
+    case "PENDING": return "Chưa thanh toán";
+  default :return "Không xác định";}
 
+ }
   // const filteredPayments = useMemo(() => {
   //   // console.log(paymentHistory);
   //   let filtered = paymentHistory;
@@ -133,10 +138,10 @@ function GPackageOrderHistory() {
                     {new Date(payment.paymentDate).toISOString().split("T")[0]}
                   </td>
                   <td>
-                    <span
+                    <span style={{}}
                       className={`gpayhistory-status-badge gpayhistory-status-${payment.status.toLowerCase()}`}
                     >
-                      {payment.status}
+                      {Statusmap(payment.status)}
                     </span>
                   </td>
                   <td>

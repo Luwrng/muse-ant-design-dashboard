@@ -28,6 +28,7 @@ function SubscriptionTabs() {
 
     fetchData();
   }, [activeTab]);
+  
 
   return (
     <div className="subscription-tabs-container">
