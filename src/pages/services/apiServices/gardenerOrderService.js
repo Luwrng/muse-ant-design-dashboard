@@ -35,13 +35,20 @@ const createOrderDelivery = async (orderId, data) => {
   );
 };
 
-const updateOrderDeliveryStatus = async () => {};
+const updateOrderDeliveryStatus = async (orderId, orderDeliveryId, status) => {
+  return await httpService.patch(
+    `${orderEndpoint}/${orderId}/order-deliveries/${orderDeliveryId}`,
+    {},
+    { params: { status } }
+  );
+};
 
 const gardenerOrderService = {
   getGardenerOrder,
   getGardenerOrderDetail,
   getOrderDeliveries,
   createOrderDelivery,
+  updateOrderDeliveryStatus,
 };
 
 export default gardenerOrderService;

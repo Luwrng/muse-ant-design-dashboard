@@ -10,6 +10,7 @@ function ProductDetailPage({
   onClose,
   onUpdatePrice,
   onChangeStatus,
+  onAddCertificate,
 }) {
   const [reviews, setReviews] = useState([]);
 
@@ -115,6 +116,12 @@ function ProductDetailPage({
               onClick={() => onUpdatePrice(product)}
             >
               Chỉnh sửa
+            </button>
+            <button
+              className="gpd-addcer-button"
+              onClick={() => onAddCertificate(product)}
+            >
+              Thêm chứng chỉ
             </button>
             <button
               className={`gpd-${

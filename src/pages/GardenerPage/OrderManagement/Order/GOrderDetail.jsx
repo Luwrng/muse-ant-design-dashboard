@@ -7,7 +7,7 @@ import gardenerOrderService from "../../../services/apiServices/gardenerOrderSer
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
-  const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
+  // const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
   const [deliveryQuantities, setDeliveryQuantities] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -123,11 +123,9 @@ function GOrderDetail({ orderId, onBack }) {
         orderId
       );
       setOrderData(orderResult);
-      const deliveriesResult =
-        await gardenerOrderService.getGardenerOrderDeliveries(
-          accountId,
-          orderId
-        );
+      const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
+        orderId
+      );
       setOrderDeliveries(deliveriesResult);
 
       alert("Đơn giao hàng đã được tạo thành công!");
@@ -148,6 +146,26 @@ function GOrderDetail({ orderId, onBack }) {
     setExpandedDeliveryId(
       expandedDeliveryId === deliveryId ? null : deliveryId
     );
+  };
+
+  const handleCompleteDelivery = async (orderDeliveryId) => {
+    try {
+      await gardenerOrderService.updateOrderDeliveryStatus(
+        orderId,
+        orderDeliveryId,
+        "DELIVERED"
+      );
+      // Optionally update UI
+      setOrderDeliveries((prev) =>
+        prev.map((d) =>
+          d.orderDeliveryId === orderDeliveryId
+            ? { ...d, deliveryStatus: "DELIVERED" }
+            : d
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (!orderData) {
@@ -410,6 +428,17 @@ function GOrderDetail({ orderId, onBack }) {
                 </p>
                 <p>Ghi chú: {delivery.note || "Không có"}</p>
 
+                {delivery.deliveryStatus !== "DELIVERED" && (
+                  <button
+                    className="godetail-complete-button"
+                    onClick={() =>
+                      handleCompleteDelivery(delivery.orderDeliveryId)
+                    }
+                  >
+                    Hoàn tất giao hàng
+                  </button>
+                )}
+
                 {expandedDeliveryId === delivery.orderDeliveryId && (
                   <div className="godetail-delivery-details-list">
                     <h4>Sản phẩm đã giao:</h4>
@@ -442,12 +471,12 @@ function GOrderDetail({ orderId, onBack }) {
           )}
         </div>
       </div>
-      {showDeliveryPopup && (
+      {/* {showDeliveryPopup && (
         <GOrderDelivery
           orderId={orderData.orderId}
           onClose={() => setShowDeliveryPopup(false)}
         />
-      )}
+      )} */}
     </div>
   );
 }

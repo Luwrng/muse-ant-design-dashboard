@@ -93,6 +93,14 @@ const deleteProductCategory = async (categoryId) => {
   return await httpService.delete(`${productCateEndpoint}/${categoryId}`);
 };
 
+// Certificate
+const cerateProductCertificate = async (productId, data) => {
+  return await httpService.post(
+    `${productEndpoint}/${productId}/product-certificates`,
+    data
+  );
+};
+
 const productService = {
   //Product
   getGardenerProducts,
@@ -114,6 +122,9 @@ const productService = {
   createProductCategory,
   updateProductCategory,
   deleteProductCategory,
+
+  //Certificate
+  cerateProductCertificate,
 };
 
 export default productService;

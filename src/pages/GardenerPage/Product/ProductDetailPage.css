@@ -64,6 +64,20 @@
 .gpd-edit-button:hover {
   background-color: #2563eb;
 }
+
+.gpd-addcer-button {
+  background-color: #17c500;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.gpd-addcer-button:hover {
+  background-color: #139b01;
+}
 .gpd-hide-button {
   background-color: #dc2626;
   color: white;
