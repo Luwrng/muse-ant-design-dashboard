@@ -4,6 +4,7 @@ import GOrderDelivery from "../OrderDelivery/GOrderDelivery";
 import "./GOrderDetail.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
+import matchers from "@testing-library/jest-dom/matchers";
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
@@ -148,21 +149,34 @@ function GOrderDetail({ orderId, onBack }) {
     );
   };
 
-  const handleCompleteDelivery = async (orderDeliveryId) => {
+  const handleCompleteDelivery = async (delivery) => {
+    const matchedDetailsList = delivery.orderDeliveryDetails.map(
+      (deliveryItem) => {
+        const matches = orderData.orderDetails.find(
+          (detail) => detail.productId === deliveryItem.productId
+        );
+        return {
+          orderDetailId: matches.orderDetailId,
+          remainDeliveryQuantity: matches.quantity - matches.deliveredQuantity,
+        };
+      }
+    );
+
+    console.log(matchedDetailsList);
     try {
-      await gardenerOrderService.updateOrderDeliveryStatus(
-        orderId,
-        orderDeliveryId,
-        "DELIVERED"
-      );
-      // Optionally update UI
-      setOrderDeliveries((prev) =>
-        prev.map((d) =>
-          d.orderDeliveryId === orderDeliveryId
-            ? { ...d, deliveryStatus: "DELIVERED" }
-            : d
-        )
-      );
+      // await gardenerOrderService.updateOrderDeliveryStatus(
+      //   orderId,
+      //   delivery.orderDeliveryId,
+      //   "DELIVERED"
+      // );
+      // // Optionally update UI
+      // setOrderDeliveries((prev) =>
+      //   prev.map((d) =>
+      //     d.orderDeliveryId === delivery.orderDeliveryId
+      //       ? { ...d, deliveryStatus: "DELIVERED" }
+      //       : d
+      //   )
+      // );
     } catch (err) {
       console.log(err);
     }
@@ -302,8 +316,7 @@ function GOrderDetail({ orderId, onBack }) {
                       Tổng: {detail.quantity} {detail.weightUnit}
                     </span>
                     <span className="godetail-quantity-label">
-                      Đã giao:
-                      {detail.deliveredQuantity} {detail.weightUnit}
+                      Đã giao: {detail.deliveredQuantity} {detail.weightUnit}
                     </span>
                     <span className="godetail-quantity-remaining">
                       Còn lại: {detail.quantity - detail.deliveredQuantity}{" "}
@@ -431,9 +444,7 @@ function GOrderDetail({ orderId, onBack }) {
                 {delivery.deliveryStatus !== "DELIVERED" && (
                   <button
                     className="godetail-complete-button"
-                    onClick={() =>
-                      handleCompleteDelivery(delivery.orderDeliveryId)
-                    }
+                    onClick={() => handleCompleteDelivery(delivery)}
                   >
                     Hoàn tất giao hàng
                   </button>
