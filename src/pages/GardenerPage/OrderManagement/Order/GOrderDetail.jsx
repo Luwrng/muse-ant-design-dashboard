@@ -23,28 +23,28 @@ function GOrderDetail({ orderId, onBack }) {
   });
 
   useEffect(() => {
-    const fetchOrderDeatil = async () => {
-      try {
-        const accountId = localStorage.getItem("account_id");
-        const result = await gardenerOrderService.getGardenerOrderDetail(
-          accountId,
-          orderId
-        );
-        setOrderData(result);
-
-        const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
-          orderId
-        );
-        setOrderDeliveries(deliveriesResult);
-      } catch (err) {
-        console.log(err);
-        setOrderData(null);
-        setOrderDeliveries([]);
-      }
-    };
-
-    fetchOrderDeatil();
+    fetchOrderDetail();
   }, [orderId]);
+
+  const fetchOrderDetail = async () => {
+    try {
+      const accountId = localStorage.getItem("account_id");
+      const result = await gardenerOrderService.getGardenerOrderDetail(
+        accountId,
+        orderId
+      );
+      setOrderData(result);
+
+      const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
+        orderId
+      );
+      setOrderDeliveries(deliveriesResult);
+    } catch (err) {
+      console.log(err);
+      setOrderData(null);
+      setOrderDeliveries([]);
+    }
+  };
 
   const handleQuantityChange = (orderDetailId, value) => {
     const orderDetail = orderData.orderDetails.find(
@@ -162,21 +162,26 @@ function GOrderDetail({ orderId, onBack }) {
       }
     );
 
-    console.log(matchedDetailsList);
     try {
-      // await gardenerOrderService.updateOrderDeliveryStatus(
-      //   orderId,
-      //   delivery.orderDeliveryId,
-      //   "DELIVERED"
-      // );
-      // // Optionally update UI
-      // setOrderDeliveries((prev) =>
-      //   prev.map((d) =>
-      //     d.orderDeliveryId === delivery.orderDeliveryId
-      //       ? { ...d, deliveryStatus: "DELIVERED" }
-      //       : d
-      //   )
-      // );
+      await gardenerOrderService.updateOrderDeliveryStatus(
+        orderId,
+        delivery.orderDeliveryId,
+        "DELIVERED"
+      );
+      // Optionally update UI
+      setOrderDeliveries((prev) =>
+        prev.map((d) =>
+          d.orderDeliveryId === delivery.orderDeliveryId
+            ? { ...d, deliveryStatus: "DELIVERED" }
+            : d
+        )
+      );
+
+      await gardenerOrderService.updateGardenerOrderStatus(
+        orderId,
+        matchedDetailsList
+      );
+      fetchOrderDetail(0);
     } catch (err) {
       console.log(err);
     }
@@ -194,18 +199,22 @@ function GOrderDetail({ orderId, onBack }) {
         <button className="godetail-back-btn" onClick={onBack}>
           ← Quay lại
         </button>
-        <div className="godetail-actions">
-          {!isCreatingDelivery && (
-            <>
-              <button
-                className="godetail-create-delivery-btn"
-                onClick={() => setIsCreatingDelivery(true)}
-              >
-                + Tạo đơn giao hàng
-              </button>
-            </>
-          )}
-        </div>
+        {orderData.status !== "DELIVERED" ? (
+          <div className="godetail-actions">
+            {!isCreatingDelivery && (
+              <>
+                <button
+                  className="godetail-create-delivery-btn"
+                  onClick={() => setIsCreatingDelivery(true)}
+                >
+                  + Tạo đơn giao hàng
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="godetail-content">
         <div className="godetail-title-section">
