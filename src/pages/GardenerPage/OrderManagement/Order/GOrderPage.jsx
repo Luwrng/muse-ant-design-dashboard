@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { EyeFilled } from "@ant-design/icons";
+import { EyeFilled, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import GOrderDetail from "./GOrderDetail";
 import "./GOrderPage.css";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
@@ -48,6 +48,7 @@ function GOrderPage() {
     { key: "PENDING", label: "Chờ xử lý" },
     { key: "PREPARING", label: "Chuẩn bị hàng" },
     { key: "DELIVERING", label: "Đang giao" },
+    { key: "DELIVERED", label: "Đã giao" },
     { key: "COMPLETED", label: "Hoàn thành" },
     { key: "CANCELLED", label: "Đã hủy" },
   ];
@@ -60,6 +61,15 @@ function GOrderPage() {
   const handleView = (orderId) => {
     setSelectedOrderId(orderId);
     setShowOrderDetail(true);
+  };
+
+  const handleUpdateOrderStatus = async (orderId, status) => {
+    try {
+      await gardenerOrderService.updateOrderStatus(orderId, status);
+      fetchOrder();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -135,6 +145,37 @@ function GOrderPage() {
                         >
                           <EyeFilled />
                         </button>
+
+                        {order.status === "PENDING" ? (
+                          <>
+                            <button
+                              className="gorder-action-btn gorder-accept-btn"
+                              onClick={() =>
+                                handleUpdateOrderStatus(
+                                  order.orderId,
+                                  "PREPARING"
+                                )
+                              }
+                              title="Xem chi tiết"
+                            >
+                              <CheckOutlined />
+                            </button>
+                            <button
+                              className="gorder-action-btn gorder-deny-btn"
+                              onClick={() =>
+                                handleUpdateOrderStatus(
+                                  order.orderId,
+                                  "CANCELLED"
+                                )
+                              }
+                              title="Xem chi tiết"
+                            >
+                              <CloseOutlined />
+                            </button>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -142,25 +183,6 @@ function GOrderPage() {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination
-        <div className="gorder-pagination">
-          <div className="gorder-pagination-info"></div>
-          <div className="gpost-pagination-controls">
-            <button className="gpost-pagination-btn">‹</button>
-            {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-              <button
-                key={index}
-                className={`gpost-pagination-btn ${
-                  page === 1 ? "gpost-active" : ""
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button className="gpost-pagination-btn">›</button>
-          </div>
-        </div> */}
 
         <Paginate
           currentPage={currentPage}

@@ -183,8 +183,8 @@
   margin-bottom: 24px;
 }
 
-.gpdetail-status-badge { 
-  flex:auto;
+.gpdetail-status-badge {
+  flex: auto;
   gap: 3px;
 
   display: inline-block;
@@ -200,7 +200,7 @@
 }
 
 .gpdetail-status-badge.inactive {
-  background-color: #fef3c7;
+  background-color: #fec7c7;
   color: #92400e;
 }
 

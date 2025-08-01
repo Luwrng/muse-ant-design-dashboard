@@ -25,7 +25,6 @@
 }
 
 .gorder-filter-tabs {
-  
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -210,7 +209,11 @@
   color: #007bff;
 }
 
-.gorder-delete-btn {
+.gorder-accept-btn {
+  color: #09ff00;
+}
+
+.gorder-deny-btn {
   color: #dc3545;
 }
 

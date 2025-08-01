@@ -86,7 +86,6 @@ function GPostPage() {
         return status; // fallback nếu không khớp
     }
   };
-  
 
   const handleFilterChange = (filterKey) => {
     setActiveFilter(filterKey);
@@ -171,7 +170,7 @@ function GPostPage() {
   const handleConfirmDisable = async () => {
     try {
       const updatedStatus =
-      selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+        selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
       await postService.changePostStatus(selectedPost.postId, updatedStatus);
 
       setPosts(
@@ -278,9 +277,16 @@ function GPostPage() {
               </div>
               <div className="gpost-article-content">
                 <h3 className="gpost-article-title">{article.title}</h3>
-                <p className="gpost-article-description">{article.content}</p>
+                <p className="gpost-article-description">
+                  {/* {article.content} */}
+                  <div dangerouslySetInnerHTML={{ __html: article?.content }} />
+                </p>
                 <div className="gpost-article-meta">
-                 <span className="gpost-status">{translateStatus(article.status)}</span>
+                  <span
+                    className={`gpost-status-${article.status.toLowerCase()}`}
+                  >
+                    {translateStatus(article.status)}
+                  </span>
                   <div className="gpost-rating">
                     {renderStars(article.rating)}
                     <span className="gpost-rating-value">{article.rating}</span>
