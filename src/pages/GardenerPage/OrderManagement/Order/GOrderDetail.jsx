@@ -4,10 +4,11 @@ import GOrderDelivery from "../OrderDelivery/GOrderDelivery";
 import "./GOrderDetail.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
+import matchers from "@testing-library/jest-dom/matchers";
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
-  const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
+  // const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
   const [deliveryQuantities, setDeliveryQuantities] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -22,28 +23,28 @@ function GOrderDetail({ orderId, onBack }) {
   });
 
   useEffect(() => {
-    const fetchOrderDeatil = async () => {
-      try {
-        const accountId = localStorage.getItem("account_id");
-        const result = await gardenerOrderService.getGardenerOrderDetail(
-          accountId,
-          orderId
-        );
-        setOrderData(result);
-
-        const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
-          orderId
-        );
-        setOrderDeliveries(deliveriesResult);
-      } catch (err) {
-        console.log(err);
-        setOrderData(null);
-        setOrderDeliveries([]);
-      }
-    };
-
-    fetchOrderDeatil();
+    fetchOrderDetail();
   }, [orderId]);
+
+  const fetchOrderDetail = async () => {
+    try {
+      const accountId = localStorage.getItem("account_id");
+      const result = await gardenerOrderService.getGardenerOrderDetail(
+        accountId,
+        orderId
+      );
+      setOrderData(result);
+
+      const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
+        orderId
+      );
+      setOrderDeliveries(deliveriesResult);
+    } catch (err) {
+      console.log(err);
+      setOrderData(null);
+      setOrderDeliveries([]);
+    }
+  };
 
   const handleQuantityChange = (orderDetailId, value) => {
     const orderDetail = orderData.orderDetails.find(
@@ -123,11 +124,9 @@ function GOrderDetail({ orderId, onBack }) {
         orderId
       );
       setOrderData(orderResult);
-      const deliveriesResult =
-        await gardenerOrderService.getGardenerOrderDeliveries(
-          accountId,
-          orderId
-        );
+      const deliveriesResult = await gardenerOrderService.getOrderDeliveries(
+        orderId
+      );
       setOrderDeliveries(deliveriesResult);
 
       alert("Đơn giao hàng đã được tạo thành công!");
@@ -150,6 +149,44 @@ function GOrderDetail({ orderId, onBack }) {
     );
   };
 
+  const handleCompleteDelivery = async (delivery) => {
+    const matchedDetailsList = delivery.orderDeliveryDetails.map(
+      (deliveryItem) => {
+        const matches = orderData.orderDetails.find(
+          (detail) => detail.productId === deliveryItem.productId
+        );
+        return {
+          orderDetailId: matches.orderDetailId,
+          remainDeliveryQuantity: matches.quantity - matches.deliveredQuantity,
+        };
+      }
+    );
+
+    try {
+      await gardenerOrderService.updateOrderDeliveryStatus(
+        orderId,
+        delivery.orderDeliveryId,
+        "DELIVERED"
+      );
+      // Optionally update UI
+      setOrderDeliveries((prev) =>
+        prev.map((d) =>
+          d.orderDeliveryId === delivery.orderDeliveryId
+            ? { ...d, deliveryStatus: "DELIVERED" }
+            : d
+        )
+      );
+
+      await gardenerOrderService.updateGardenerOrderStatus(
+        orderId,
+        matchedDetailsList
+      );
+      fetchOrderDetail(0);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (!orderData) {
     return (
       <div className="godetail-loading">Đang tải chi tiết đơn hàng...</div>
@@ -162,18 +199,22 @@ function GOrderDetail({ orderId, onBack }) {
         <button className="godetail-back-btn" onClick={onBack}>
           ← Quay lại
         </button>
-        <div className="godetail-actions">
-          {!isCreatingDelivery && (
-            <>
-              <button
-                className="godetail-create-delivery-btn"
-                onClick={() => setIsCreatingDelivery(true)}
-              >
-                + Tạo đơn giao hàng
-              </button>
-            </>
-          )}
-        </div>
+        {orderData.status !== "DELIVERED" ? (
+          <div className="godetail-actions">
+            {!isCreatingDelivery && (
+              <>
+                <button
+                  className="godetail-create-delivery-btn"
+                  onClick={() => setIsCreatingDelivery(true)}
+                >
+                  + Tạo đơn giao hàng
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="godetail-content">
         <div className="godetail-title-section">
@@ -284,8 +325,7 @@ function GOrderDetail({ orderId, onBack }) {
                       Tổng: {detail.quantity} {detail.weightUnit}
                     </span>
                     <span className="godetail-quantity-label">
-                      Đã giao:
-                      {detail.deliveredQuantity} {detail.weightUnit}
+                      Đã giao: {detail.deliveredQuantity} {detail.weightUnit}
                     </span>
                     <span className="godetail-quantity-remaining">
                       Còn lại: {detail.quantity - detail.deliveredQuantity}{" "}
@@ -410,6 +450,15 @@ function GOrderDetail({ orderId, onBack }) {
                 </p>
                 <p>Ghi chú: {delivery.note || "Không có"}</p>
 
+                {delivery.deliveryStatus !== "DELIVERED" && (
+                  <button
+                    className="godetail-complete-button"
+                    onClick={() => handleCompleteDelivery(delivery)}
+                  >
+                    Hoàn tất giao hàng
+                  </button>
+                )}
+
                 {expandedDeliveryId === delivery.orderDeliveryId && (
                   <div className="godetail-delivery-details-list">
                     <h4>Sản phẩm đã giao:</h4>
@@ -442,12 +491,12 @@ function GOrderDetail({ orderId, onBack }) {
           )}
         </div>
       </div>
-      {showDeliveryPopup && (
+      {/* {showDeliveryPopup && (
         <GOrderDelivery
           orderId={orderData.orderId}
           onClose={() => setShowDeliveryPopup(false)}
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -30,11 +30,11 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
       videoRef.current.play();
     }
   };
-  const statusMap={
-    ACTIVE:"Hoạt Động",
-    INACTIVE:"Ngưng họat động",
-    BANNED:"Bị cấm"
-  }
+  const statusMap = {
+    ACTIVE: "Hoạt Động",
+    INACTIVE: "Ngưng họat động",
+    BANNED: "Bị cấm",
+  };
 
   return (
     <div className="gpdetail-overlay" onClick={onClose}>
@@ -232,15 +232,15 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
 
                   <div className="gpdetail-product-info-row">
                     <span className="gpdetail-product-info-label">
-                      Ngày thu hoạch:
+                      Ngày bắt đầu thu hoạch:
                     </span>
                     <span className="gpdetail-product-info-value">
-                      {/* {
+                      {
                         new Date(currentPost?.harvestDate)
                           .toISOString()
                           .split("T")[0]
-                      } */}
-                      {currentPost?.harvestDate}
+                      }
+                      {/* {currentPost?.harvestDate} */}
                     </span>
                   </div>
 

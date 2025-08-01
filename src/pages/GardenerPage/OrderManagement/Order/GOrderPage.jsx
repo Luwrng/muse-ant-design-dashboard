@@ -73,7 +73,7 @@ function GOrderPage() {
 
         {/* Filter Tabs */}
         <div className="gorder-header-bottom">
-          <div className="gorder-filter-tabs" >
+          <div className="gorder-filter-tabs">
             {filterTabs.map((tab) => (
               <button
                 key={tab.key}
@@ -95,7 +95,7 @@ function GOrderPage() {
             <thead>
               <tr className="gorder-table-header">
                 <th className="gorder-th">ID</th>
-                <th className="gorder-th">ID Nhà bán lẻ</th>
+                <th className="gorder-th">Nhà bán lẻ</th>
                 <th className="gorder-th">Tổng tiền</th>
                 <th className="gorder-th">Số lượng sản phẩm</th>
                 <th className="gorder-th">Ngày tạo</th>
@@ -107,7 +107,7 @@ function GOrderPage() {
                 orders.map((order) => (
                   <tr key={order.id} className="gorder-table-row">
                     <td className="gorder-td">{order.orderId}</td>
-                    <td className="gorder-td">{order.retailerId}</td>
+                    <td className="gorder-td">{order.retailerName}</td>
                     <td className="gorder-td">{order.totalAmount} ₫</td>
                     <td className="gorder-td">{order.productTypeAmount}</td>
                     <td className="gorder-td">

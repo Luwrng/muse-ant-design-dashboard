@@ -22,7 +22,12 @@ const getGardenerOrderDetail = async (accountId, orderId) => {
   );
 };
 
-const updateGardenerOrderStatus = async () => {};
+const updateGardenerOrderStatus = async (orderId, data) => {
+  return await httpService.patch(
+    `${orderEndpoint}/${orderId}/order-details`,
+    data
+  );
+};
 
 const getOrderDeliveries = async (orderId) => {
   return await httpService.get(`${orderEndpoint}/${orderId}/order-deliveries`);
@@ -35,13 +40,22 @@ const createOrderDelivery = async (orderId, data) => {
   );
 };
 
-const updateOrderDeliveryStatus = async () => {};
+const updateOrderDeliveryStatus = async (orderId, orderDeliveryId, status) => {
+  return await httpService.patch(
+    `${orderEndpoint}/${orderId}/order-deliveries/${orderDeliveryId}`,
+    {},
+    { params: { status } }
+  );
+};
 
 const gardenerOrderService = {
   getGardenerOrder,
   getGardenerOrderDetail,
+  updateGardenerOrderStatus,
+
   getOrderDeliveries,
   createOrderDelivery,
+  updateOrderDeliveryStatus,
 };
 
 export default gardenerOrderService;

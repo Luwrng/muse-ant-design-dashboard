@@ -8,7 +8,7 @@ import LoadingPage from "./Loading/LoadingPage";
 import PErrorModal from "./ErrorModal/PErrorModal";
 import PSuccessModal from "./SuccessModal/PSuccessModal";
 import Paginate from "../../../components/paginate/Paginate";
-
+import CreateProductCertificatePopup from "./CreateProductCertificatePopup";
 import "./ProductPage.css";
 import productService from "../../services/apiServices/productService";
 
@@ -22,6 +22,7 @@ function GardenerProductPage() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [showAddCertificate, setShowAddCertificate] = useState(false);
   const [showCreateProduct, setShowCreateProduct] = useState(false);
   const [showUpdatePrice, setShowUpdatePrice] = useState(false);
   const [showConfirmStatus, setShowConfirmStatus] = useState(false);
@@ -36,11 +37,14 @@ function GardenerProductPage() {
     { id: "ACTIVE", label: "Đang bán" },
     { id: "INACTIVE", label: "Hết hàng" },
   ]);
-  const mapstatus=(status)=>{
-    switch(status){
-      case "ACTIVE":return "Đang bán";
-      case "INACTIVE":return "Hết hàng";
-      default : return"Không xác định";
+  const mapstatus = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "Đang bán";
+      case "INACTIVE":
+        return "Hết hàng";
+      default:
+        return "Không xác định";
     }
   };
 
@@ -126,8 +130,19 @@ function GardenerProductPage() {
     setIsDetailModalOpen(true);
   };
 
+  const handleAddCertificateClick = (product) => {
+    setIsDropdownOpen(false);
+    setSelectedProduct(product);
+    setShowAddCertificate(true);
+  };
+
   const handleCloseDetail = () => {
     setIsDetailModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleCloseAddCertificate = () => {
+    setShowAddCertificate(false);
     setSelectedProduct(null);
   };
 
@@ -159,6 +174,19 @@ function GardenerProductPage() {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  const handleAddCertificate = async (newCertificate) => {
+    try {
+      await productService.cerateProductCertificate(
+        selectedProduct.productId,
+        newCertificate
+      );
+
+      setShowAddCertificate(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleUpdatePrice = (product) => {
     setIsDropdownOpen(false);
@@ -364,6 +392,12 @@ function GardenerProductPage() {
                             </button>
                             <button
                               className="gproduct-dropdown-item"
+                              onClick={() => handleAddCertificateClick(product)}
+                            >
+                              Thêm chứng chỉ
+                            </button>
+                            <button
+                              className="gproduct-dropdown-item"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleUpdatePrice(product);
@@ -404,23 +438,6 @@ function GardenerProductPage() {
         </table>
       </div>
 
-      {/* <div className="gorder-pagination">
-        <div className="gorder-pagination-info"></div>
-        <div className="gpost-pagination-controls">
-          <button className="gpost-pagination-btn">‹</button>
-          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-            <button
-              key={index}
-              className={`gpost-pagination-btn ${
-                page === 1 ? "gpost-active" : ""
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button className="gpost-pagination-btn">›</button>
-        </div>
-      </div> */}
       <Paginate
         currentPage={currentPage}
         totalPages={totalPage}
@@ -436,7 +453,16 @@ function GardenerProductPage() {
         onClose={handleCloseDetail}
         onUpdatePrice={handleUpdatePrice}
         onChangeStatus={handleChangeStatus}
+        onAddCertificate={handleAddCertificateClick}
       />
+
+      {/* Add Certificate */}
+      {showAddCertificate && (
+        <CreateProductCertificatePopup
+          onClose={handleCloseAddCertificate}
+          onAddCertificate={handleAddCertificate}
+        />
+      )}
 
       {/* Update Price Popup */}
       <UpdateProductPrice

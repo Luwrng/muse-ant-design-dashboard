@@ -403,3 +403,19 @@
   border-color: #22c55e; /* focus:border-green-500 */
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); /* focus:ring-green-500 (simulated) */
 }
+
+.godetail-complete-button {
+  background-color: #22c55e; /* green */
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.godetail-complete-button:hover {
+  background-color: #16a34a;
+}
