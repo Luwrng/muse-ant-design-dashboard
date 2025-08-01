@@ -253,8 +253,14 @@
   margin-bottom: 12px;
 }
 
-.gpost-status {
+.gpost-status-active {
   color: #28a745;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.gpost-status-inactive {
+  color: #a72828;
   font-size: 13px;
   font-weight: 500;
 }

@@ -187,6 +187,15 @@ function GOrderDetail({ orderId, onBack }) {
     }
   };
 
+  const handleUpdateOrderStatus = async (orderId, status) => {
+    try {
+      await gardenerOrderService.updateOrderStatus(orderId, status);
+      fetchOrderDetail();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (!orderData) {
     return (
       <div className="godetail-loading">Đang tải chi tiết đơn hàng...</div>
@@ -199,7 +208,23 @@ function GOrderDetail({ orderId, onBack }) {
         <button className="godetail-back-btn" onClick={onBack}>
           ← Quay lại
         </button>
-        {orderData.status !== "DELIVERED" ? (
+        {orderData.status === "PENDING" ? (
+          <div className="godetail-actions">
+            <button
+              className="godetail-accept-delivery-btn"
+              onClick={() => handleUpdateOrderStatus(orderId, "PREPARING")}
+            >
+              Chấp nhận đơn hàng
+            </button>
+            <button
+              className="godetail-deny-delivery-btn"
+              onClick={() => handleUpdateOrderStatus(orderId, "cANCELLED")}
+            >
+              Từ chối đơn hàng
+            </button>
+          </div>
+        ) : orderData.status === "PREPARING" ||
+          orderData.status === "DELIVERING" ? (
           <div className="godetail-actions">
             {!isCreatingDelivery && (
               <>
@@ -222,7 +247,7 @@ function GOrderDetail({ orderId, onBack }) {
             Chi tiết đơn hàng {orderData.orderId}
           </h1>
           <span
-            className={`godetail-status godetail-status-${orderData.status}`}
+            className={`godetail-status godetail-status-${orderData.status.toLowerCase()}`}
           >
             {orderData.status}
           </span>
