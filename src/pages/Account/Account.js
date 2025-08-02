@@ -251,14 +251,14 @@ function Account() {
       dataIndex: "Name",
       key: "name",
       width: 150,
-      align: "center",
+
     },
     {
       title: "Email",
       dataIndex: "Email",
       key: "email",
       width: 200,
-      align: "center",
+
     },
     {
       title: "Số điện thoại",

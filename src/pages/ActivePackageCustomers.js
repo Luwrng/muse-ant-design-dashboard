@@ -27,11 +27,15 @@ const ActivePackageCustomers = () => {
         return orders
             .filter(order =>
                 order.servicePackageId === activePackageKey &&
-                (order.gardenerName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                order.status === "SUCCESS" && // ✅ chỉ lấy đơn thành công
+                (
+                    order.gardenerName?.toLowerCase().includes(searchText.toLowerCase()) ||
                     order.gardenerPhone?.includes(searchText) ||
-                    order.gardenerEmail?.toLowerCase().includes(searchText))
+                    order.gardenerEmail?.toLowerCase().includes(searchText)
+                )
             );
     };
+
 
     useEffect(() => {
         const fetchPackages = async () => {
@@ -64,12 +68,12 @@ const ActivePackageCustomers = () => {
         {
             title: "Mã KH",
             dataIndex: "gardenerId",
-            align: "center",
+
         },
         {
             title: "Họ Tên",
             dataIndex: "gardenerName",
-            align: "center",
+
         },
         {
             title: "Số Điện Thoại",
@@ -79,7 +83,7 @@ const ActivePackageCustomers = () => {
         {
             title: "Email",
             dataIndex: "gardenerEmail",
-            align: "center",
+
         },
         {
             title: "Trạng Thái",

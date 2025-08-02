@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Row,
   Col,
@@ -72,6 +72,7 @@ const Orders = () => {
 
       const formatted = res.items.map((item, index) => ({
         key: index,
+        gardenerName: item.gardenerName || "",
         servicePackageOrderId: item.servicePackageOrderId || "",
         gardenerId: item.gardenerId || "",
         servicePackageId: item.servicePackageId || "",
@@ -100,19 +101,19 @@ const Orders = () => {
       title: "Mã Đơn",
       dataIndex: "servicePackageOrderId",
       key: "servicePackageOrderId",
-      align: "center"
+
     },
     {
-      title: "Khách Hàng (ID)",
-      dataIndex: "gardenerId",
-      key: "gardenerId",
-      align: "center"
+      title: "Khách Hàng",
+      dataIndex: "gardenerName",
+      key: "gardenerName",
+
     },
     {
       title: "Gói Dịch Vụ (ID)",
       dataIndex: "servicePackageId",
       key: "servicePackageId",
-      align: "center"
+
     },
     {
       title: "Tổng Tiền",
@@ -162,6 +163,9 @@ const Orders = () => {
     },
   ];
 
+  const activeData = useMemo(() => data.filter(item => item.status === "SUCCESS"), [data]);
+
+
   return (
     <>
       <div className="tabled">
@@ -184,7 +188,7 @@ const Orders = () => {
               <div className="table-responsive">
                 <Table
                   columns={columns}
-                  dataSource={data}
+                  dataSource={activeData}
                   pagination={{
                     position: ["bottomCenter", "bottomRight"],
                     pageSize,

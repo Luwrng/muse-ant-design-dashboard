@@ -144,7 +144,7 @@ function Home() {
   const initialCount = useMemo(() => [
     {
       key: "gardener",
-      today: "Nhà Vườn",
+      today: "Số lượng Nhà Vườn",
       title: (stats.gardener ?? 0).toLocaleString(),
       icon: profile,
       bnb: "bnb2",
@@ -152,7 +152,7 @@ function Home() {
     },
     {
       key: "retailer",
-      today: "Nhà bán lẻ",
+      today: "Số lượng Nhà bán lẻ",
       title: (stats.retailer ?? 0).toLocaleString(),
       icon: profile,
       bnb: "bnb2",
@@ -160,7 +160,7 @@ function Home() {
     },
     {
       key: "servicePackage",
-      today: "Gói dịch vụ",
+      today: "Tổng số Gói dịch vụ",
       title: (stats.servicePackage ?? 0).toLocaleString(),
       icon: cart,
       bnb: "redtext",
@@ -356,6 +356,7 @@ function Home() {
         0
       );
       const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order, idx) => {
+        const status = order.status?.toUpperCase() || "UNKNOWN";
         return {
           title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()}VND`,
           time: order.createdAt
@@ -367,7 +368,8 @@ function Home() {
               year: "numeric",
             })
             : "Không xác định",
-          color: "green", // Hoặc logic nếu có status: order.status === "SUCCESS" ? "green" : "gray"
+          color: status === "SUCCESS" ? "green" : "gray",
+          status,
         };
       });
 
@@ -514,18 +516,17 @@ function Home() {
                 <Paragraph className="lastweek" style={{ marginBottom: 24 }}>
 
                 </Paragraph>
-                <Timeline
-                  // pending="Recording..."
-                  className="timelinelist"
-                  reverse={reverse}
-                >
-                  {timelineList.map((t, index) => (
-                    <Timeline.Item color={t.color} key={index}>
-                      <Title level={5}>{t.title}</Title>
-                      <Text>{t.time}</Text>
-                    </Timeline.Item>
-                  ))}
+                <Timeline className="timelinelist" reverse={reverse}>
+                  {timelineList
+                    .filter((t) => t.status === "SUCCESS")
+                    .map((t, index) => (
+                      <Timeline.Item color={t.color} key={index}>
+                        <Title level={5}>{t.title}</Title>
+                        <Text>{t.time}</Text>
+                      </Timeline.Item>
+                    ))}
                 </Timeline>
+
                 <Button
                   type="primary"
                   className="width-100"
