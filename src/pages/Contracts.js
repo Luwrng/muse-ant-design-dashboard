@@ -161,7 +161,7 @@ const ContractTable = () => {
               children: (
                 <Table
                   columns={columns}
-                  dataSource={dataSource}
+                  dataSource={dataSource.filter(item => item.status === "ACTIVE")}
                   pagination={{
                     current: currentPage,
                     pageSize: pageSize,

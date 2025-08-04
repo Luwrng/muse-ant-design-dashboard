@@ -19,7 +19,12 @@ const ActivePackageCustomers = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activePackageKey, setActivePackageKey] = useState(null);
     const [orders, setOrders] = useState(null);
-
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+    });
+    
 
     const getFilteredOrdersByPackage = () => {
         if (!orders || !activePackageKey) return [];
@@ -157,7 +162,19 @@ const ActivePackageCustomers = () => {
                                 locale={{
                                     emptyText: <Empty description="Không có khách hàng nào sử dụng gói này" />,
                                 }}
-                                pagination={false}
+                                pagination={{
+                                    current: pagination.current,
+                                    pageSize: pagination.pageSize,
+                                    total: pagination.total,
+                                    position: ["bottomCenter", "bottomRight"],
+                                    onChange: (page, size) => {
+                                        setPagination({
+                                            ...pagination,
+                                            current: page,
+                                            pageSize: size,
+                                        });
+                                    },
+                                }}
                                 rowKey="servicePackageOrderId"
                                 scroll={{ x: "max-content" }}
                             />
