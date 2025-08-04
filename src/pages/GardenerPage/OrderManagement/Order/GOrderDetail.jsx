@@ -5,6 +5,9 @@ import "./GOrderDetail.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
 import matchers from "@testing-library/jest-dom/matchers";
+import GApprovePopup from "./Popups/GApprovePopup";
+import GRejectPopup from "./Popups/GRejectPopup";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
@@ -22,11 +25,18 @@ function GOrderDetail({ orderId, onBack }) {
     delieryDetailsDTOs: [{}],
   });
 
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [orderIdForModal, setOrderIdForModal] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     fetchOrderDetail();
   }, [orderId]);
 
   const fetchOrderDetail = async () => {
+    setIsLoading(true);
     try {
       const accountId = localStorage.getItem("account_id");
       const result = await gardenerOrderService.getGardenerOrderDetail(
@@ -43,6 +53,8 @@ function GOrderDetail({ orderId, onBack }) {
       console.log(err);
       setOrderData(null);
       setOrderDeliveries([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,6 +115,7 @@ function GOrderDetail({ orderId, onBack }) {
       return;
     }
 
+    setIsLoading(true);
     try {
       const createdeliveryData = createOrderDelivery;
       createOrderDelivery.delieryDetailsDTOs = productsToDeliver;
@@ -140,6 +153,7 @@ function GOrderDetail({ orderId, onBack }) {
         note: "",
         delieryDetailsDTOs: [{}],
       });
+      setIsLoading(false);
     }
   };
 
@@ -162,6 +176,7 @@ function GOrderDetail({ orderId, onBack }) {
       }
     );
 
+    setIsLoading(true);
     try {
       await gardenerOrderService.updateOrderDeliveryStatus(
         orderId,
@@ -184,15 +199,56 @@ function GOrderDetail({ orderId, onBack }) {
       fetchOrderDetail(0);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleUpdateOrderStatus = async (orderId, status) => {
+  // const handleUpdateOrderStatus = async (orderId, status) => {
+  //   try {
+  //     await gardenerOrderService.updateOrderStatus(orderId, status);
+  //     fetchOrderDetail();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  const handleUpdateOrderStatus = (orderId, status) => {
+    setOrderIdForModal(orderId);
+    if (status === "PREPARING") {
+      setShowApproveModal(true);
+    } else if (status === "CANCELLED") {
+      setShowRejectModal(true);
+    }
+  };
+
+  const handleApproveConfirm = async (orderId, shippingCost) => {
+    setIsLoading(true);
     try {
-      await gardenerOrderService.updateOrderStatus(orderId, status);
+      await gardenerOrderService.approveOrder(orderId, shippingCost);
       fetchOrderDetail();
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowApproveModal(false);
+      setOrderIdForModal(null);
+      setIsLoading(false);
+    }
+  };
+
+  const handleRejectConfirm = async (orderId, rejectReason) => {
+    setIsLoading(true);
+    try {
+      await gardenerOrderService.rejectOrder(orderId, {
+        rejectReason,
+      });
+      fetchOrderDetail(); // Refresh orders after update
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setShowRejectModal(false);
+      setOrderIdForModal(null);
+      setIsLoading(false);
     }
   };
 
@@ -516,12 +572,22 @@ function GOrderDetail({ orderId, onBack }) {
           )}
         </div>
       </div>
-      {/* {showDeliveryPopup && (
-        <GOrderDelivery
-          orderId={orderData.orderId}
-          onClose={() => setShowDeliveryPopup(false)}
+      {showApproveModal && (
+        <GApprovePopup
+          orderId={orderIdForModal}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={handleApproveConfirm}
         />
-      )} */}
+      )}
+      {showRejectModal && (
+        <GRejectPopup
+          orderId={orderIdForModal}
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={handleRejectConfirm}
+        />
+      )}
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

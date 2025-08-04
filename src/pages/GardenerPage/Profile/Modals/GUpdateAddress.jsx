@@ -2,6 +2,7 @@ import React from "react";
 import addressService from "../../../services/apiServices/addressService";
 import { useState } from "react";
 import "./GUpdateAddress.css";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 
 function GUpdateAddress({ address, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
     country: address.country,
     postalCode: address.postalCode,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -26,12 +29,16 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
   };
 
   const onUpdateSubmit = async (e) => {
+    setIsLoading(true);
     try {
       await addressService.updateAddress(address.addressId, formData);
       e.preventDefault();
+      setIsLoading(false);
       onUpdate({ ...address, ...formData });
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,6 +127,8 @@ function GUpdateAddress({ address, onClose, onUpdate }) {
           </div>
         </form>
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

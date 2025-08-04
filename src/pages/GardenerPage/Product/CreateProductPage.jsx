@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import "./CreateProductPage.css";
 import productService from "../../services/apiServices/productService";
 import CreateProductCertificatePopup from "./CreateProductCertificatePopup";
+import LoadingPage from "./Loading/LoadingPage";
 
 function CreateProductPage({ onBack }) {
   const [formData, setFormData] = useState({
@@ -26,14 +27,19 @@ function CreateProductPage({ onBack }) {
   const [categories, setCategories] = useState([]);
   const [showAddCertificateModal, setShowAddCertificateModal] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   //Call get product Category
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoading(true);
       try {
         const result = await productService.getProductCategories(1, 10, true);
         setCategories(result);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -85,14 +91,17 @@ function CreateProductPage({ onBack }) {
       })),
     };
 
+    setIsLoading(true);
+
     try {
       const gardenerId = localStorage.getItem("account_id");
       await productService.createProduct(gardenerId, finalFormData);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
+      onBack();
     }
-
-    onBack();
   };
 
   return (
@@ -228,7 +237,7 @@ function CreateProductPage({ onBack }) {
               <div className="cproduct-form-group cproduct-form-group-inline">
                 <div className="cproduct-form-group-half">
                   <label htmlFor="price" className="cproduct-form-label">
-                  Giá<span className="cproduct-required">*</span>
+                    Giá<span className="cproduct-required">*</span>
                   </label>
                   <input
                     id="price"
@@ -271,7 +280,7 @@ function CreateProductPage({ onBack }) {
                 {/* Currency */}
                 <div className="cproduct-form-group-half">
                   <label htmlFor="currency" className="cproduct-form-label">
-Tiền tệ
+                    Tiền tệ
                   </label>
                   <select
                     id="currency"
@@ -459,6 +468,7 @@ Tiền tệ
           onAddCertificate={handleAddCertificate}
         />
       )}
+      <LoadingPage isOpen={isLoading} />
     </div>
   );
 }

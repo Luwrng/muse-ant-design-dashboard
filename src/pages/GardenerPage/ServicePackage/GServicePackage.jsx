@@ -3,13 +3,17 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import "./GServicePackage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
 import paymentService from "../../services/apiServices/paymentService";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 function GServicePackage() {
   const history = useHistory();
 
   const [packages, setPackages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const fetchPackage = async () => {
+      setIsLoading(true);
       try {
         const result = await servicePackageService.getAvailableServicePackage(
           "Status",
@@ -19,6 +23,8 @@ function GServicePackage() {
         setPackages(result.items);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -116,6 +122,8 @@ function GServicePackage() {
             </div>
           ))}
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

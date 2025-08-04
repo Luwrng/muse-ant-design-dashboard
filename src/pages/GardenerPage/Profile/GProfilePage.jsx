@@ -10,6 +10,7 @@ import GPasswordChange from "./Modals/GPasswordChange";
 import GProfileUpdate from "./Modals/GProfileUpdate";
 import GUpdateAddress from "./Modals/GUpdateAddress";
 import GUpdateCertificate from "./Modals/GUpdateCertificate";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 //Import Styling
 import "./GProfilePage.css";
@@ -33,9 +34,12 @@ function GProfilePage() {
   const [addresses, setAddresses] = useState([]);
   const [certificates, setCertificates] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   //Get profile
   useEffect(() => {
     const fetchProfile = async () => {
+      setIsLoading(true);
       try {
         const accountId = localStorage.getItem("account_id");
         const result = await accountService.getProfile(accountId);
@@ -47,11 +51,15 @@ function GProfilePage() {
         setCertificates(certificates || []);
       } catch (err) {
         console.log(err.response.data);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchProfile();
   }, []);
+
+  const handleChangePassword = async (passwordData) => {};
 
   const handleAddressClick = (address) => {
     setSelectedAddress(address);
@@ -67,18 +75,26 @@ function GProfilePage() {
     (cert) => cert.name === selectedCertificate
   );
 
- const Statusmap = (status)=>{
-    switch(status){  case "ACTIVE": return "Đang hoạt động";
-      case "INACTIVE": return "Ngưng hoạt động";
-    default :return "Bị cấm";}
-   }
-  const Gendermap = (gender) =>{
-    switch(gender){
-      case "Male" : return "Nam";
-      case "Female": return "Nữ";
-      default : return "Không xác định"
+  const Statusmap = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "Đang hoạt động";
+      case "INACTIVE":
+        return "Ngưng hoạt động";
+      default:
+        return "Bị cấm";
     }
-  }
+  };
+  const Gendermap = (gender) => {
+    switch (gender) {
+      case "Male":
+        return "Nam";
+      case "Female":
+        return "Nữ";
+      default:
+        return "Không xác định";
+    }
+  };
 
   return (
     <div className="gprofile-profile">
@@ -99,7 +115,6 @@ function GProfilePage() {
         </button>
       </div>
 
-
       {profile && activeTab === "account" && (
         <div className="gprofile-account-tab">
           <div className="gprofile-profile-section">
@@ -110,6 +125,13 @@ function GProfilePage() {
                 className="gprofile-avatar"
               />
               <h2>{profile.name}</h2>
+            </div>
+
+            <div className="gprofile-detail-bio">
+              <div className="gprofile-detail-item">
+                <label>Bio</label>
+                <span>{profile.bio}</span>
+              </div>
             </div>
 
             <div className="gprofile-profile-details">
@@ -150,14 +172,18 @@ function GProfilePage() {
                 </div>
                 <div className="gprofile-detail-item">
                   <label>Ngày tạo</label>
-                  <span>{profile.createdAt}</span>
+                  <span>
+                    {new Date(profile.createAt).toISOString().split("T")[0]}
+                  </span>
                 </div>
               </div>
 
               <div className="gprofile-detail-row">
                 <div className="gprofile-detail-item">
                   <label>Lần cập nhật gần nhất</label>
-                  <span>{profile.updatedAt}</span>
+                  <span>
+                    {new Date(profile.updatedAt).toISOString().split("T")[0]}
+                  </span>
                 </div>
               </div>
             </div>
@@ -287,7 +313,10 @@ function GProfilePage() {
       )}
 
       {showChangePassword && (
-        <GPasswordChange onClose={() => setShowChangePassword(false)} />
+        <GPasswordChange
+          onClose={() => setShowChangePassword(false)}
+          phoneNumber={profile.phoneNumber}
+        />
       )}
 
       {showAddressDetail && selectedAddress && (
@@ -356,6 +385,8 @@ function GProfilePage() {
           }}
         />
       )}
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

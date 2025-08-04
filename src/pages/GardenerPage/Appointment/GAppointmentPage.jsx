@@ -8,6 +8,7 @@ import GAppointmentCancelModal from "./GAppointmentCancelModal";
 import Paginate from "../../../components/paginate/Paginate";
 import "./GAppointmentPage.css";
 import appointmentService from "../../services/apiServices/appointmentService";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 // const scheduledAppointments = [
 //   {
@@ -171,6 +172,8 @@ function GAppointmentPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResult, setTotalResults] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const today = new Date();
 
   useEffect(() => {
@@ -178,6 +181,7 @@ function GAppointmentPage() {
   }, [activeTab, currentPage]);
 
   const fetchPendingAppointment = async (page) => {
+    setIsLoading(true);
     try {
       if (activeTab === "wait-approve") {
         const gardenerId = localStorage.getItem("account_id");
@@ -200,6 +204,8 @@ function GAppointmentPage() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -224,7 +230,15 @@ function GAppointmentPage() {
   // Function to get week days with dates
   const getWeekDays = (weekStart) => {
     const days = [];
-    const dayNames = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
+    const dayNames = [
+      "Thứ 2",
+      "Thứ 3",
+      "Thứ 4",
+      "Thứ 5",
+      "Thứ 6",
+      "Thứ 7",
+      "Chủ nhật",
+    ];
     const fullDayNames = [
       "MONDAY",
       "TUESDAY",
@@ -255,18 +269,18 @@ function GAppointmentPage() {
     weekEnd.setDate(weekStart.getDate() + 6);
 
     const monthNames = [
-      "Tháng 1",  // Jan
-      "Tháng 2",  // Feb
-      "Tháng 3",  // Mar
-      "Tháng 4",  // Apr
-      "Tháng 5",  // May
-      "Tháng 6",  // Jun
-      "Tháng 7",  // Jul
-      "Tháng 8",  // Aug
-      "Tháng 9",  // Sep
+      "Tháng 1", // Jan
+      "Tháng 2", // Feb
+      "Tháng 3", // Mar
+      "Tháng 4", // Apr
+      "Tháng 5", // May
+      "Tháng 6", // Jun
+      "Tháng 7", // Jul
+      "Tháng 8", // Aug
+      "Tháng 9", // Sep
       "Tháng 10", // Oct
       "Tháng 11", // Nov
-      "Tháng 12"  // Dec
+      "Tháng 12", // Dec
     ];
 
     const startMonth = monthNames[weekStart.getMonth()];
@@ -352,6 +366,7 @@ function GAppointmentPage() {
   };
 
   const handleApprove = async (appointment) => {
+    setIsLoading(true);
     try {
       await appointmentService.updateAppointmentStatus(
         appointment.appointmentId,
@@ -363,12 +378,14 @@ function GAppointmentPage() {
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      closeRequestModal();
+      setIsLoading(false);
     }
-
-    closeRequestModal();
   };
 
   const handleReject = async (appointment) => {
+    setIsLoading(true);
     try {
       await appointmentService.updateAppointmentStatus(
         appointment.appointmentId,
@@ -380,9 +397,10 @@ function GAppointmentPage() {
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      closeRequestModal();
+      setIsLoading(false);
     }
-
-    closeRequestModal();
   };
 
   // Modal functions for Schedule Detail
@@ -408,7 +426,8 @@ function GAppointmentPage() {
   };
 
   const handleCancelConfirm = async (appointment, reason) => {
-    console.log("Cancelled appointment:", appointment, "Reason:", reason);
+    // console.log("Cancelled appointment:", appointment, "Reason:", reason);
+    setIsLoading(true);
     try {
       const gardenerId = localStorage.getItem("account_id");
       await appointmentService.cancelAppointment(appointment.appointmentId, {
@@ -417,9 +436,11 @@ function GAppointmentPage() {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowCancelPopup(false);
+      setSelectedAppointment(null);
+      setIsLoading(false);
     }
-    setShowCancelPopup(false);
-    setSelectedAppointment(null);
   };
 
   const getClosestTimeSlot = (startTime, timeSlots) => {
@@ -468,7 +489,7 @@ function GAppointmentPage() {
             onClick={() => setActiveTab("wait-approve")}
           >
             <span className="gappointment-tab-icon">⏰</span>
-           Chờ được duyệt
+            Chờ được duyệt
           </button>
           <button
             className={`gappointment-tab-trigger ${
@@ -477,7 +498,7 @@ function GAppointmentPage() {
             onClick={() => setActiveTab("schedule")}
           >
             <span className="gappointment-tab-icon">📅</span>
-         Lịch hẹn
+            Lịch hẹn
           </button>
         </div>
 
@@ -721,6 +742,8 @@ function GAppointmentPage() {
         onClose={closeCancelPopup}
         onConfirm={handleCancelConfirm}
       />
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

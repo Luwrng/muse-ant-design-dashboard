@@ -30,9 +30,25 @@ const updateOrderStatus = async (orderId, status) => {
   );
 };
 
-const updateGardenerOrderStatus = async (orderId, data) => {
+const updateGardenerOrderStatus = async (orderId, status) => {
   return await httpService.patch(
     `${orderEndpoint}/${orderId}/order-details`,
+    {},
+    { params: { status } }
+  );
+};
+
+const approveOrder = async (orderId, shippingCost) => {
+  return await httpService.patch(
+    `${orderEndpoint}/${orderId}/shipping-costs`,
+    {},
+    { params: { shippingCost } }
+  );
+};
+
+const rejectOrder = async (orderId, data) => {
+  return await httpService.patch(
+    `${orderEndpoint}/${orderId}/order-reject`,
     data
   );
 };
@@ -61,6 +77,9 @@ const gardenerOrderService = {
   getGardenerOrderDetail,
   updateOrderStatus,
   updateGardenerOrderStatus,
+
+  approveOrder,
+  rejectOrder,
 
   getOrderDeliveries,
   createOrderDelivery,

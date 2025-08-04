@@ -200,7 +200,7 @@ import {
   useLocation,
 } from "react-router-dom/cjs/react-router-dom.min";
 import { Layout, Menu, Button, Row, Col, Typography, Form, Input } from "antd";
-import signinbg from "../assets/images/img-signin.jpg";
+import signinbg from "../assets/images/login_side_image.png";
 import styled from "styled-components";
 import authenticateService from "./services/apiServices/authenticateService";
 import CloudinaryUpload from "../cloudinary/CloudinaryUpload";

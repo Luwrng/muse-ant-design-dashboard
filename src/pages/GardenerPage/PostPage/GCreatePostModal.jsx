@@ -6,6 +6,8 @@ import QuillTestbox from "../../../components/textarea/QuillTextbox";
 import dayjs from "dayjs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const [formData, setFormData] = useState({
@@ -21,6 +23,8 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const [contentValue, setContentValue] = useState("");
   const [createVideo, setCreateVideo] = useState();
   const [createImages, setCreateImages] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -55,6 +59,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const uploadedAt = new Date().toISOString();
+    setIsLoading(true);
     try {
       const mediaList = [];
 
@@ -133,6 +138,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
       setContentValue("");
       setCreateVideo();
       setCreateImages([]);
+      setIsLoading(false);
       onClose();
     }
   };
@@ -300,6 +306,8 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           </div>
         </form>
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

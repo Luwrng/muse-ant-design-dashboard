@@ -5,6 +5,7 @@ import GDisableConfirmModal from "./GDisableConfirmModal";
 import GCreatePostModal from "./GCreatePostModal";
 import GUpdatePostModal from "./GUpdatePostModal";
 import Paginate from "../../../components/paginate/Paginate";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 import productService from "../../services/apiServices/productService";
 
@@ -30,6 +31,8 @@ function GPostPage() {
   const [totalPage, setTotalPage] = useState(1);
   const [totalResult, setTotalResult] = useState();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // #region Fetching data
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,6 +52,7 @@ function GPostPage() {
   }, [currentPage, searchTerm, activeFilter]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const gardenerId = localStorage.getItem("account_id");
       const gardenerPosts = await postService.getGardenerPosts(
@@ -64,6 +68,8 @@ function GPostPage() {
       setTotalResult(gardenerPosts.total);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
   // #endregion
@@ -126,6 +132,7 @@ function GPostPage() {
   };
 
   const handleUpdate = async (updatedPost) => {
+    setIsLoading(true);
     try {
       await postService.updatePost(updatedPost.postId, {
         title: updatedPost.title,
@@ -139,12 +146,14 @@ function GPostPage() {
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowUpdatePopup(false);
+      setIsLoading(false);
     }
-
-    setShowUpdatePopup(false);
   };
 
   const handleCreate = async (newPostData) => {
+    setIsLoading(true);
     try {
       const newPost = {
         title: newPostData.title,
@@ -164,10 +173,12 @@ function GPostPage() {
       console.log(err);
     } finally {
       setShowCreatePopup(false);
+      setIsLoading(false);
     }
   };
 
   const handleConfirmDisable = async () => {
+    setIsLoading(true);
     try {
       const updatedStatus =
         selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
@@ -182,10 +193,11 @@ function GPostPage() {
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowDisablePopup(false);
+      setSelectedPost(null);
+      setIsLoading(false);
     }
-
-    setShowDisablePopup(false);
-    setSelectedPost(null);
   };
 
   const SearchIcon = () => (
@@ -339,6 +351,7 @@ function GPostPage() {
         onClose={() => setShowDisablePopup(false)}
         onConfirm={handleConfirmDisable}
       />
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

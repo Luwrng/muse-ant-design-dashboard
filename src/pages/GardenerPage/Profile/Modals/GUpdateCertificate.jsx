@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./GUpdateCertificate.css";
 import certificateService from "../../../services/apiServices/certificateService";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 
 function GUpdateCertificate({ certificate, onClose, onUpdate }) {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
     expiryDate: new Date(certificate.expiryDate).toISOString().split("T")[0],
     status: certificate.status,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -26,15 +29,19 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
   };
 
   const handleUpdateSubmit = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       await certificateService.updateCertificate(
         certificate.certificateId,
         formData
       );
+      setIsLoading(false);
       onUpdate({ ...certificate, ...formData });
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,7 +58,10 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           <h2>Cập nhật chứng chỉ</h2>
         </div>
 
-        <form onSubmit={handleUpdateSubmit} className="gupdatecertificate-popup-form">
+        <form
+          onSubmit={handleUpdateSubmit}
+          className="gupdatecertificate-popup-form"
+        >
           <div className="gupdatecertificate-form-group">
             <label htmlFor="name">Tên chứng chỉ</label>
             <input
@@ -114,6 +124,8 @@ function GUpdateCertificate({ certificate, onClose, onUpdate }) {
           </div>
         </form>
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

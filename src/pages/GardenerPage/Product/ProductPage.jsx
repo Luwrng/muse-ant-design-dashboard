@@ -58,6 +58,7 @@ function GardenerProductPage() {
   }, [currentPage, activeTab, searchTerm]);
 
   const fetchProducts = async () => {
+    setIsLoading(true);
     try {
       const gardenerId = localStorage.getItem("account_id");
       const result = await productService.getGardenerProducts(
@@ -75,6 +76,8 @@ function GardenerProductPage() {
     } catch (err) {
       console.log(err);
       //Add modal later
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -176,6 +179,7 @@ function GardenerProductPage() {
   }, []);
 
   const handleAddCertificate = async (newCertificate) => {
+    setIsLoading(true);
     try {
       await productService.cerateProductCertificate(
         selectedProduct.productId,
@@ -185,6 +189,8 @@ function GardenerProductPage() {
       setShowAddCertificate(false);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -245,7 +251,7 @@ function GardenerProductPage() {
 
   const handleStatusConfirm = async () => {
     setShowConfirmStatus(false);
-
+    setIsLoading(true);
     try {
       const status =
         selectedProduct.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
@@ -262,6 +268,8 @@ function GardenerProductPage() {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
