@@ -78,6 +78,10 @@
   gap: 40px;
 }
 
+.gprofile-detail-bio {
+  margin-bottom: 1rem;
+}
+
 .gprofile-detail-item {
   display: flex;
   flex-direction: column;

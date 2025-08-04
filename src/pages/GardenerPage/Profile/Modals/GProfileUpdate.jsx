@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import "./GProfileUpdate.css";
 import axios from "axios";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 import accountService from "../../../services/apiServices/accountService";
 
 function GProfileUpdate({ profile, onClose, onUpdate }) {
@@ -9,8 +10,10 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
     name: profile.name,
     gender: profile.gender,
     avatar: profile.avatar,
+    bio: profile.bio,
   });
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -35,25 +38,34 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
   };
 
   const handleUpdateSubmit = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
-      const fileData = new FormData();
-      fileData.append("file", file); // This will work
-      fileData.append("upload_preset", "clean_food_viet");
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
-        fileData
-      );
 
       const updatedFormData = formData;
-      updatedFormData.avatar = res.data.url;
+      console.log(file);
+      if (file !== null) {
+        const fileData = new FormData();
+        fileData.append("file", file); // This will work
+        fileData.append("upload_preset", "clean_food_viet");
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
+          fileData
+        );
+        updatedFormData.avatar = res.data.url;
+      } else {
+        updatedFormData.avatar = null;
+      }
 
       const accountId = localStorage.getItem("account_id");
       await accountService.updateProfile(accountId, updatedFormData);
+      setIsLoading(false);
       onUpdate({ ...profile, ...updatedFormData });
       onClose();
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,6 +96,18 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
           </div>
 
           <div className="gupdateprofile-form-group">
+            <label htmlFor="bio">Giới thiệu bản thân</label>
+            <textarea
+              type="text"
+              id="bio"
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="gupdateprofile-form-group">
             <label htmlFor="gender">Giới tính</label>
             <select
               id="gender"
@@ -105,24 +129,29 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
               name="avatar"
               accept="image/*"
               onChange={handleFileChange}
-              placeholder="https://example.com/image.jpg"
+              // placeholder="https://example.com/image.jpg"
             />
           </div>
 
           <div className="gupdateprofile-popup-actions">
-            <button type="submit" className="gupdateprofile-btn-primary">
-              Update
+            <button
+              type="submit"
+              className="gupdateprofile-btn-primary"
+              onClick={(e) => handleUpdateSubmit(e)}
+            >
+              Cập nhật
             </button>
             <button
               type="button"
               className="gupdateprofile-btn-secondary"
-              onClick={handleUpdateSubmit}
+              onClick={onClose}
             >
-              Cancel
+              Hủy
             </button>
           </div>
         </form>
       </div>
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

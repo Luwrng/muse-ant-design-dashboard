@@ -168,7 +168,8 @@ function SignUpPage() {
     const payload = {
       phoneNumber: formData.phone,
       password: formData.password,
-      email: "None",
+      bio: "Không có",
+      email: "Không có",
       gender: null,
       avatar: null,
       name: formData.name,

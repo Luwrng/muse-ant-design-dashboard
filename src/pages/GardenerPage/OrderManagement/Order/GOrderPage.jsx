@@ -4,6 +4,9 @@ import { EyeFilled, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import GOrderDetail from "./GOrderDetail";
 import "./GOrderPage.css";
 import gardenerOrderService from "../../../services/apiServices/gardenerOrderService";
+import GApprovePopup from "./Popups/GApprovePopup";
+import GRejectPopup from "./Popups/GRejectPopup";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 import Paginate from "../../../../components/paginate/Paginate";
 
 function GOrderPage() {
@@ -17,11 +20,18 @@ function GOrderPage() {
   const [totalPage, setTotalPage] = useState(1);
   const [totalResult, setTotalResult] = useState();
 
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [orderIdForModal, setOrderIdForModal] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     fetchOrder();
   }, [currentPage, activeFilter]);
 
   const fetchOrder = async () => {
+    setIsLoading(true);
     try {
       const gardenerId = localStorage.getItem("account_id");
       const result = await gardenerOrderService.getGardenerOrder(
@@ -37,6 +47,8 @@ function GOrderPage() {
       setTotalResult(result.total);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,12 +75,52 @@ function GOrderPage() {
     setShowOrderDetail(true);
   };
 
-  const handleUpdateOrderStatus = async (orderId, status) => {
+  // const handleUpdateOrderStatus = async (orderId, status) => {
+  //   try {
+  //     await gardenerOrderService.updateOrderStatus(orderId, status);
+  //     fetchOrder();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  // Modified handleUpdateOrderStatus to open modals
+  const handleUpdateOrderStatus = (orderId, status) => {
+    setOrderIdForModal(orderId);
+    if (status === "PREPARING") {
+      setShowApproveModal(true);
+    } else if (status === "CANCELLED") {
+      setShowRejectModal(true);
+    }
+  };
+
+  const handleApproveConfirm = async (orderId, shippingCost) => {
+    setIsLoading(true);
     try {
-      await gardenerOrderService.updateOrderStatus(orderId, status);
+      await gardenerOrderService.approveOrder(orderId, shippingCost);
       fetchOrder();
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowApproveModal(false);
+      setOrderIdForModal(null);
+      setIsLoading(false);
+    }
+  };
+
+  const handleRejectConfirm = async (orderId, rejectReason) => {
+    setIsLoading(true);
+    try {
+      await gardenerOrderService.rejectOrder(orderId, {
+        rejectReason,
+      });
+      fetchOrder(); // Refresh orders after update
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setShowRejectModal(false);
+      setOrderIdForModal(null);
+      setIsLoading(false);
     }
   };
 
@@ -197,6 +249,22 @@ function GOrderPage() {
           onBack={() => setShowOrderDetail(false)}
         />
       )}
+      {showApproveModal && (
+        <GApprovePopup
+          orderId={orderIdForModal}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={handleApproveConfirm}
+        />
+      )}
+      {showRejectModal && (
+        <GRejectPopup
+          orderId={orderIdForModal}
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={handleRejectConfirm}
+        />
+      )}
+
+      <LoadingPopup isOpen={isLoading} />
     </>
   );
 }

@@ -2,21 +2,25 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import "./GPostDetailModal.css";
 import postService from "../../services/apiServices/postService";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentPost, setCurrentPost] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   // const [playButton, setPlayButton] = useState(true);
   const videoRef = useRef(null);
 
   useEffect(() => {
     const fetchPost = async () => {
+      setIsLoading(true);
       try {
         const result = await postService.getPostDetail(postId);
         setCurrentPost(result);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -276,6 +280,8 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
           </div>
         )}
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

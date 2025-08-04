@@ -3,6 +3,7 @@ import certificateService from "../../../services/apiServices/certificateService
 import { useState } from "react";
 import axios from "axios";
 import "./GAddCertificate.css";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 
 function GAddCertificate({ onClose, onAdd }) {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ function GAddCertificate({ onClose, onAdd }) {
 
   const [file, setFile] = useState();
   const [previewUrl, setPreviewUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -52,6 +54,7 @@ function GAddCertificate({ onClose, onAdd }) {
   };
 
   const handleCreateSubmit = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       const fileData = new FormData();
@@ -69,10 +72,13 @@ function GAddCertificate({ onClose, onAdd }) {
       const gardenerId = localStorage.getItem("account_id");
       await certificateService.createCertificate(gardenerId, updatedFormData);
 
-      console.log(updatedFormData.status);
-      onAdd(formData);
+      // console.log(updatedFormData.status);
+      setIsLoading(false);
+      onAdd(updatedFormData);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -178,6 +184,8 @@ function GAddCertificate({ onClose, onAdd }) {
           </div>
         </form>
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

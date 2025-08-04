@@ -4,14 +4,17 @@ import CurrentActiveSubscription from "./CurrentActiveSubscription";
 import GSubscriptionHistory from "./GSubscriptionHistory";
 import PackageOrderHistory from "../PackageOrderHistory/GPackageOrderHistory";
 import gardenerHistoryService from "../../services/apiServices/gardenerHistoryService";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 function SubscriptionTabs() {
   const [activeTab, setActiveTab] = useState("active");
   const [subscription, setSubscription] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Fetch dât
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         if (activeTab === "active") {
           const gardenerId = localStorage.getItem("account_id");
@@ -23,12 +26,13 @@ function SubscriptionTabs() {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [activeTab]);
-  
 
   return (
     <div className="subscription-tabs-container">
@@ -56,6 +60,8 @@ function SubscriptionTabs() {
         )}
         {activeTab === "history" && <PackageOrderHistory />}
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

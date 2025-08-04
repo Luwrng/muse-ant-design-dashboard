@@ -14,6 +14,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./GDashboard.css";
 import statisticService from "../../services/apiServices/statisticService";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 // Register ChartJS components
 ChartJS.register(
@@ -30,6 +31,8 @@ function GDashboard() {
   const [date, setDate] = useState(new Date());
   const [dashboardData, setDashboardData] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const statusOrder = [
       "PENDING",
@@ -40,6 +43,7 @@ function GDashboard() {
     ];
 
     const fetchStatistic = async () => {
+      setIsLoading(true);
       try {
         const gardenerId = localStorage.getItem("account_id");
         var generalStat = await statisticService.getGeneralDashboardInfo(
@@ -126,6 +130,8 @@ function GDashboard() {
         setDashboardData(dashboardDataDetail);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -293,6 +299,8 @@ function GDashboard() {
           </div>
         </>
       )}
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

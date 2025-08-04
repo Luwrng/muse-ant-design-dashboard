@@ -15,12 +15,16 @@ function GPackageOrderHistoryDetail({ isOpen, onClose, paymentDetail }) {
       return dateString;
     }
   };
-   const Statusmap = (status)=>{
-    switch(status){  case "SUCCESS": return "Thành công";
-      case "PENDING": return "Chờ duyệt";
-    default :return "Không xác định";}
-  
-   }
+  const Statusmap = (status) => {
+    switch (status) {
+      case "SUCCESS":
+        return "Thành công";
+      case "PENDING":
+        return "Chờ duyệt";
+      default:
+        return "Không xác định";
+    }
+  };
 
   return (
     <div className="gpayhistorydetail-modal-overlay" onClick={onClose}>

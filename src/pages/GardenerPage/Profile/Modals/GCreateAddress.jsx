@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./GCreateAddress.css";
 import addressService from "../../../services/apiServices/addressService";
+import LoadingPopup from "../../../../components/loading/LoadingPopup";
 
 function GCreateAddress({ onClose, onAdd }) {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function GCreateAddress({ onClose, onAdd }) {
     country: "",
     postalCode: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,13 +33,17 @@ function GCreateAddress({ onClose, onAdd }) {
   };
 
   const onCreateSubmit = async (e) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       const accountId = localStorage.getItem("account_id");
       await addressService.createAddress(accountId, formData);
+      setIsLoading(false);
       onAdd(formData);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,6 +132,8 @@ function GCreateAddress({ onClose, onAdd }) {
           </div>
         </form>
       </div>
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }

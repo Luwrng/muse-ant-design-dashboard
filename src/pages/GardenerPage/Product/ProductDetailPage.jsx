@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StarIcon } from "lucide-react";
 import "./ProductDetailPage.css";
 import productService from "../../services/apiServices/productService";
+import LoadingPage from "./Loading/LoadingPage";
 
 function ProductDetailPage({
   product,
@@ -13,16 +14,20 @@ function ProductDetailPage({
   onAddCertificate,
 }) {
   const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!product || !product.productId) return;
 
     const fetchReviews = async () => {
+      setIsLoading(true);
       try {
         const result = await productService.getProductReview(product.productId);
         setReviews(result);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -326,6 +331,7 @@ function ProductDetailPage({
           )}
         </div>
       </div>
+      <LoadingPage isOpen={isLoading} />
     </div>
   );
 }

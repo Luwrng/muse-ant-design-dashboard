@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import "./GSubscriptionHistory.css";
 import gardenerHistoryService from "../../services/apiServices/gardenerHistoryService";
 import GSubscriptionHistoryDetail from "./GSubscriptionHistoryDetail";
+import LoadingPopup from "../../../components/loading/LoadingPopup";
 
 // const mockSubscriptions = [
 //   {
@@ -87,8 +88,12 @@ function GSubscriptionHistory() {
   const [selectedSubscription, setSelectedSubscription] = useState(null);
 
   const [subscriptionHistory, setSubscriptionHistory] = useState();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const fetchSubscriptionHistory = async () => {
+      setIsLoading(true);
       try {
         const gardenerId = localStorage.getItem("account_id");
         const result = await gardenerHistoryService.getSubscriptionHistory(
@@ -97,6 +102,8 @@ function GSubscriptionHistory() {
         setSubscriptionHistory(result.items);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -204,6 +211,8 @@ function GSubscriptionHistory() {
           onClose={closeModal}
         />
       )}
+
+      <LoadingPopup isOpen={isLoading} />
     </div>
   );
 }
