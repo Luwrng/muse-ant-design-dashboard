@@ -1,7 +1,9 @@
-import { Table, Tag, Modal, Button, Typography, Space, Card, message } from "antd";
+import { Table, Tag, Modal, Button, Typography, Space, Card, message, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import SearchButton from "../components/button/SearchButton";
 import { cleanfood } from "../api_admin";
+import ActivePackageCustomers from "./ActivePackageCustomers"; // đường dẫn đúng
+
 
 const { Title, Paragraph } = Typography;
 
@@ -10,13 +12,13 @@ const columns = [
     title: "Mã đăng ký",
     dataIndex: "subscriptionId",
     key: "subscriptionId",
-    align: "center",
+
   },
   {
     title: "Tên khách hàng",
     dataIndex: "gardenerName",
     key: "gardenerName",
-    align: "center",
+
   },
   {
     title: "SĐT",
@@ -24,12 +26,12 @@ const columns = [
     key: "gardenerPhone",
     align: "center",
   },
-  {
-    title: "Mã người dùng",
-    dataIndex: "gardenerId",
-    key: "gardenerId",
-    align: "center",
-  },
+  // {
+  //   title: "Mã người dùng",
+  //   dataIndex: "gardenerId",
+  //   key: "gardenerId",
+  //   align: "center",
+  // },
   // {
   //   title: "Loại dịch vụ",
   //   dataIndex: "subscriptionType",
@@ -95,6 +97,7 @@ const ContractTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [total, setTotal] = useState(0);
+  const [tabStatus, setTabStatus] = useState("all");
 
   const showModal = () => setVisible(true);
   const handleClose = () => setVisible(false);
@@ -144,24 +147,43 @@ const ContractTable = () => {
           </Space>
         }
       >
-        <Table
-          columns={columns}
-          dataSource={dataSource}
-          pagination={{
-            current: currentPage,
-            pageSize: pageSize,
-            total: total,
-            position: ["bottomCenter", "bottomRight"],
-            onChange: (page, size) => {
-              setCurrentPage(page);
-              setPageSize(size);
+        <Tabs
+          defaultActiveKey="all"
+          style={{ fontSize: "16px", padding: "10px" }}
+          onChange={(key) => {
+            setCurrentPage(1);
+            setTabStatus(key);
+          }}
+          items={[
+            {
+              key: "all",
+              label: "Tất cả đơn",
+              children: (
+                <Table
+                  columns={columns}
+                  dataSource={dataSource.filter(item => item.status === "ACTIVE")}
+                  pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    total: total,
+                    position: ["bottomCenter", "bottomRight"],
+                    onChange: (page, size) => {
+                      setCurrentPage(page);
+                      setPageSize(size);
+                    },
+                  }}
+                  scroll={{ x: "max-content", y: 400 }}
+                />
+              ),
             },
-          }}
-          scroll={{
-            x: "max-content", // Cho phép cuộn ngang nếu bảng rộng
-            y: 400,           // Chiều cao tối đa bảng để cuộn dọc
-          }}
+            {
+              key: "active-customers",
+              label: "Danh sách khách hàng đang sử dụng gói",
+              children: <ActivePackageCustomers />, // ✅ Gọi component bạn đã viết
+            },
+          ]}
         />
+
       </Card>
 
       {/* <div>

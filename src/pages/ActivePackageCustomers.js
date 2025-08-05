@@ -19,7 +19,12 @@ const ActivePackageCustomers = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activePackageKey, setActivePackageKey] = useState(null);
     const [orders, setOrders] = useState(null);
-
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+    });
+    
 
     const getFilteredOrdersByPackage = () => {
         if (!orders || !activePackageKey) return [];
@@ -27,11 +32,15 @@ const ActivePackageCustomers = () => {
         return orders
             .filter(order =>
                 order.servicePackageId === activePackageKey &&
-                (order.gardenerName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                order.status === "SUCCESS" && // ✅ chỉ lấy đơn thành công
+                (
+                    order.gardenerName?.toLowerCase().includes(searchText.toLowerCase()) ||
                     order.gardenerPhone?.includes(searchText) ||
-                    order.gardenerEmail?.toLowerCase().includes(searchText))
+                    order.gardenerEmail?.toLowerCase().includes(searchText)
+                )
             );
     };
+
 
     useEffect(() => {
         const fetchPackages = async () => {
@@ -64,12 +73,12 @@ const ActivePackageCustomers = () => {
         {
             title: "Mã KH",
             dataIndex: "gardenerId",
-            align: "center",
+
         },
         {
             title: "Họ Tên",
             dataIndex: "gardenerName",
-            align: "center",
+
         },
         {
             title: "Số Điện Thoại",
@@ -79,7 +88,7 @@ const ActivePackageCustomers = () => {
         {
             title: "Email",
             dataIndex: "gardenerEmail",
-            align: "center",
+
         },
         {
             title: "Trạng Thái",
@@ -153,7 +162,19 @@ const ActivePackageCustomers = () => {
                                 locale={{
                                     emptyText: <Empty description="Không có khách hàng nào sử dụng gói này" />,
                                 }}
-                                pagination={false}
+                                pagination={{
+                                    current: pagination.current,
+                                    pageSize: pagination.pageSize,
+                                    total: pagination.total,
+                                    position: ["bottomCenter", "bottomRight"],
+                                    onChange: (page, size) => {
+                                        setPagination({
+                                            ...pagination,
+                                            current: page,
+                                            pageSize: size,
+                                        });
+                                    },
+                                }}
                                 rowKey="servicePackageOrderId"
                                 scroll={{ x: "max-content" }}
                             />

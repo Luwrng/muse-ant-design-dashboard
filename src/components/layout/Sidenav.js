@@ -118,12 +118,12 @@ function Sidenav() {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="active-package-customers">
+        {/* <Menu.Item key="active-package-customers">
           <NavLink to="/active-package-customers">
             <FontAwesomeIcon icon={faUserGroup} />
             <span>Danh Sách Khách Hàng Đang Sử Dụng Gói</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
 
 
         {/* FE-09: Quản lý báo cáo */}
@@ -138,12 +138,12 @@ function Sidenav() {
               <span>Danh Sách Báo Cáo</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="reported-posts">
+          {/* <Menu.Item key="reported-posts">
             <NavLink to="/reported-posts">
               <FontAwesomeIcon icon={faNewspaper} />
               <span>Bài Viết Bị Báo Cáo</span>
             </NavLink>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu.SubMenu>
 
         <Menu.Divider />

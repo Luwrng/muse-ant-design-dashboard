@@ -251,14 +251,14 @@ function Account() {
       dataIndex: "Name",
       key: "name",
       width: 150,
-      align: "center",
+
     },
     {
       title: "Email",
       dataIndex: "Email",
       key: "email",
       width: 200,
-      align: "center",
+
     },
     {
       title: "Số điện thoại",
@@ -359,7 +359,19 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "PENDING",
                       )}
-                      pagination={false}
+                        pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        position: ["bottomCenter", "bottomRight"],
+                        onChange: (page, size) => {
+                          setPagination({
+                            ...pagination,
+                            current: page,
+                            pageSize: size,
+                          });
+                        },
+                      }}
                       className="ant-border-space"
                       scroll={{ x: true }}
                     />
@@ -386,7 +398,19 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "Active",
                       )}
-                      pagination={false}
+                      pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        position: ["bottomCenter", "bottomRight"],
+                        onChange: (page, size) => {
+                          setPagination({
+                            ...pagination,
+                            current: page,
+                            pageSize: size,
+                          });
+                        },
+                      }}
                       className="ant-border-space"
                       scroll={{ x: true }}
 
@@ -400,7 +424,19 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "Inactive",
                       )}
-                      pagination={false}
+                      pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        position: ["bottomCenter", "bottomRight"],
+                        onChange: (page, size) => {
+                          setPagination({
+                            ...pagination,
+                            current: page,
+                            pageSize: size,
+                          });
+                        },
+                      }}
                       className="ant-border-space"
                       scroll={{ x: true }}
                     />
@@ -413,7 +449,19 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "BANNED",
                       )}
-                      pagination={false}
+                        pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        position: ["bottomCenter", "bottomRight"],
+                        onChange: (page, size) => {
+                          setPagination({
+                            ...pagination,
+                            current: page,
+                            pageSize: size,
+                          });
+                        },
+                      }}
                       className="ant-border-space"
                       scroll={{ x: true }}
                     />
