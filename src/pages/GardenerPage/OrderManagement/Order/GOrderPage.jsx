@@ -52,6 +52,13 @@ function GOrderPage() {
     }
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
   const handlePagChange = (page) => {
     setCurrentPage(page);
   };
@@ -108,12 +115,11 @@ function GOrderPage() {
     }
   };
 
-  const handleRejectConfirm = async (orderId, rejectReason) => {
+  const handleRejectConfirm = async (orderId, reason) => {
     setIsLoading(true);
+    console.log(reason);
     try {
-      await gardenerOrderService.rejectOrder(orderId, {
-        rejectReason,
-      });
+      await gardenerOrderService.rejectOrder(orderId, reason);
       fetchOrder(); // Refresh orders after update
     } catch (err) {
       console.log(err);
@@ -167,10 +173,12 @@ function GOrderPage() {
             <tbody>
               {Array.isArray(orders) &&
                 orders.map((order) => (
-                  <tr key={order.id} className="gorder-table-row">
+                  <tr key={order.orderId} className="gorder-table-row">
                     <td className="gorder-td">{order.orderId}</td>
                     <td className="gorder-td">{order.retailerName}</td>
-                    <td className="gorder-td">{order.totalAmount} ₫</td>
+                    <td className="gorder-td">
+                      {formatPrice(order.totalAmount + order.shippingCost)}
+                    </td>
                     <td className="gorder-td">{order.productTypeAmount}</td>
                     <td className="gorder-td">
                       {new Date(order.createdAt).toISOString().split("T")[0]},{" "}

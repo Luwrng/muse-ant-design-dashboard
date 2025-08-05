@@ -58,6 +58,13 @@ function GOrderDetail({ orderId, onBack }) {
     }
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
   const handleQuantityChange = (orderDetailId, value) => {
     const orderDetail = orderData.orderDetails.find(
       (p) => p.orderDetailId === orderDetailId
@@ -312,7 +319,12 @@ function GOrderDetail({ orderId, onBack }) {
           <p className="godetail-customer">
             Khách hàng: {orderData.accountName}
           </p>
-          <p className="godetail-total">Tổng tiền: {orderData.totalAmount} ₫</p>
+          <p className="godetail-total">
+            Tổng tiền sản phẩm: {formatPrice(orderData.totalAmount)}
+          </p>
+          <p className="godetail-total">
+            Chi phí vận chuyển: {formatPrice(orderData.shippingCost)}
+          </p>
           <p className="godetail-unit">
             Phương thức thanh toán: {orderData.paymentMethod}
           </p>{" "}
