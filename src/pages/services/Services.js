@@ -91,7 +91,7 @@ const ServiceList = () => {
         serviceFeatureId: editRecord?.serviceFeatureId,
         serviceFeatureName: values.serviceFeatureName,
         description: values.description,
-        action: editRecord?.value ?? 0, 
+        action: editRecord?.value ?? 0,
         status: values.status,
       };
 
@@ -172,12 +172,12 @@ const ServiceList = () => {
             }}
           />
           <EditButton
-            tooltip="Chỉnh sửa trạng thái"
+            tooltip="Chỉnh sửa"
             onClick={() => showEditModal(record)}
           />
           <DeleteButton
             record={record}
-            tooltip="Xóa"
+            tooltip="Dừng"
             type="feature"
             onDeleteSuccess={() =>
               fetchService(currentPage, pageSize, searchText)

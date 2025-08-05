@@ -19,6 +19,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
+import dayjs from "dayjs";
 
 import Echart from "../components/chart/EChart";
 import LineChart from "../components/chart/LineChart";
@@ -50,8 +51,11 @@ function Home() {
     retailer: 0,
     servicePackage: 0,
     revenue: 0,
+    orderAmount: 0,
+    orderCount: 0,
   });
   const [activePackages, setActivePackages] = useState([]);
+  const [timelineList, setTimelineList] = useState([]);
   const history = useHistory();
 
 
@@ -182,130 +186,8 @@ function Home() {
   const [count, setCount] = useState(initialCount);
 
 
-  const list = [
-    {
-      img: ava1,
-      Title: "Soft UI Shopify Version",
-      bud: "$14,000",
-      progress: <Progress percent={60} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Jessica Doe">
-            <img className="tootip-img" src={team4} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava2,
-      Title: "Progress Track",
-      bud: "$3,000",
-      progress: <Progress percent={10} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava3,
-      Title: "Fix Platform Errors",
-      bud: "Not Set",
-      progress: <Progress percent={100} size="small" status="active" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava4,
-      Title: "Launch new Mobile App",
-      bud: "$20,600",
-      progress: <Progress percent={100} size="small" status="active" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava5,
-      Title: "Add the New Landing Page",
-      bud: "$4,000",
-      progress: <Progress percent={80} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Jessica Doe">
-            <img className="tootip-img" src={team4} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
 
-    {
-      img: ava6,
-      Title: "Redesign Online Store",
-      bud: "$2,000",
-      progress: (
-        <Progress
-          percent={100}
-          size="small"
-          status="exception"
-          format={() => "Cancel"}
-        />
-      ),
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
-  const [timelineList, setTimelineList] = useState([
 
-  ]);
   const uploadProps = {
     name: "file",
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
@@ -351,14 +233,14 @@ function Home() {
         (sum, contract) => sum + (contract.price || 0),
         0
       );
-      const orderTotalAmount = orderRes.items?.reduce(
-        (sum, order) => sum + (order.totalAmount || 0),
-        0
-      );
+
+      // ✅ Đặt successOrders trước khi dùng
+      const successOrders = orderRes.items?.filter(order => order.status === "SUCCESS") || [];
+
       const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order, idx) => {
         const status = order.status?.toUpperCase() || "UNKNOWN";
         return {
-          title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()}VND`,
+          title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()} VND`,
           time: order.createdAt
             ? new Date(order.createdAt).toLocaleString("vi-VN", {
               hour: "2-digit",
@@ -373,32 +255,49 @@ function Home() {
         };
       });
 
-      // 👇 Gộp thêm vào cuối danh sách timeline có sẵn
+      // ✅ Tính doanh thu theo tháng
+      const revenueMap = {};
+      for (const order of successOrders) {
+        const date = dayjs(order.createdAt).format("MM/YYYY");
+        revenueMap[date] = (revenueMap[date] || 0) + (order.totalAmount || 0);
+      }
+
+      const monthlyRevenue = Object.entries(revenueMap)
+        .sort(([a], [b]) => dayjs(a, "MM/YYYY").unix() - dayjs(b, "MM/YYYY").unix())
+        .map(([month, amount]) => ({ month, amount }));
+
+      const orderTotalAmount = successOrders.reduce(
+        (sum, order) => sum + (order.totalAmount || 0),
+        0
+      );
+      const orderCount = successOrders.length;
+
       setTimelineList((prev) => [...prev, ...newTimelineItems]);
 
       const active = (serviceRes.items || [])
         .filter((pkg) => pkg.status === "ACTIVE")
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Mới nhất trước
-        .slice(0, 5); // Giới hạn số lượng nếu muốn
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5);
 
       setActivePackages(active);
 
-      const orderCount = orderRes.total || 0;
+      // ✅ Cập nhật thống kê
       setStats({
-        gardener: gardenerRes.total || 0,
-        retailer: retailerRes.total || 0,
-        servicePackage: packageRes.total || 0,
+        gardener: gardenerRes.totalItems || 0,
+        retailer: retailerRes.totalItems || 0,
+        servicePackage: packageRes.totalItems || 0,
         revenue: revenue || 0,
         orderAmount: orderTotalAmount || 0,
+        orderCount: orderCount || 0,
+        monthlyRevenue,
       });
+
     } catch (err) {
       console.error("❌ Lỗi fetch data:", err);
     } finally {
       setLoading(false);
     }
   };
-
-
 
 
   useEffect(() => {
@@ -447,7 +346,8 @@ function Home() {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <LineChart orderAmount={stats.orderAmount} />
+              <LineChart monthlyRevenue={stats.monthlyRevenue || []} />
+
             </Card>
           </Col>
         </Row>
@@ -512,7 +412,7 @@ function Home() {
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
-                <Title level={5}>Lịch sử giao dịch</Title>
+                <Title level={5}>Lịch sử giao dịch gần đây</Title>
                 <Paragraph className="lastweek" style={{ marginBottom: 24 }}>
 
                 </Paragraph>

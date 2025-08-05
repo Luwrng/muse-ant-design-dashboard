@@ -1,94 +1,37 @@
-import { Table, Tag, Modal, Button, Typography, Space, Card, message, Tabs } from "antd";
+import { Table, Tag, Modal, Button, Typography, Space, Card, message, Tabs, Tooltip, Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import SearchButton from "../components/button/SearchButton";
 import { cleanfood } from "../api_admin";
 import ActivePackageCustomers from "./ActivePackageCustomers"; // đường dẫn đúng
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 
 const { Title, Paragraph } = Typography;
 
-const columns = [
-  {
-    title: "Mã đăng ký",
-    dataIndex: "subscriptionId",
-    key: "subscriptionId",
+const getStatusColor = (status) => {
+  const info = getStatusInfo(status);
+  return info.color;
+};
+const getStatusInfo = (status) => {
+  switch (status) {
+    case "PENDING":
+      return { color: "orange", label: "Đang chờ" };
+    case "CONFIRMED":
+      return { color: "blue", label: "Đã xác nhận" };
+    case "IN_PROGRESS":
+      return { color: "cyan", label: "Đang thực hiện" };
+    case "SUCCESS":
+      return { color: "green", label: "Hoàn thành" };
+    case "CANCELLED":
+      return { color: "red", label: "Đã hủy" };
+    default:
+      return { color: "default", label: "Không xác định" };
+  }
 
-  },
-  {
-    title: "Tên khách hàng",
-    dataIndex: "gardenerName",
-    key: "gardenerName",
+};
 
-  },
-  {
-    title: "SĐT",
-    dataIndex: "gardenerPhone",
-    key: "gardenerPhone",
-    align: "center",
-  },
-  // {
-  //   title: "Mã người dùng",
-  //   dataIndex: "gardenerId",
-  //   key: "gardenerId",
-  //   align: "center",
-  // },
-  // {
-  //   title: "Loại dịch vụ",
-  //   dataIndex: "subscriptionType",
-  //   key: "subscriptionType",
-  //   align: "center",
-  //   render: (type) => {
-  //     const labelMap = {
-  //       POST_LIMIT: "Giới hạn đăng bài",
-  //       PRIORITY_POST: "Đăng bài ưu tiên",
-  //     };
-  //     return labelMap[type] || type;
-  //   },
-  // },
-  {
-    title: "Ngày bắt đầu",
-    dataIndex: "startDate",
-    key: "startDate",
-    align: "center",
-    render: (date) =>
-      date
-        ? new Date(date).toLocaleDateString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        : "-",
-  },
-  {
-    title: "Ngày kết thúc",
-    dataIndex: "endDate",
-    key: "endDate",
-    align: "center",
-    render: (date) =>
-      date
-        ? new Date(date).toLocaleDateString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        : "-",
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "status",
-    key: "status",
-    align: "center",
-    render: (status) => {
-      const colorMap = {
-        ACTIVE: { color: "green", label: "Đang hoạt động" },
-        PENDING: { color: "orange", label: "Chờ kích hoạt" },
-        EXPIRED: { color: "red", label: "Đã hết hạn" },
-      };
-      const { color, label } = colorMap[status] || { color: "gray", label: "Không xác định" };
-      return <Tag color={color}>{label}</Tag>;
-    },
-  },
-];
+
 
 const ContractTable = () => {
   const [visible, setVisible] = useState(false);
@@ -99,22 +42,32 @@ const ContractTable = () => {
   const [total, setTotal] = useState(0);
   const [tabStatus, setTabStatus] = useState("all");
 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+
   const showModal = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
-  const fetchContracts = async (page = 1, size = 6, search = "") => {
+  const fetchContracts = async (page = 1, size = 10, search = "") => {
     try {
-      const res = await cleanfood.admin.getContract({ page, size, search });
-      const formatted = res.items.map((item) => ({
-        key: item.subscriptionId?.random || item.subscriptionId,
-        subscriptionId: item.subscriptionId?.random || item.subscriptionId,
-        gardenerName: item.gardenerName,
-        gardenerPhone: item.gardenerPhone,
-        gardenerId: item.gardenerId?.random || item.gardenerId,
-        subscriptionType: item.subscriptionType,
-        startDate: item.startDate?.slice(0, 10),
-        endDate: item.endDate?.slice(0, 10),
+      const params = {
+        page,
+        size,
+        search,
+        status: "SUCCESS", // ✅ chỉ lấy đơn hoàn thành
+      };
+
+      const res = await cleanfood.admin.getServicePackageOrders(params);
+      const formatted = res.items.map((item, index) => ({
+        key: index,
+        gardenerName: item.gardenerName || "",
+        servicePackageName: item.servicePackageName || "",
+        gardenerId: item.gardenerId || "",
+        servicePackageId: item.servicePackageId || "",
+        totalAmount: item.totalAmount || 0,
         status: item.status,
+        createdAt: item.createdAt?.split("T")[0] || "",
       }));
 
       setDataSource(formatted);
@@ -127,10 +80,97 @@ const ContractTable = () => {
     }
   };
 
-  useEffect(() => {
-    fetchContracts(currentPage, pageSize, searchText);
-  }, [currentPage, pageSize, searchText]);
 
+  useEffect(() => {
+    if (tabStatus === "SUCCESS") {
+      fetchContracts(currentPage, pageSize, searchText, "SUCCESS");
+    }
+  }, [currentPage, pageSize, searchText, tabStatus]);
+
+
+  const showOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setIsModalVisible(true);
+  };
+  const renderTable = () => (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={{
+        current: currentPage,
+        pageSize: pageSize,
+        total: total,
+        position: ["bottomCenter", "bottomRight"],
+        onChange: (page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        },
+      }}
+      scroll={{ x: "max-content", y: 400 }}
+    />
+  );
+
+
+  const columns = [
+    {
+      title: "Tên gói",
+      dataIndex: "servicePackageName",
+      key: "servicePackageName",
+
+    },
+    {
+      title: "Khách Hàng",
+      dataIndex: "gardenerName",
+      key: "gardenerName",
+
+    },
+    {
+      title: "Tổng Tiền",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+      render: (amount) => `${Number(amount).toLocaleString()} đ`,
+      align: "center"
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (status) => {
+        const { color, label } = getStatusInfo(status);
+        return <Tag color={color}>{label}</Tag>;
+      },
+    },
+
+    {
+      title: "Ngày Tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center"
+    },
+    {
+      title: "Thao Tác",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <Space center size="middle">
+          <Tooltip title="Xem chi tiết">
+            <FontAwesomeIcon
+              icon={faEye}
+              onClick={() => showOrderDetails(record)}
+              style={{
+                fontSize: "16px",
+                color: "#1890ff",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
   return (
     <>
       <Card
@@ -151,40 +191,63 @@ const ContractTable = () => {
           defaultActiveKey="all"
           style={{ fontSize: "16px", padding: "10px" }}
           onChange={(key) => {
-            setCurrentPage(1);
-            setTabStatus(key);
+            setTabStatus(key);  // ✅ set tab đang chọn
+            setCurrentPage(1);  // ✅ reset về trang đầu
           }}
           items={[
             {
-              key: "all",
-              label: "Tất cả đơn",
-              children: (
-                <Table
-                  columns={columns}
-                  dataSource={dataSource.filter(item => item.status === "ACTIVE")}
-                  pagination={{
-                    current: currentPage,
-                    pageSize: pageSize,
-                    total: total,
-                    position: ["bottomCenter", "bottomRight"],
-                    onChange: (page, size) => {
-                      setCurrentPage(page);
-                      setPageSize(size);
-                    },
-                  }}
-                  scroll={{ x: "max-content", y: 400 }}
-                />
-              ),
+              key: "SUCCESS",
+              label: "Đơn hoàn thành",
+              children: renderTable(),
             },
             {
               key: "active-customers",
               label: "Danh sách khách hàng đang sử dụng gói",
-              children: <ActivePackageCustomers />, // ✅ Gọi component bạn đã viết
+              children: <ActivePackageCustomers />,
             },
           ]}
         />
 
+
       </Card>
+
+      <Modal
+        title="Chi tiết đơn hàng"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Đóng
+          </Button>,
+        ]}
+        width={700}
+      >
+        {selectedOrder && (
+          <Descriptions bordered column={1} size="small">
+            <Descriptions.Item label="Mã đơn">
+              {selectedOrder.servicePackageName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Tên khách hàng">
+              {selectedOrder.gardenerName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Gói dịch vụ">
+              {selectedOrder.servicePackageId}
+            </Descriptions.Item>
+            <Descriptions.Item label="Tổng tiền">
+              {Number(selectedOrder.totalAmount).toLocaleString()} đ
+            </Descriptions.Item>
+            <Descriptions.Item label="Trạng thái">
+              <Tag color={getStatusColor(selectedOrder.status)}>
+                {getStatusInfo(selectedOrder.status).label}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Ngày tạo">
+              {selectedOrder.createdAt}
+            </Descriptions.Item>
+          </Descriptions>
+        )}
+      </Modal>
+
 
       {/* <div>
         <Button type="link" onClick={showModal} style={{ padding: 0 }}>

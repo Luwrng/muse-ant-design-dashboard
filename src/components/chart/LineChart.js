@@ -3,33 +3,37 @@ import ReactApexChart from "react-apexcharts";
 import { Typography } from "antd";
 import { MinusOutlined } from "@ant-design/icons";
 
-function LineChart({ orderAmount }) {
+function LineChart({ monthlyRevenue = [] }) {
   const { Title, Paragraph } = Typography;
 
-  // Tạo dữ liệu biểu đồ từ doanh thu
+  const categories = monthlyRevenue.map((item) => item.month);
+  const dataSeries = monthlyRevenue.map((item) => item.amount);
+  const total = dataSeries.reduce((sum, val) => sum + val, 0);
+
   const chartData = {
     series: [
       {
-        name: "Doanh thu",
-        data: [orderAmount || 0], // Có thể thay đổi thành mảng thời gian nếu cần
+        name: "Doanh thu theo tháng",
+        data: dataSeries,
       },
     ],
     options: {
       chart: {
-        id: "order-amount-chart",
+        id: "monthly-revenue-chart",
         type: "area",
-        zoom: {
-          enabled: false,
-        },
+        zoom: { enabled: false },
       },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "smooth",
-      },
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth" },
       xaxis: {
-        categories: ["Hiện tại"], // Có thể thay đổi nếu có nhiều mốc thời gian
+        categories,
+
+      },
+      yaxis: {
+        labels: {
+          formatter: (val) => `${val / 1_000_000}M`,
+        },
+
       },
       tooltip: {
         y: {
@@ -43,15 +47,13 @@ function LineChart({ orderAmount }) {
     <>
       <div className="linechart">
         <div>
-          <Title level={5}>Doanh thu</Title>
+          <Title level={5}>Biểu đồ doanh thu theo tháng</Title>
           <Paragraph className="lastweek">
-            Tổng doanh thu hiện tại: <span className="bnb2">{(orderAmount || 0).toLocaleString()} VND</span>
+            Tổng doanh thu: <span className="bnb2">{total.toLocaleString()} VND</span>
           </Paragraph>
         </div>
         <div className="sales">
-          <ul>
-            <li><MinusOutlined /> Doanh thu</li>
-          </ul>
+
         </div>
       </div>
 
@@ -68,4 +70,3 @@ function LineChart({ orderAmount }) {
 }
 
 export default LineChart;
-  

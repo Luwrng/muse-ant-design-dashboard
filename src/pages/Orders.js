@@ -11,12 +11,14 @@ import {
   Descriptions,
   message,
   Tooltip,
+  Tabs
 } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import SearchButton from "../components/button/SearchButton";
 import { cleanfood } from "../api_admin";
+import ActivePackageCustomers from "./ActivePackageCustomers";
 
 const Orders = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -73,7 +75,7 @@ const Orders = () => {
       const formatted = res.items.map((item, index) => ({
         key: index,
         gardenerName: item.gardenerName || "",
-        servicePackageOrderId: item.servicePackageOrderId || "",
+        servicePackageName: item.servicePackageName || "",
         gardenerId: item.gardenerId || "",
         servicePackageId: item.servicePackageId || "",
         totalAmount: item.totalAmount || 0,
@@ -99,8 +101,8 @@ const Orders = () => {
   const columns = [
     {
       title: "Mã Đơn",
-      dataIndex: "servicePackageOrderId",
-      key: "servicePackageOrderId",
+      dataIndex: "servicePackageName",
+      key: "servicePackageName",
 
     },
     {
@@ -174,7 +176,7 @@ const Orders = () => {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Danh sách đơn mua gói dịch vụ"
+              title="Quản lí mua gói"
               extra={
                 <Space>
                   <SearchButton
@@ -185,22 +187,41 @@ const Orders = () => {
                 </Space>
               }
             >
-              <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  dataSource={activeData}
-                  pagination={{
-                    position: ["bottomCenter", "bottomRight"],
-                    pageSize,
-                    total,
-                    current: currentPage,
-                    onChange: (page, size) => {
-                      setCurrentPage(page);
-                      setPageSize(size);
-                    },
-                  }}
-                />
-              </div>
+              <Tabs
+                defaultActiveKey="all"
+                onChange={(key) => {
+                  setCurrentPage(1);
+                }}
+                items={[
+
+                  {
+                    key: "success",
+                    label: "Đơn đã hoàn thành",
+                    children: (
+                      <Table
+                        columns={columns}
+                        dataSource={activeData}
+                        pagination={{
+                          position: ["bottomCenter", "bottomRight"],
+                          pageSize,
+                          total: activeData.length,
+                          current: currentPage,
+                          onChange: (page, size) => {
+                            setCurrentPage(page);
+                            setPageSize(size);
+                          },
+                        }}
+                      />
+                    ),
+                  },
+                  {
+                    key: "active-customers",
+                    label: "Danh sách khách hàng đang sử dụng gói",
+                    children: <ActivePackageCustomers />,
+                  },
+                ]}
+              />
+
             </Card>
           </Col>
         </Row>

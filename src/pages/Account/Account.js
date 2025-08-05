@@ -247,7 +247,7 @@ function Account() {
       render: (avatar) => <Avatar size={40} src={avatar} />,
     },
     {
-      title: "Họ và tên",
+      title: "Tên",
       dataIndex: "Name",
       key: "name",
       width: 150,
@@ -265,7 +265,7 @@ function Account() {
       dataIndex: "PhoneNumber",
       key: "phone",
       width: 150,
-      align: "center",
+
     },
     {
       title: "Trạng thái",
@@ -298,7 +298,7 @@ function Account() {
     {
       title: "Hành động",
       key: "detail",
-      width: 80,
+      width: 120,
       align: "center",
       render: (_, record) => (
         <Space>
@@ -315,7 +315,7 @@ function Account() {
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
           <EditButton
-            tooltip="Chỉnh sửa trạng thái"
+            tooltip="Chỉnh sửa"
             onClick={() => showEditModal(record)}
           />
         </Space>
@@ -359,7 +359,7 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "PENDING",
                       )}
-                        pagination={{
+                      pagination={{
                         current: pagination.current,
                         pageSize: pagination.pageSize,
                         total: pagination.total,
@@ -449,7 +449,7 @@ function Account() {
                       dataSource={statusData.filter(
                         (item) => item.Status === "BANNED",
                       )}
-                        pagination={{
+                      pagination={{
                         current: pagination.current,
                         pageSize: pagination.pageSize,
                         total: pagination.total,
@@ -507,7 +507,23 @@ function Account() {
                   ? `${selectedUser.Address.addressLine}, ${selectedUser.Address.province}, ${selectedUser.Address.country}`
                   : "---"}
               </p>
-              <p><strong>Trạng thái:</strong> {selectedUser?.Status}</p>
+              <p>
+                <strong>Trạng thái:</strong>{" "}
+                <Tag color={
+                  selectedUser?.Status === "Active" ? "green" :
+                    selectedUser?.Status === "Inactive" ? "red" :
+                      selectedUser?.Status === "BANNED" ? "volcano" :
+                        "default"
+                }>
+                  {selectedUser?.Status === "Active"
+                    ? "Đang hoạt động"
+                    : selectedUser?.Status === "Inactive"
+                      ? "Ngưng hoạt động"
+                      : selectedUser?.Status === "BANNED"
+                        ? "Bị cấm"
+                        : "Không xác định"}
+                </Tag>
+              </p>
               <p><strong>Ngày tạo:</strong> {selectedUser?.CreatedAt}</p>
               <p><strong>Ngày cập nhật:</strong> {selectedUser?.UpdatedAt}</p>
               <p>
@@ -572,6 +588,8 @@ function Account() {
             message.error("Cập nhật trạng thái thất bại");
           }
         }}
+        okText="Xác nhận"
+        cancelText="Hủy"
       >
         <p>Trạng thái mới:</p>
         <Select
