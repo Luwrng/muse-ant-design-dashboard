@@ -62,7 +62,7 @@ function GDashboard() {
         );
 
         const monthlyData = Array(12).fill(0);
-        upcommingAppointmentsData.forEach((item) => {
+        yearlyOrder.forEach((item) => {
           monthlyData[item.month - 1] = item.amount;
         });
 
