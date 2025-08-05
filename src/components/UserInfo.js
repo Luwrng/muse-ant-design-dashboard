@@ -16,10 +16,6 @@ const UserInfo = () => {
 
     const menu = (
         <Menu>
-            <Menu.Item key="profile" icon={<UserOutlined />}>
-                <span>Role: {userRole}</span>
-            </Menu.Item>
-            <Menu.Divider />
             <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
                 Đăng xuất
             </Menu.Item>

@@ -133,17 +133,23 @@ function GardenerVerification() {
 
   const columns = [
     {
+      title: "Hình đại diện",
+      dataIndex: "Avatar",
+      key: "avatar",
+      width: 80,
+      align: "center",
+      render: (avatar) => <Avatar size={40} src={avatar} />,
+    },
+    {
       title: "Đại lý",
       key: "retailer",
       width: 250,
       render: (_, record) => (
         <Space>
-          <Avatar size={40} src={record.avatar} />
+
           <div>
             <div style={{ fontWeight: 500 }}>{record.name}</div>
-            <div style={{ fontSize: "12px", color: "#8c8c8c" }}>
-              {record.email}
-            </div>
+
           </div>
         </Space>
       ),
@@ -159,11 +165,8 @@ function GardenerVerification() {
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: 180,
-      render: (phone) =>
-        phone
-          ? phone.replace(/(\d{4})(\d{3})(\d{3})/, "$1-$2-$3")
-          : "Chưa có",
-      align: "center",
+
+
     },
     // {
     //   title: "Địa chỉ ",
@@ -187,7 +190,7 @@ function GardenerVerification() {
       key: "updatedAt",
       width: 180,
       render: (date) => new Date(date).toLocaleDateString("vi-VN"),
-      align: "center",
+
     },
     {
       title: "Trạng thái",
@@ -224,11 +227,11 @@ function GardenerVerification() {
       title: "Thao tác",
       key: "action",
       width: 100,
-      align: "center",
+
       render: (_, record) => (
         <Space>
           <DetailButton record={record} showModal={showViewModal} />
-          <EditButton tooltip="Chỉnh sửa trạng thái" onClick={() => showEditModal(record)} />
+          <EditButton tooltip="Chỉnh sửa" onClick={() => showEditModal(record)} />
 
         </Space>
       ),
@@ -315,13 +318,15 @@ function GardenerVerification() {
                 {viewingRecord.city || "Chưa có"}
               </Descriptions.Item>
 
-              <Descriptions.Item label="Giới tính" span={2}>
+              {/* <Descriptions.Item label="Giới tính" span={2}>
                 {viewingRecord.gender || "Khác"}
-              </Descriptions.Item>
+              </Descriptions.Item> */}
               <Descriptions.Item label="Trạng thái" span={2}>
-                {viewingRecord.status === "Approved" ? (
-                  <Tag color="green">Đã phê duyệt</Tag>
-                ) : (
+                {viewingRecord.status === "ACTIVE" ? (
+                  <Tag color="green">Đang hoạt động</Tag>
+                ) : viewingRecord.status === "INACTIVE" ? (
+                  <Tag color="red">Chưa phê duyệt</Tag>
+                ) : viewingRecord.status === "BANNED"(
                   <Tag color="red">Chưa phê duyệt</Tag>
                 )}
               </Descriptions.Item>
@@ -344,6 +349,8 @@ function GardenerVerification() {
             message.error("Cập nhật trạng thái thất bại");
           }
         }}
+        okText="Xác nhận"
+        cancelText="Hủy"
       >
         <p>Chọn trạng thái mới:</p>
         <Select

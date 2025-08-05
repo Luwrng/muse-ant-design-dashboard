@@ -24,7 +24,7 @@ const ActivePackageCustomers = () => {
         pageSize: 10,
         total: 0,
     });
-    
+
 
     const getFilteredOrdersByPackage = () => {
         if (!orders || !activePackageKey) return [];
@@ -126,14 +126,7 @@ const ActivePackageCustomers = () => {
             <div style={{ width: "100%" }}>
                 <Card
                     bordered={false}
-                    title="Danh Sách Khách Hàng Đang Sử Dụng Gói Dịch Vụ"
-                    extra={
-                        <SearchButton
-                            placeholder="Tìm kiếm khách hàng..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                        />
-                    }
+
                 >
                     <Row gutter={[16, 16]}>
                         <Col xs={24} sm={12} md={8} lg={6}>

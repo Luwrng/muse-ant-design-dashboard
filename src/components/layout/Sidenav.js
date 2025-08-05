@@ -98,16 +98,16 @@ function Sidenav() {
           icon={<FontAwesomeIcon icon={faFileContract} />}
           title="Quản Lý Đăng Ký"
         >
-          <Menu.Item key="subscription-contracts">
+          {/* <Menu.Item key="subscription-contracts">
             <NavLink to="/subscription-contracts">
               <FontAwesomeIcon icon={faFileContract} />
               <span>Quản lí mua gói</span>
             </NavLink>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="subscription-orders">
             <NavLink to="/subscription-orders">
               <FontAwesomeIcon icon={faMoneyBill} />
-              <span>Đơn Hàng & Thanh Toán</span>
+              <span>Quản lí mua gói</span>
             </NavLink>
           </Menu.Item>
         </Menu.SubMenu>

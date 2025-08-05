@@ -87,7 +87,7 @@ const ServicesPackage = () => {
     fetchService(currentPage, pageSize, searchText);
   }, [currentPage, pageSize, searchText]);
 
-  // Vô hiệu hóa gói dịch vụ (tạm dừng bán)
+  // Vô hiệu hóa gói dịch vụ (tạm dừng Hoạt động  )
   const handleDisablePackage = (record) => {
     Modal.confirm({
       title: "Xác nhận vô hiệu hóa",
@@ -236,7 +236,7 @@ const ServicesPackage = () => {
 
           {/* Nút kích hoạt gói dịch vụ */}
           <EditButton
-            tooltip="Chỉnh sửa gói"
+            tooltip="Chỉnh sửa"
             onClick={() => {
               setEditingPackage({
                 packageId: record.servicePackageId || record.key,
@@ -251,6 +251,7 @@ const ServicesPackage = () => {
 
           {/* Nút xóa (hoặc vô hiệu hóa) */}
           <DeleteButton
+            tooltip="Dừng"
             record={record}
             type="package"
             onDeleteSuccess={() =>
@@ -267,7 +268,7 @@ const ServicesPackage = () => {
     setIsModalVisible(true);
   };
 
- 
+
 
   return (
     <>
@@ -358,7 +359,7 @@ const ServicesPackage = () => {
                   selectedPackage.status === "active" ? "success" : "error"
                 }
               >
-                {selectedPackage.status === "active" ? "Đang Bán" : "Ngừng Bán"}
+                {selectedPackage.status === "active" ? "Hoạt động" : "Ngừng Hoạt động "}
               </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Dịch Vụ Bao Gồm">

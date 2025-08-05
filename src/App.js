@@ -5,6 +5,7 @@ import Rtl from "./pages/Rtl";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import ForgotPass from "./pages/forgotpassword/ForgotPass";
 import Main from "./components/layout/Main";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthCheck from "./components/AuthCheck";
@@ -40,6 +41,7 @@ import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPack
 import GReportPage from "./pages/GardenerPage/Report/GReportPage";
 import SubscriptionTabs from "./pages/GardenerPage/SubscriptionHistory/SubscriptionTabs";
 
+
 //Payment
 import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
 import SuccessPaymentResult from "./pages/GardenerPage/PaymentResult/SuccessPaymentResult";
@@ -69,6 +71,7 @@ function App() {
           {/* Auth routes */}
           <Route path="/sign-up" exact component={SignUpPage} />
           <Route path="/sign-in" exact component={SignIn} />
+          <Route path="/forgot-password" exact component={ForgotPass} />
 
           {/* General routes */}
           <Route path="/" exact component={GardenerLandingPage} />
@@ -155,7 +158,7 @@ function App() {
                 </Switch>
               </GardenerMain>
             )}
-            s
+
           ></Route>
 
           {/* Admin routes */}
@@ -267,12 +270,13 @@ function App() {
               allowedRoles={["admin"]}
             />
 
+
             <Redirect from="*" to="/dashboard" />
           </Main>
           <Redirect from="*" to="/" />
         </Switch>
       </AuthCheck>
-    </div>
+    </div >
   );
 }
 

@@ -205,6 +205,7 @@ import styled from "styled-components";
 import authenticateService from "./services/apiServices/authenticateService";
 import CloudinaryUpload from "../cloudinary/CloudinaryUpload";
 import AuthService from "./services/AuthService";
+import ForgotPass from "./forgotpassword/ForgotPass";
 
 const { Title } = Typography;
 const { Header, Content } = Layout;
@@ -370,6 +371,12 @@ export default function SignIn() {
                   Đăng nhập
                 </CustomButton>
               </Form.Item>
+
+              <div className="mt-4">
+                <Link to="/forgot-password" className="text-blue-500 hover:underline">
+                  Quên mật khẩu?
+                </Link>
+              </div>
 
               <p className="font-semibold text-muted">
                 Bạn chưa có tài khoản?{" "}
