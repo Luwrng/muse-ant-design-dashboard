@@ -40,7 +40,7 @@ const updateGardenerOrderStatus = async (orderId, status) => {
 
 const approveOrder = async (orderId, shippingCost) => {
   return await httpService.patch(
-    `${orderEndpoint}/${orderId}/shipping-costs`,
+    `${orderEndpoint}/${orderId}/shipping-cost`,
     {},
     { params: { shippingCost } }
   );
