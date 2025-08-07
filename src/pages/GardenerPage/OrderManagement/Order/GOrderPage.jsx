@@ -8,6 +8,7 @@ import GApprovePopup from "./Popups/GApprovePopup";
 import GRejectPopup from "./Popups/GRejectPopup";
 import LoadingPopup from "../../../../components/loading/LoadingPopup";
 import Paginate from "../../../../components/paginate/Paginate";
+import notificationService from "../../../services/apiServices/notificationService";
 
 function GOrderPage() {
   const [activeFilter, setActiveFilter] = useState("PENDING");
@@ -22,7 +23,7 @@ function GOrderPage() {
 
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [orderIdForModal, setOrderIdForModal] = useState(null);
+  const [orderForModal, setOrderForModal] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -92,8 +93,8 @@ function GOrderPage() {
   // };
 
   // Modified handleUpdateOrderStatus to open modals
-  const handleUpdateOrderStatus = (orderId, status) => {
-    setOrderIdForModal(orderId);
+  const handleUpdateOrderStatus = (order, status) => {
+    setOrderForModal(order);
     if (status === "PREPARING") {
       setShowApproveModal(true);
     } else if (status === "CANCELLED") {
@@ -101,31 +102,51 @@ function GOrderPage() {
     }
   };
 
-  const handleApproveConfirm = async (orderId, shippingCost) => {
+  const handleApproveConfirm = async (order, shippingCost) => {
     setIsLoading(true);
     try {
-      await gardenerOrderService.approveOrder(orderId, shippingCost);
+      await gardenerOrderService.approveOrder(order.orderId, shippingCost);
+
+      const data = {
+        accountId: order.retailerId,
+        message: `Đơn hàng [${order.orderId}] đã được duyệt thành công và đang chuẩn bị được giao`,
+        link: "Không có",
+        sender: localStorage.getItem("account_name"),
+      };
+      await notificationService.sendNotification(data);
+
+      // console.log(data, order);
       fetchOrder();
     } catch (err) {
       console.log(err);
     } finally {
       setShowApproveModal(false);
-      setOrderIdForModal(null);
+      setOrderForModal(null);
       setIsLoading(false);
     }
   };
 
-  const handleRejectConfirm = async (orderId, reason) => {
+  const handleRejectConfirm = async (order, reason) => {
     setIsLoading(true);
     console.log(reason);
     try {
-      await gardenerOrderService.rejectOrder(orderId, reason);
+      await gardenerOrderService.rejectOrder(order.orderId, reason);
+
+      const data = {
+        accountId: order.retailerId,
+        message: `Đơn hàng [${order.orderId}] đã bị nhà vườn từ chối. Vui lòng kiểm tra chi tiết đơn hàng hoặc liên hệ nhà vuòn để biết thêom thông tin.`,
+        link: "Không có",
+        sender: localStorage.getItem("account_name"),
+      };
+      await notificationService.sendNotification(data);
+
+      // console.log(data, order);
       fetchOrder(); // Refresh orders after update
     } catch (err) {
       console.log(err);
     } finally {
       setShowRejectModal(false);
-      setOrderIdForModal(null);
+      setOrderForModal(null);
       setIsLoading(false);
     }
   };
@@ -211,10 +232,7 @@ function GOrderPage() {
                             <button
                               className="gorder-action-btn gorder-accept-btn"
                               onClick={() =>
-                                handleUpdateOrderStatus(
-                                  order.orderId,
-                                  "PREPARING"
-                                )
+                                handleUpdateOrderStatus(order, "PREPARING")
                               }
                               title="Xem chi tiết"
                             >
@@ -223,10 +241,7 @@ function GOrderPage() {
                             <button
                               className="gorder-action-btn gorder-deny-btn"
                               onClick={() =>
-                                handleUpdateOrderStatus(
-                                  order.orderId,
-                                  "CANCELLED"
-                                )
+                                handleUpdateOrderStatus(order, "CANCELLED")
                               }
                               title="Xem chi tiết"
                             >
@@ -259,14 +274,14 @@ function GOrderPage() {
       )}
       {showApproveModal && (
         <GApprovePopup
-          orderId={orderIdForModal}
+          order={orderForModal}
           onClose={() => setShowApproveModal(false)}
           onConfirm={handleApproveConfirm}
         />
       )}
       {showRejectModal && (
         <GRejectPopup
-          orderId={orderIdForModal}
+          order={orderForModal}
           onClose={() => setShowRejectModal(false)}
           onConfirm={handleRejectConfirm}
         />

@@ -8,6 +8,7 @@ import matchers from "@testing-library/jest-dom/matchers";
 import GApprovePopup from "./Popups/GApprovePopup";
 import GRejectPopup from "./Popups/GRejectPopup";
 import LoadingPopup from "../../../../components/loading/LoadingPopup";
+import notificationService from "../../../services/apiServices/notificationService";
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
@@ -27,13 +28,42 @@ function GOrderDetail({ orderId, onBack }) {
 
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [orderIdForModal, setOrderIdForModal] = useState(null);
+  const [orderForModal, setOrderForModal] = useState(null);
+
+  const [minDeliveryDate, setMinDeliveryDate] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchOrderDetail();
   }, [orderId]);
+
+  //Date time input handler
+  const formatForDatetimeLocal = (date) => {
+    // Format to "YYYY-MM-DDTHH:MM"
+    return date.toISOString().slice(0, 16);
+  };
+
+  const getTodayAtMidnight = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+  };
+
+  const formatDateToLocalDatetimeString = (date) => {
+    const pad = (n) => String(n).padStart(2, "0");
+
+    return (
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1) +
+      "-" +
+      pad(date.getDate()) +
+      "T" +
+      pad(date.getHours()) +
+      ":" +
+      pad(date.getMinutes())
+    );
+  };
 
   const fetchOrderDetail = async () => {
     setIsLoading(true);
@@ -49,10 +79,27 @@ function GOrderDetail({ orderId, onBack }) {
         orderId
       );
       setOrderDeliveries(deliveriesResult);
+
+      // === Setup latest delivery date ===
+      let latestDate = null;
+
+      if (deliveriesResult && deliveriesResult.length > 0) {
+        latestDate = deliveriesResult.reduce((latest, current) => {
+          const currentDate = new Date(current.deliveryDate);
+          return currentDate > new Date(latest.deliveryDate) ? current : latest;
+        }).deliveryDate;
+      }
+
+      const finalMinDate = latestDate
+        ? new Date(latestDate)
+        : getTodayAtMidnight();
+
+      setMinDeliveryDate(formatDateToLocalDatetimeString(finalMinDate));
     } catch (err) {
       console.log(err);
       setOrderData(null);
       setOrderDeliveries([]);
+      setMinDeliveryDate(formatDateToLocalDatetimeString(getTodayAtMidnight()));
     } finally {
       setIsLoading(false);
     }
@@ -71,10 +118,10 @@ function GOrderDetail({ orderId, onBack }) {
     );
     const quantity = Number.parseInt(value) || 0;
 
-    if (quantity < orderDetail.deliveredQuantity) {
+    if (quantity > orderDetail.quantity - orderDetail.deliveredQuantity) {
       setErrors({
         ...errors,
-        [orderDetailId]: `Số lượng không được vượt quá ${orderDetail.remaining}`,
+        [orderDetailId]: `Số lượng không được vượt quá ${orderDetail.deliveredQuantity}`,
       });
     } else {
       setErrors({
@@ -149,6 +196,22 @@ function GOrderDetail({ orderId, onBack }) {
       );
       setOrderDeliveries(deliveriesResult);
 
+      // === Setup latest delivery date ===
+      let latestDate = null;
+
+      if (deliveriesResult && deliveriesResult.length > 0) {
+        latestDate = deliveriesResult.reduce((latest, current) => {
+          const currentDate = new Date(current.deliveryDate);
+          return currentDate > new Date(latest.deliveryDate) ? current : latest;
+        }).deliveryDate;
+      }
+
+      const finalMinDate = latestDate
+        ? new Date(latestDate)
+        : getTodayAtMidnight();
+
+      setMinDeliveryDate(formatDateToLocalDatetimeString(finalMinDate));
+
       alert("Đơn giao hàng đã được tạo thành công!");
     } catch (err) {
       console.log(err);
@@ -220,8 +283,8 @@ function GOrderDetail({ orderId, onBack }) {
   //   }
   // };
 
-  const handleUpdateOrderStatus = (orderId, status) => {
-    setOrderIdForModal(orderId);
+  const handleUpdateOrderStatus = (order, status) => {
+    setOrderForModal(order);
     if (status === "PREPARING") {
       setShowApproveModal(true);
     } else if (status === "CANCELLED") {
@@ -229,32 +292,54 @@ function GOrderDetail({ orderId, onBack }) {
     }
   };
 
-  const handleApproveConfirm = async (orderId, shippingCost) => {
+  const handleApproveConfirm = async (order, shippingCost) => {
     setIsLoading(true);
     try {
-      await gardenerOrderService.approveOrder(orderId, shippingCost);
+      await gardenerOrderService.approveOrder(order.orderId, shippingCost);
+
+      const data = {
+        accountId: order.retailerId,
+        message: `Đơn hàng [${order.orderId}] đã được duyệt thành công và đang chuẩn bị được giao`,
+        link: "Không có",
+        sender: localStorage.getItem("account_name"),
+      };
+      await notificationService.sendNotification(data);
+
+      // console.log(data, order);
+
       fetchOrderDetail();
     } catch (err) {
       console.log(err);
     } finally {
       setShowApproveModal(false);
-      setOrderIdForModal(null);
+      setOrderForModal(null);
       setIsLoading(false);
     }
   };
 
-  const handleRejectConfirm = async (orderId, rejectReason) => {
+  const handleRejectConfirm = async (order, rejectReason) => {
     setIsLoading(true);
     try {
-      await gardenerOrderService.rejectOrder(orderId, {
+      await gardenerOrderService.rejectOrder(order.orderId, {
         rejectReason,
       });
+
+      const data = {
+        accountId: order.retailerId,
+        message: `Đơn hàng [${order.orderId}] đã bị nhà vườn từ chối. Vui lòng kiểm tra chi tiết đơn hàng hoặc liên hệ nhà vuòn để biết thêom thông tin.`,
+        link: "Không có",
+        sender: localStorage.getItem("account_name"),
+      };
+      await notificationService.sendNotification(data);
+
+      // console.log(data, order);
+
       fetchOrderDetail(); // Refresh orders after update
     } catch (err) {
       console.log(err);
     } finally {
       setShowRejectModal(false);
-      setOrderIdForModal(null);
+      setOrderForModal(null);
       setIsLoading(false);
     }
   };
@@ -275,13 +360,13 @@ function GOrderDetail({ orderId, onBack }) {
           <div className="godetail-actions">
             <button
               className="godetail-accept-delivery-btn"
-              onClick={() => handleUpdateOrderStatus(orderId, "PREPARING")}
+              onClick={() => handleUpdateOrderStatus(orderData, "PREPARING")}
             >
               Chấp nhận đơn hàng
             </button>
             <button
               className="godetail-deny-delivery-btn"
-              onClick={() => handleUpdateOrderStatus(orderId, "cANCELLED")}
+              onClick={() => handleUpdateOrderStatus(orderData, "CANCELLED")}
             >
               Từ chối đơn hàng
             </button>
@@ -443,10 +528,10 @@ function GOrderDetail({ orderId, onBack }) {
                   Ngày giao:
                 </label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   id="delivery-date"
                   value={createOrderDelivery.deliveryDate}
-                  min={new Date().toISOString().split("T")[0]}
+                  min={minDeliveryDate}
                   onChange={(e) =>
                     setCreateOrderDelivery((prev) => ({
                       ...prev,
@@ -586,14 +671,14 @@ function GOrderDetail({ orderId, onBack }) {
       </div>
       {showApproveModal && (
         <GApprovePopup
-          orderId={orderIdForModal}
+          order={orderForModal}
           onClose={() => setShowApproveModal(false)}
           onConfirm={handleApproveConfirm}
         />
       )}
       {showRejectModal && (
         <GRejectPopup
-          orderId={orderIdForModal}
+          order={orderForModal}
           onClose={() => setShowRejectModal(false)}
           onConfirm={handleRejectConfirm}
         />
