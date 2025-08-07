@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./GPopup.css";
 
-function GApprovePopup({ orderId, onClose, onConfirm }) {
+function GApprovePopup({ order, onClose, onConfirm }) {
   const [shippingCost, setShippingCost] = useState("");
 
   const handleConfirm = () => {
@@ -12,7 +12,7 @@ function GApprovePopup({ orderId, onClose, onConfirm }) {
       alert("Vui lòng nhập chi phí vận chuyển hợp lệ (số không âm).");
       return;
     }
-    onConfirm(orderId, cost);
+    onConfirm(order, cost);
   };
 
   return (

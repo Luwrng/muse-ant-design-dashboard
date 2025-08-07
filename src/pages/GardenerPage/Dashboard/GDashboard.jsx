@@ -116,7 +116,7 @@ function GDashboard() {
             ],
             datasets: [
               {
-                label: "Orders",
+                label: "Đơn hàng",
                 data: monthlyData,
                 backgroundColor: "#36A2EB",
               },
@@ -147,7 +147,7 @@ function GDashboard() {
       },
       title: {
         display: true,
-        text: "Monthly Orders",
+        text: "",
       },
     },
   };
@@ -239,8 +239,8 @@ function GDashboard() {
             {/* Calendar */}
             <div className="gdashboard-chart-card gdashboard-calendar">
               <div className="gdashboard-card-header">
-                <h3>Appointment Calendar</h3>
-                <h3>Upcoming Appointments</h3> {/* Moved title here */}
+                <h3>Lịch hẹn gặp</h3>
+                <h3>Cuộc hẹn sắp tới</h3> {/* Moved title here */}
               </div>
               <div className="gdashboard-calendar-content">
                 <Calendar
@@ -278,8 +278,8 @@ function GDashboard() {
 
             {/* Pie Chart */}
             <div className="gdashboard-chart-card gdashboard-pie-chart">
-              <h3 style={{ fontSize: "2rem", marginBottom: "3.5rem" }}>
-                Order Status
+              <h3 style={{ fontSize: "1.5rem", marginBottom: "3.5rem" }}>
+                Trạng thái đơn hàng theo tháng
               </h3>
               <div
                 className="gdashboard-chart-wrapper"
@@ -291,7 +291,7 @@ function GDashboard() {
 
             {/* Bar Chart */}
             <div className="gdashboard-chart-card gdashboard-bar-chart">
-              <h3>Monthly Orders</h3>
+              <h3>Số đơn hàng theo tháng</h3>
               <div className="gdashboard-chart-wrapper">
                 <Bar options={barOptions} data={dashboardData.monthlyOrders} />
               </div>
