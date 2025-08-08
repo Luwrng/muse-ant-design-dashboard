@@ -30,11 +30,10 @@ const updateOrderStatus = async (orderId, status) => {
   );
 };
 
-const updateGardenerOrderStatus = async (orderId, status) => {
+const updateGardenerOrderStatus = async (orderId, data) => {
   return await httpService.patch(
     `${orderEndpoint}/${orderId}/order-details`,
-    {},
-    { params: { status } }
+    data
   );
 };
 

@@ -269,7 +269,10 @@ function GOrderPage() {
       {showOrderDetail && (
         <GOrderDetail
           orderId={selectedOrderId}
-          onBack={() => setShowOrderDetail(false)}
+          onBack={() => {
+            setShowOrderDetail(false);
+            fetchOrder();
+          }}
         />
       )}
       {showApproveModal && (
