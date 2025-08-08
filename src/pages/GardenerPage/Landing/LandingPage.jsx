@@ -12,11 +12,12 @@ import {
   HandHeart,
 } from "lucide-react";
 import { useHistory, Link } from "react-router-dom";
-import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
+import GardenerLandingImage from "../../../assets/images/gardener/GardenerImage.jpg";
 import "./LandingPage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
 import paymentService from "../../services/apiServices/paymentService";
 import GPopup from "./GPopup";
+import FvLogo from "../../../assets/images/logodoan.png";
 
 function GardenerLandingPage() {
   const [servicePackages, setServicePackages] = useState([]);
@@ -86,6 +87,7 @@ function GardenerLandingPage() {
             <div className="glanding-logo flex items-center space-x-2">
               <div className="glanding-logo-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-emerald-500" />
+                <img src={FvLogo} alt="" />
               </div>
               <span className="glanding-logo-text text-xl font-bold">
                 CleanFoodViet
