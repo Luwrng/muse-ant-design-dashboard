@@ -27,7 +27,7 @@ const Orders = () => {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(7);
 
   const showOrderDetails = (order) => {
     setSelectedOrder(order);

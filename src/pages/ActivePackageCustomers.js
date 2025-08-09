@@ -21,7 +21,7 @@ const ActivePackageCustomers = () => {
     const [orders, setOrders] = useState(null);
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 10,
+        pageSize: 7,
         total: 0,
     });
 
