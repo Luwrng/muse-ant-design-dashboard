@@ -41,7 +41,6 @@ import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPack
 import GReportPage from "./pages/GardenerPage/Report/GReportPage";
 import SubscriptionTabs from "./pages/GardenerPage/SubscriptionHistory/SubscriptionTabs";
 
-
 //Payment
 import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
 import SuccessPaymentResult from "./pages/GardenerPage/PaymentResult/SuccessPaymentResult";
@@ -90,13 +89,10 @@ function App() {
 
           {/* Payment Result Routes */}
           <Route
-            path="/gardener/payment-result/success"
+            path="/gardener/payment/success"
             component={SuccessPaymentResult}
           />
-          <Route
-            path="/gardener/payment-result/fail"
-            component={FailPaymentResult}
-          />
+          <Route path="/gardener/payment/fail" component={FailPaymentResult} />
 
           <Route
             path="/gardener"
@@ -158,7 +154,6 @@ function App() {
                 </Switch>
               </GardenerMain>
             )}
-
           ></Route>
 
           {/* Admin routes */}
@@ -270,13 +265,12 @@ function App() {
               allowedRoles={["admin"]}
             />
 
-
             <Redirect from="*" to="/dashboard" />
           </Main>
           <Redirect from="*" to="/" />
         </Switch>
       </AuthCheck>
-    </div >
+    </div>
   );
 }
 

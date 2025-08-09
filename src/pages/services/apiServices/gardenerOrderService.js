@@ -30,17 +30,16 @@ const updateOrderStatus = async (orderId, status) => {
   );
 };
 
-const updateGardenerOrderStatus = async (orderId, status) => {
+const updateGardenerOrderStatus = async (orderId, data) => {
   return await httpService.patch(
     `${orderEndpoint}/${orderId}/order-details`,
-    {},
-    { params: { status } }
+    data
   );
 };
 
 const approveOrder = async (orderId, shippingCost) => {
   return await httpService.patch(
-    `${orderEndpoint}/${orderId}/shipping-costs`,
+    `${orderEndpoint}/${orderId}/shipping-cost`,
     {},
     { params: { shippingCost } }
   );

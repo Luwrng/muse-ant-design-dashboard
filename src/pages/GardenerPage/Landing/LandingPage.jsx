@@ -12,11 +12,12 @@ import {
   HandHeart,
 } from "lucide-react";
 import { useHistory, Link } from "react-router-dom";
-import GardenerLandingImage from "../../../assets/images/gardener/GardenerLanding.png";
+import GardenerLandingImage from "../../../assets/images/gardener/GardenerImage.jpg";
 import "./LandingPage.css";
 import servicePackageService from "../../services/apiServices/servicePackageService";
 import paymentService from "../../services/apiServices/paymentService";
 import GPopup from "./GPopup";
+import FvLogo from "../../../assets/images/logodoan.png";
 
 function GardenerLandingPage() {
   const [servicePackages, setServicePackages] = useState([]);
@@ -32,137 +33,8 @@ function GardenerLandingPage() {
           "ACTIVE"
         );
 
-        // Mock data for demonstration
-        // const mockData = [
-        //   {
-        //     ServicePackageId: "01HQXYZ123456789ABCDEF",
-        //     PackageName: "Germinate",
-        //     Description: "Gói cơ bản cho người mới bắt đầu",
-        //     Price: 10.0,
-        //     Duration: 30,
-        //     Status: "Active",
-        //     Features: [
-        //       {
-        //         ServiceFeatureName: "Kết nối trực tiếp",
-        //         Action: "Kết nối",
-        //         DefaultValue: 5,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Hỗ trợ cơ bản",
-        //         Action: "Hỗ trợ",
-        //         DefaultValue: 1,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     ServicePackageId: "01HQXYZ123456789ABCDEG",
-        //     PackageName: "Growing",
-        //     Description: "Gói phát triển cho doanh nghiệp nhỏ",
-        //     Price: 25.0,
-        //     Duration: 30,
-        //     Status: "Active",
-        //     Features: [
-        //       {
-        //         ServiceFeatureName: "Kết nối trực tiếp",
-        //         Action: "Kết nối",
-        //         DefaultValue: 15,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Hỗ trợ nâng cao",
-        //         Action: "Hỗ trợ",
-        //         DefaultValue: 3,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Phân tích dữ liệu",
-        //         Action: "Phân tích",
-        //         DefaultValue: 10,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     ServicePackageId: "01HQXYZ123456789ABCDEH",
-        //     PackageName: "Fruiting",
-        //     Description: "Gói chuyên nghiệp cho doanh nghiệp lớn",
-        //     Price: 50.0,
-        //     Duration: 30,
-        //     Status: "Active",
-        //     Features: [
-        //       {
-        //         ServiceFeatureName: "Kết nối không giới hạn",
-        //         Action: "Kết nối",
-        //         DefaultValue: 999,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Hỗ trợ 24/7",
-        //         Action: "Hỗ trợ",
-        //         DefaultValue: 24,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Phân tích nâng cao",
-        //         Action: "Phân tích",
-        //         DefaultValue: 50,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Tùy chỉnh giao diện",
-        //         Action: "Tùy chỉnh",
-        //         DefaultValue: 5,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     ServicePackageId: "01HQXYZ123456789ABCDEI",
-        //     PackageName: "Plus+",
-        //     Description:
-        //       "Nâng cao năng suất và tính sáng tạo với quyền truy cập mở rộng",
-        //     Price: 20.0,
-        //     Duration: 30,
-        //     Status: "Active",
-        //     Features: [
-        //       {
-        //         ServiceFeatureName: "Mọi tính năng trong gói Free",
-        //         Action: "Truy cập",
-        //         DefaultValue: 1,
-        //       },
-        //       {
-        //         ServiceFeatureName:
-        //           "Mở rộng quyền truy cập vào các tính năng nhân tín",
-        //         Action: "Mở rộng",
-        //         DefaultValue: 10,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Chế độ thoại tiêu chuẩn và nâng cao",
-        //         Action: "Chế độ",
-        //         DefaultValue: 2,
-        //       },
-        //       {
-        //         ServiceFeatureName:
-        //           "Quyền truy cập vào chức năng nghiên cứu chuyên sâu",
-        //         Action: "Nghiên cứu",
-        //         DefaultValue: 5,
-        //       },
-        //       {
-        //         ServiceFeatureName:
-        //           "Tạo và sử dụng các nhiệm vụ, dự án cùng như GPT tùy chỉnh",
-        //         Action: "Tạo GPT",
-        //         DefaultValue: 3,
-        //       },
-        //       {
-        //         ServiceFeatureName:
-        //           "Quyền truy cập hạn chế vào chức năng tạo video Sora",
-        //         Action: "Video Sora",
-        //         DefaultValue: 2,
-        //       },
-        //       {
-        //         ServiceFeatureName: "Cơ hội để thử nghiệm các tính năng mới",
-        //         Action: "Thử nghiệm",
-        //         DefaultValue: 1,
-        //       },
-        //     ],
-        //   },
-        // ];
-
         console.log("servicePackages result:", result);
-        setServicePackages(Array.isArray(result.items) ? result.items : []);
+        setServicePackages(result.items);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching service packages:", error);
@@ -198,7 +70,7 @@ function GardenerLandingPage() {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
     }).format(price);
   };
 
@@ -215,6 +87,7 @@ function GardenerLandingPage() {
             <div className="glanding-logo flex items-center space-x-2">
               <div className="glanding-logo-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-emerald-500" />
+                <img src={FvLogo} alt="" />
               </div>
               <span className="glanding-logo-text text-xl font-bold">
                 CleanFoodViet
@@ -375,63 +248,65 @@ function GardenerLandingPage() {
             </div>
           ) : (
             <div className="glanding-packages-grid grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.isArray(servicePackages) && servicePackages.map(pkg => (
-                <div
-                  key={pkg.ServicePackageId}
-                  className={`glanding-package-card bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${
-                    pkg.PackageName === "Plus"
-                      ? "border-emerald-500 relative"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <div className="glanding-package-header text-center mb-6">
-                    <h3 className="glanding-package-name text-xl font-bold mb-2">
-                      {pkg.PackageName}
-                    </h3>
-                    <div className="glanding-package-pricemb-4">
-                      <span className="glanding-price-amount text-3xl font-bold">
-                        {formatPrice(pkg.Price)}
-                      </span>
-                      <span className="glanding-price-period text-gray-500 ml-1">
-                        /{pkg.Duration} ngày
-                      </span>
-                    </div>
-                    <p className="glanding-package-description text-gray-600 text-sm">
-                      {pkg.Description}
-                    </p>
-                  </div>
-
-                  <button
-                    className={`glanding-package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors glanding-secondary bg-gray-100 text-gray-800 `}
-                    disabled={pkg.packageName === "Plus" ? true : false}
-                    // ${
-                    //   pkg.packageName === "Plus"
-                    //     ? "glanding-primary bg-emerald-500 text-white"
-                    //     : "glanding-secondary bg-gray-100 text-gray-800"
-                    // }
+              {Array.isArray(servicePackages) &&
+                servicePackages.map((pkg) => (
+                  <div
+                    key={pkg.servicePackageId}
+                    className={`glanding-package-card bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${
+                      pkg.packageName === "Plus"
+                        ? "border-emerald-500 relative"
+                        : "border-gray-200"
+                    }`}
                   >
-                    {/* {pkg.packageName === "Plus"
+                    <div className="glanding-package-header text-center mb-6">
+                      <h3 className="glanding-package-name text-xl font-bold mb-2">
+                        {pkg.packageName}
+                      </h3>
+                      <div className="glanding-package-pricemb-4">
+                        <span className="glanding-price-amount text-3xl font-bold">
+                          {formatPrice(pkg.price)}
+                        </span>
+                        <span className="glanding-price-period text-gray-500 ml-1">
+                          /{pkg.duration} ngày
+                        </span>
+                      </div>
+                      <p className="glanding-package-description text-gray-600 text-sm">
+                        {pkg.description}
+                      </p>
+                    </div>
+
+                    <button
+                      className={`glanding-package-button w-full py-3 px-4 rounded-lg font-medium mb-6 transition-colors glanding-secondary bg-gray-100 text-gray-800 `}
+                      disabled={pkg.packageName === "Plus" ? true : false}
+                      onClick={() => handlePayPackage(pkg)}
+                      // ${
+                      //   pkg.packageName === "Plus"
+                      //     ? "glanding-primary bg-emerald-500 text-white"
+                      //     : "glanding-secondary bg-gray-100 text-gray-800"
+                      // }
+                    >
+                      {/* {pkg.packageName === "Plus"
                       ? "Gói hiện tại"
                       : `Chọn ${pkg.packageName}`} */}
-                    Mua gói
-                  </button>
+                      Mua gói
+                    </button>
 
-                  <div className="glanding-package-features space-y-3">
-                    {Array.isArray(pkg.Features) &&
-                      pkg.Features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="glanding-package-feature flex items-start gap-3"
-                        >
-                          <Check className="glanding-feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                          <span className="glanding-feature-text text-sm text-gray-700">
-                            {feature.serviceFeatureName}
-                          </span>
-                        </div>
-                      ))}
+                    <div className="glanding-package-features space-y-3">
+                      {Array.isArray(pkg.features) &&
+                        pkg.features.map((feature, index) => (
+                          <div
+                            key={index}
+                            className="glanding-package-feature flex items-start gap-3"
+                          >
+                            <Check className="glanding-feature-check w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                            <span className="glanding-feature-text text-sm text-gray-700">
+                              {feature.description}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </div>

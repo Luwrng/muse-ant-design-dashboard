@@ -17,11 +17,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
-  font-family:
-    open sans,
-    Helvetica,
-    Arial,
-    sans-serif;
+  font-family: open sans, Helvetica, Arial, sans-serif;
 }
 .ant-layout.ant-layout-has-sider {
   flex-direction: row;
@@ -810,8 +806,7 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
 }
 
 .shadow-lg {
-  box-shadow:
-    0 8px 26px -4px hsla(0, 0%, 8%, 0.15),
+  box-shadow: 0 8px 26px -4px hsla(0, 0%, 8%, 0.15),
     0 8px 9px -5px hsla(0, 0%, 8%, 0.06) !important;
 }
 .ant-menu-inline,
@@ -1408,9 +1403,7 @@ span.ismobile {
 .sidebarnav-color button {
   width: 100%;
   margin-right: 10px;
-  box-shadow:
-    0 3px 5px -1px rgb(0 0 0 / 9%),
-    0 2px 3px -1px rgb(0 0 0 / 7%);
+  box-shadow: 0 3px 5px -1px rgb(0 0 0 / 9%), 0 2px 3px -1px rgb(0 0 0 / 7%);
   height: 40px;
 }
 
@@ -1780,7 +1773,6 @@ body {
 }
 
 .layout-default .ant-layout-header {
-  
   display: flex;
 }
 
@@ -1806,7 +1798,6 @@ body {
   display: none;
 }
 .sign-up-header {
-
   border-radius: 12px;
   box-shadow: 0 20px 27px rgb(0 0 0 / 5%);
   background-size: cover;
@@ -2152,7 +2143,8 @@ body {
 }
 .sign-img img {
   width: 100%;
-  max-width: 500px;
+  max-width: 40vw;
+  max-height: 60vh;
   margin: auto;
   display: block;
 }
@@ -2356,11 +2348,7 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
   margin-bottom: 0;
 }
 .widget-2 .ant-statistic-content {
-  font-family:
-    open sans,
-    Helvetica,
-    Arial,
-    sans-serif;
+  font-family: open sans, Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 20px;
   padding: 12px 16px;

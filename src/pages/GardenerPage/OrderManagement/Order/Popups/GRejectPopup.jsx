@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./GPopup.css";
 
-function GRejectPopup({ orderId, onClose, onConfirm }) {
+function GRejectPopup({ order, onClose, onConfirm }) {
   const [rejectReason, setRejectReason] = useState("");
 
   const handleConfirm = () => {
@@ -10,7 +10,7 @@ function GRejectPopup({ orderId, onClose, onConfirm }) {
       alert("Vui lòng nhập lý do hủy đơn hàng.");
       return;
     }
-    onConfirm(orderId, rejectReason);
+    onConfirm(order, rejectReason);
   };
 
   return (
