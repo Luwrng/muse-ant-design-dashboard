@@ -276,6 +276,7 @@ export const cleanfood = {
       page = 1,
       size = 10,
       search = "",
+      status = "",
     } = {}) => {
       try {
         const response = await api.get("/api/v1/admin/service-package-orders", {
@@ -284,6 +285,7 @@ export const cleanfood = {
             size,
             sortOrder: "asc",
             search,
+            status,
           },
         });
         return response.data;
