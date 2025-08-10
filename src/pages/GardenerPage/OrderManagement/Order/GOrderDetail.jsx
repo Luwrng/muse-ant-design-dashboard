@@ -149,14 +149,14 @@ function GOrderDetail({ orderId, onBack }) {
     }
 
     // Filter out products with 0 quantity or no quantity set
-    const productsToDeliver = orderData.orderDetails
+    const orderDetailsToDeliver = orderData.orderDetails
       .filter(
         (detail) =>
           deliveryQuantities[detail.orderDetailId] != null &&
           deliveryQuantities[detail.orderDetailId] > 0
       )
       .map((detail) => ({
-        productId: detail.productId,
+        orderDetailId: detail.orderDetailId,
         deliveredAt: createOrderDelivery.deliveryDate,
         quantity: deliveryQuantities[detail.orderDetailId],
         price: detail.price,
@@ -164,7 +164,7 @@ function GOrderDetail({ orderId, onBack }) {
         currency: detail.currency,
       }));
 
-    if (productsToDeliver.length === 0) {
+    if (orderDetailsToDeliver.length === 0) {
       alert("Vui lòng chọn ít nhất một sản phẩm để giao.");
       return;
     }
@@ -172,7 +172,7 @@ function GOrderDetail({ orderId, onBack }) {
     setIsLoading(true);
     try {
       const createdeliveryData = createOrderDelivery;
-      createOrderDelivery.delieryDetailsDTOs = productsToDeliver;
+      createOrderDelivery.delieryDetailsDTOs = orderDetailsToDeliver;
 
       await gardenerOrderService.createOrderDelivery(
         orderId,
@@ -266,7 +266,7 @@ function GOrderDetail({ orderId, onBack }) {
         orderId,
         matchedDetailsList
       );
-      fetchOrderDetail(0);
+      fetchOrderDetail();
     } catch (err) {
       console.log(err);
     } finally {
