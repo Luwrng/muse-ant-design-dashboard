@@ -10,6 +10,7 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
     name: profile.name,
     gender: profile.gender,
     avatar: profile.avatar,
+    email: profile.email,
     bio: profile.bio,
   });
   const [file, setFile] = useState(null);
@@ -102,6 +103,18 @@ function GProfileUpdate({ profile, onClose, onUpdate }) {
               id="bio"
               name="bio"
               value={formData.bio}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="gupdateprofile-form-group">
+            <label htmlFor="name">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
             />

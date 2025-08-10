@@ -11,6 +11,7 @@ import productService from "../../services/apiServices/productService";
 
 import "./GPostPage.css";
 import postService from "../../services/apiServices/postService";
+import gardenerHistoryService from "../../services/apiServices/gardenerHistoryService";
 
 function GPostPage() {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -21,6 +22,7 @@ function GPostPage() {
 
   const [posts, setPosts] = useState([]);
   const [productList, setProducts] = useState([]);
+  const [benefitValue, setBenefitValue] = useState();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -66,6 +68,10 @@ function GPostPage() {
       setPosts(gardenerPosts.items);
       setTotalPage(gardenerPosts.totalPages);
       setTotalResult(gardenerPosts.total);
+
+      const curBenefit =
+        await gardenerHistoryService.getCurrentContractBenefitValue(gardenerId);
+      setBenefitValue(curBenefit);
     } catch (err) {
       console.log(err);
     } finally {
@@ -230,6 +236,31 @@ function GPostPage() {
           >
             + Tạo bài viết
           </button>
+
+          {/* Usage Info Card */}
+          {benefitValue ? (
+            <div className="gpost-usage-card">
+              <div className="gpost-usage-text">
+                Số bài viết có thể tạo:{" "}
+                <strong>{benefitValue.remainingValue}</strong> /{" "}
+                {benefitValue.defaultValue}
+              </div>
+              <div className="gpost-usage-bar">
+                <div
+                  className="gpost-usage-fill"
+                  style={{
+                    width: `${
+                      (benefitValue.remainingValue /
+                        benefitValue.defaultValue) *
+                      100
+                    }%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 

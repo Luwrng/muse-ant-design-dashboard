@@ -8,7 +8,6 @@ import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import GNotificationIcon from "../../pages/GardenerPage/Notification/GNotificationIcon";
-import httpService from "../../pages/services/apiServices/httpService";
 import notificationService from "../../pages/services/apiServices/notificationService";
 import SubscriptionIcon from "../../assets/images/gardener/subscription_icon.png";
 import { Tooltip } from "antd";
@@ -47,10 +46,9 @@ function GardenerHeader({
     feedback: "Danh Sách Phản Hồi",
     profile: "Hồ Sơ",
     "sign-up": "Đăng Ký",
-    "package-payment": "Quản Lý Gói Dịch Vụ",     // 👈 mới thêm
-    report: "Báo Cáo",                            // 👈 mới thêm
+    "package-payment": "Quản Lý Gói Dịch Vụ", // 👈 mới thêm
+    report: "Báo Cáo", // 👈 mới thêm
   };
-
 
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
