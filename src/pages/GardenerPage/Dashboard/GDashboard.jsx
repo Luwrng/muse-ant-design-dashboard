@@ -38,6 +38,7 @@ function GDashboard() {
       "PENDING",
       "PREPARED",
       "DELIVERING",
+      "DELIVERED",
       "COMPLETED",
       "CANCELLED",
     ];
@@ -77,11 +78,12 @@ function GDashboard() {
           // Data for pie chart - order status
           orderStatus: {
             labels: [
-              "Pending",
-              "Prepared",
-              "Delivering",
-              "Completed",
-              "Cancelled",
+              "Chờ duyệt",
+              "Chuẩn bị hàng",
+              "Đang giao",
+              "Đã giao",
+              "Hoàn thành",
+              "Hủy",
             ],
             datasets: [
               {
@@ -90,6 +92,7 @@ function GDashboard() {
                   "#FF9F40",
                   "#36A2EB",
                   "#4BC0C0",
+                  "#4bc06eff",
                   "#97CA00",
                   "#E74C3C",
                 ],

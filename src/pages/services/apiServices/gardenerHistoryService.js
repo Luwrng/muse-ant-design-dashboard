@@ -23,10 +23,20 @@ const getCurrentSubscription = async (gardenerId) => {
   );
 };
 
+const getCurrentContractBenefitValue = async (gardenerId) => {
+  return await httpService.get(
+    `${gardenerEndpoint}/current-subscription-benefit`,
+    {
+      params: { gardenerId },
+    }
+  );
+};
+
 const gardenerHistoryService = {
   getPaymentHistory,
   getSubscriptionHistory,
   getCurrentSubscription,
+  getCurrentContractBenefitValue,
 };
 
 export default gardenerHistoryService;
