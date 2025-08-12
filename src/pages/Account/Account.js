@@ -27,6 +27,7 @@ import {
   faCheck,
   faTimes,
   faEye,
+  faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import "./Account.css";
@@ -72,6 +73,7 @@ function Account() {
     visible: false,
     recordKey: null,
   });
+  const [activeTab, setActiveTab] = useState("1");
 
   const [approveModalInfo, setApproveModalInfo] = useState({
     visible: false,
@@ -113,6 +115,8 @@ function Account() {
     setEditingAccountId(record.key);
     setEditModalVisible(true);
   };
+
+
 
 
 
@@ -235,6 +239,12 @@ function Account() {
     }
   };
 
+  const approveCols = approveColumns({
+    setDataSource,
+    onApproved: fetchGardeners,
+    setActiveTab, // truyền thêm
+  });
+
 
 
   const gardenerColumns = [
@@ -345,7 +355,9 @@ function Account() {
                 </Space>
               }
             >
-              <Tabs defaultActiveKey="1">
+              <Tabs activeKey={activeTab}
+                onChange={(key) => setActiveTab(key)}
+                defaultActiveKey="1">
 
                 <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Đang chờ duyệt </span>} key="1">
                   <div className="table-responsive">
@@ -354,6 +366,8 @@ function Account() {
                         handleViewImage,
                         openRejectModal,
                         setDataSource,
+                        setActiveTab,
+                        onApproved: fetchGardeners // truyền đúng hàm bạn có
                       })}
 
                       dataSource={statusData.filter(

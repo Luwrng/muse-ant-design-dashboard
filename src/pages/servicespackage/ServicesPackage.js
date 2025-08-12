@@ -51,7 +51,7 @@ const ServicesPackage = () => {
   // State cho ô tìm kiếm
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(7);
   const [total, setTotal] = useState(0);
   const [searchText, setSearchText] = useState("");
 
@@ -287,9 +287,7 @@ const ServicesPackage = () => {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                   />
-                  <Button type="primary">Thêm Gói Mới</Button>
-                  {/* Nút thêm mới */}
-                  {/*<AddButton onClick={() => setAddServiceModalVisible(true)} />*/}
+                  <AddButton onClick={() => setAddServiceModalVisible(true)} />
                 </Space>
               }
             >

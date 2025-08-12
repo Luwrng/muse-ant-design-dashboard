@@ -56,13 +56,13 @@ export const cleanfood = {
     ADMIN API
     * ================================ */
   admin: {
-    updateAccountStatus: async (id, status) => {
+    updateAccountStatus: async (id, statusValue, isVerified) => {
       try {
         const response = await api.patch(
           `/api/v1/accounts/${id}/status`,
           null,
           {
-            params: { status }, // ✅ Gửi qua query string
+            params: { status: statusValue, isVerified }, // đúng format
           }
         );
         return response.data;
@@ -74,6 +74,7 @@ export const cleanfood = {
         throw error;
       }
     },
+
 
     getAllUsers: async () => {
       try {
@@ -275,6 +276,7 @@ export const cleanfood = {
       page = 1,
       size = 10,
       search = "",
+      status = "",
     } = {}) => {
       try {
         const response = await api.get("/api/v1/admin/service-package-orders", {
@@ -283,6 +285,7 @@ export const cleanfood = {
             size,
             sortOrder: "asc",
             search,
+            status,
           },
         });
         return response.data;

@@ -39,7 +39,7 @@ const ServiceList = () => {
 
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(7);
   const [total, setTotal] = useState(0);
   const [form] = Form.useForm();
   const fetchService = async (page = 1, size = 10, search = "") => {

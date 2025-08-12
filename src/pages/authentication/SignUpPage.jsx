@@ -252,20 +252,26 @@ function SignUpPage() {
                     </div>
                   ) : (
                     <input
-                      type="text"
-                      className="siup-input-field"
-                      placeholder={`Nhập ${field}`}
-                      value={formData[field]}
-                      onChange={(e) =>
-                        handleInputChange(
-                          field,
-                          field === "phone"
-                            ? e.target.value.replace(/\D/g, "")
-                            : e.target.value
-                        )
-                      }
-                      required
-                    />
+                    type="text"
+                    className="siup-input-field"
+                    placeholder={
+                      field === "name"
+                        ? "Nhập tên"
+                        : field === "phone"
+                        ? "Nhập số điện thoại"
+                        : `Nhập ${field}`
+                    }
+                    value={formData[field]}
+                    onChange={(e) =>
+                      handleInputChange(
+                        field,
+                        field === "phone"
+                          ? e.target.value.replace(/\D/g, "")
+                          : e.target.value
+                      )
+                    }
+                    required
+                  />
                   )}
                 </div>
               ))}

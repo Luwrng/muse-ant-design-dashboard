@@ -221,12 +221,13 @@ function Home() {
         orderRes,
         serviceRes
       ] = await Promise.all([
-        cleanfood.gardener.getAll({ page: 1, size: 1 }),
-        cleanfood.retailer.getAll(1, 1),
-        cleanfood.admin.getPackage({ page: 1, size: 1 }),
+        // ✅ Chỉ lấy ACTIVE ngay từ server
+        cleanfood.gardener.getAll({ page, size, status: "ACTIVE" }),
+        cleanfood.retailer.getAll(page, size, "ACTIVE"),
+        cleanfood.admin.getPackage({ page, size }),
         cleanfood.admin.getContract({ page, size }),
         cleanfood.admin.getServicePackageOrders({ page, size, search }),
-        cleanfood.admin.getPackage({ page, size, search })
+        cleanfood.admin.getPackage({ page, size, search, status: "ACTIVE" })
       ]);
 
       const revenue = contractRes.items?.reduce(
@@ -234,10 +235,9 @@ function Home() {
         0
       );
 
-      // ✅ Đặt successOrders trước khi dùng
       const successOrders = orderRes.items?.filter(order => order.status === "SUCCESS") || [];
 
-      const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order, idx) => {
+      const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order) => {
         const status = order.status?.toUpperCase() || "UNKNOWN";
         return {
           title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()} VND`,
@@ -255,13 +255,11 @@ function Home() {
         };
       });
 
-      // ✅ Tính doanh thu theo tháng
       const revenueMap = {};
       for (const order of successOrders) {
         const date = dayjs(order.createdAt).format("MM/YYYY");
         revenueMap[date] = (revenueMap[date] || 0) + (order.totalAmount || 0);
       }
-
       const monthlyRevenue = Object.entries(revenueMap)
         .sort(([a], [b]) => dayjs(a, "MM/YYYY").unix() - dayjs(b, "MM/YYYY").unix())
         .map(([month, amount]) => ({ month, amount }));
@@ -272,20 +270,19 @@ function Home() {
       );
       const orderCount = successOrders.length;
 
-      setTimelineList((prev) => [...prev, ...newTimelineItems]);
+      setTimelineList(newTimelineItems);
 
       const active = (serviceRes.items || [])
-        .filter((pkg) => pkg.status === "ACTIVE")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
 
       setActivePackages(active);
 
-      // ✅ Cập nhật thống kê
+      // ✅ Dữ liệu đã lọc ACTIVE từ server nên chỉ cần đếm
       setStats({
-        gardener: gardenerRes.totalItems || 0,
-        retailer: retailerRes.totalItems || 0,
-        servicePackage: packageRes.totalItems || 0,
+        gardener: gardenerRes.total || 0,
+        retailer: retailerRes.total || 0,
+        servicePackage: packageRes.total || 0,
         revenue: revenue || 0,
         orderAmount: orderTotalAmount || 0,
         orderCount: orderCount || 0,
@@ -298,6 +295,7 @@ function Home() {
       setLoading(false);
     }
   };
+
 
 
   useEffect(() => {
@@ -339,12 +337,12 @@ function Home() {
         </Row>
 
         <Row gutter={[24, 0]}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
+          {/* <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <Echart />
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
+          </Col> */}
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <LineChart monthlyRevenue={stats.monthlyRevenue || []} />
 

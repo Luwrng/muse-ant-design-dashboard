@@ -67,13 +67,22 @@ const Orders = () => {
 
   };
 
+  const [tabKey, setTabKey] = useState("success");
+
+
 
   const fetchOrders = async (page = 1, size = 10, search = "") => {
     try {
-      const res = await cleanfood.admin.getServicePackageOrders({ page, size, search });
+      // Lấy tất cả dữ liệu, sau đó filter SUCCESS
+      const params = { page, size, search };
 
-      const formatted = res.items.map((item, index) => ({
-        key: index,
+      const res = await cleanfood.admin.getServicePackageOrders(params);
+
+      // Filter chỉ lấy SUCCESS
+      const successItems = res.items.filter(item => item.status === "SUCCESS");
+
+      const formatted = successItems.map((item, index) => ({
+        key: index + (page - 1) * size,
         gardenerName: item.gardenerName || "",
         servicePackageName: item.servicePackageName || "",
         gardenerId: item.gardenerId || "",
@@ -81,11 +90,11 @@ const Orders = () => {
         totalAmount: item.totalAmount || 0,
         status: item.status,
         createdAt: item.createdAt?.split("T")[0] || "",
+        servicePackageOrderId: item.servicePackageOrderId,
       }));
 
-
       setData(formatted);
-      setTotal(res.total || 0);
+      setTotal(successItems.length);
       setCurrentPage(res.page || page);
       setPageSize(res.size || size);
     } catch (error) {
@@ -98,24 +107,24 @@ const Orders = () => {
     fetchOrders(currentPage, pageSize, searchText);
   }, [currentPage, pageSize, searchText]);
 
+
+
+
   const columns = [
     {
       title: "Mã Đơn",
       dataIndex: "servicePackageName",
       key: "servicePackageName",
-
     },
     {
       title: "Khách Hàng",
       dataIndex: "gardenerName",
       key: "gardenerName",
-
     },
     {
       title: "Gói Dịch Vụ (ID)",
       dataIndex: "servicePackageId",
       key: "servicePackageId",
-
     },
     {
       title: "Tổng Tiền",
@@ -130,11 +139,12 @@ const Orders = () => {
       key: "status",
       align: "center",
       render: (status) => {
+        // Chỉ hiển thị SUCCESS, ẩn các status khác
+        if (status !== "SUCCESS") return null;
         const { color, label } = getStatusInfo(status);
         return <Tag color={color}>{label}</Tag>;
       },
     },
-
     {
       title: "Ngày Tạo",
       dataIndex: "createdAt",
@@ -165,7 +175,7 @@ const Orders = () => {
     },
   ];
 
-  const activeData = useMemo(() => data.filter(item => item.status === "SUCCESS"), [data]);
+
 
 
   return (
@@ -200,11 +210,11 @@ const Orders = () => {
                     children: (
                       <Table
                         columns={columns}
-                        dataSource={activeData}
+                        dataSource={data}
                         pagination={{
                           position: ["bottomCenter", "bottomRight"],
                           pageSize,
-                          total: activeData.length,
+                          total: total,
                           current: currentPage,
                           onChange: (page, size) => {
                             setCurrentPage(page);
