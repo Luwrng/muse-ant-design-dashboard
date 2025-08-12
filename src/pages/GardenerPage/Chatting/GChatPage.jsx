@@ -88,7 +88,7 @@ function GChatPage() {
   return (
     <div className="gchat-chat-container">
       <SendbirdProvider
-        appId={"296C6AE3-686D-44BF-8FDA-7DDFF64921C3"}
+        appId={"76B840AB-32EE-4792-B6C7-98FC3101C9D7"}
         userId={user.id}
         nickname={user.name}
         profileUrl={user?.imageUrl}

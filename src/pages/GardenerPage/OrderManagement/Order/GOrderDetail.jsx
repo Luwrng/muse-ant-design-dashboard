@@ -404,6 +404,12 @@ function GOrderDetail({ orderId, onBack }) {
           <p className="godetail-customer">
             Khách hàng: {orderData.accountName}
           </p>
+          <p className="godetail-customer">
+            Số điện thoại: {orderData.phoneNumber}
+          </p>
+          <p className="godetail-customer">
+            Địa chỉ giao hàng: {orderData.shippingAddress}
+          </p>
           <p className="godetail-total">
             Tổng tiền sản phẩm: {formatPrice(orderData.totalAmount)}
           </p>
