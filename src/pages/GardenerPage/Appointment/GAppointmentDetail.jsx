@@ -79,7 +79,7 @@ function GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
             <div className="gapdetail-detail-row">
               <span className="gapdetail-detail-label">Trạng thái:</span>
               <span className="gapdetail-detail-value">
-                {appointment.status}
+                {appointment.status === "ACCEPTED" ? "Xác nhận" : "Đã hủy"}
               </span>
             </div>
             <div className="gapdetail-detail-row gapdetail-description-row">
