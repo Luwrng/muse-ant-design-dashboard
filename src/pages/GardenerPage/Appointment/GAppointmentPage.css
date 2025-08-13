@@ -347,6 +347,12 @@
   color: #9a3412;
 }
 
+.gappointment-appointment-red {
+  background-color: #feaaaa;
+  border-color: #fd7474;
+  color: #9a3412;
+}
+
 .gappointment-appointment-blue {
   background-color: #dbeafe;
   border-color: #93c5fd;

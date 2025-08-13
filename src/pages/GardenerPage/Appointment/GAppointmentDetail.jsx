@@ -91,11 +91,18 @@ function GAppointmentDetail({ appointment, isOpen, onClose, onCancel }) {
           </div>
 
           {/* Action Button */}
-          <div className="gapdetail-modal-actions">
-            <button className="gapdetail-cancel-button" onClick={handleCancel}>
-              🗑 Hủy cuộc hẹn
-            </button>
-          </div>
+          {appointment.status !== "CANCELLED" ? (
+            <div className="gapdetail-modal-actions">
+              <button
+                className="gapdetail-cancel-button"
+                onClick={handleCancel}
+              >
+                🗑 Hủy cuộc hẹn
+              </button>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
