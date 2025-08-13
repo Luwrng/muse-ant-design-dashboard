@@ -7,7 +7,7 @@ function FailPaymentResult() {
   const history = useHistory();
 
   const handleGoBack = () => {
-    history.push("/gardener/landing");
+    history.push("/gardener/dashboard");
   };
 
   return (
