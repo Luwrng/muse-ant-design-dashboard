@@ -429,9 +429,10 @@ function GAppointmentPage() {
     // console.log("Cancelled appointment:", appointment, "Reason:", reason);
     setIsLoading(true);
     try {
-      const gardenerId = localStorage.getItem("account_id");
+      // const gardenerId = localStorage.getItem("account_id");
+      const gardenerName = localStorage.getItem("account_name");
       await appointmentService.cancelAppointment(appointment.appointmentId, {
-        cancelledBy: gardenerId,
+        cancelledBy: gardenerName,
         cancellationReason: reason,
       });
     } catch (err) {
@@ -670,7 +671,9 @@ function GAppointmentPage() {
                             {isFirstSlot && (
                               <div
                                 className={`gappointment-appointment-block ${
-                                  today > appointment.appointmentDate
+                                  appointment.status === "CANCELLED"
+                                    ? "gappointment-appointment-red"
+                                    : today > appointment.appointmentDate
                                     ? "gappointment-appointment-orange"
                                     : "gappointment-appointment-green"
                                 }`}
@@ -702,7 +705,9 @@ function GAppointmentPage() {
                                       appointment.status
                                     )}`}
                                   >
-                                    {appointment.status}
+                                    {appointment.status === "ACCEPTED"
+                                      ? "Xác nhận"
+                                      : "Đã Hủy"}
                                   </span>
                                 </div>
                               </div>
