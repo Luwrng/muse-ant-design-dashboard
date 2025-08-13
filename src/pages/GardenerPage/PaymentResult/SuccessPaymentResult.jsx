@@ -7,7 +7,7 @@ function SuccessPaymentResult() {
   const history = useHistory();
 
   const handleGoBack = () => {
-    history.push("/landing");
+    history.push("/gardener/landing");
   };
 
   return (
