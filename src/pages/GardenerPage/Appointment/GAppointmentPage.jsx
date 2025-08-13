@@ -707,7 +707,7 @@ function GAppointmentPage() {
                                   >
                                     {appointment.status === "ACCEPTED"
                                       ? "Xác nhận"
-                                      : "Đã Hủy"}
+                                      : "Đã hủy"}
                                   </span>
                                 </div>
                               </div>
