@@ -1,0 +1,108 @@
+import React from "react";
+import { useState } from "react";
+import "./GAppointmentCancelModal.css";
+
+function GAppointmentCancelModal({
+  appointment,
+  isOpen,
+  onClose,
+  onConfirm,
+  onRejectConfirm,
+  isCancel,
+}) {
+  const [reason, setReason] = useState("");
+
+  if (!isOpen || !appointment) return null;
+
+  const handleConfirm = async () => {
+    await onConfirm(appointment, reason);
+    setReason("");
+  };
+
+  const handleRejectConfirm = async () => {
+    await onRejectConfirm(appointment, reason);
+    setReason("");
+  };
+
+  const handleClose = () => {
+    setReason("");
+    onClose();
+  };
+
+  return (
+    <div className="gacancel-modal-overlay" onClick={handleClose}>
+      <div
+        className="gacancel-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="gacancel-modal-header">
+          <h2 className="gacancel-modal-title">
+            Xác nhận {isCancel ? "hủy" : "từ chối"} cuộc hẹn
+          </h2>
+        </div>
+
+        {/* Modal Body */}
+        <div className="gacancel-modal-body">
+          {/* Confirmation Message */}
+          <div className="gacancel-message-section">
+            <div className="gacancel-warning-icon">⚠️</div>
+            <p className="gacancel-confirmation-text">
+              Bạn muốn {isCancel ? "hủy" : "từ chối"} cuộc hẹn này?
+            </p>
+          </div>
+
+          {/* Appointment Info */}
+          <div className="gacancel-appointment-info">
+            <h4 className="gacancel-appointment-subject">
+              {appointment.subject}
+            </h4>
+            <p className="gacancel-appointment-time">
+              {/* Add a function for calculating the endTime of the appointment */}
+              {appointment.startTime} - {appointment.endTime}
+            </p>
+          </div>
+
+          {/* Reason Input */}
+          <div className="gacancel-reason-section">
+            <label className="gacancel-reason-label" htmlFor="cancel-reason">
+              Lý do:
+            </label>
+            <textarea
+              id="cancel-reason"
+              className="gacancel-reason-input"
+              placeholder="Nhập lý do hủy cuộc hẹn..."
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              rows={4}
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="gacancel-modal-actions">
+            <button className="gacancel-cancel-button" onClick={handleClose}>
+              Hủy
+            </button>
+            {isCancel ? (
+              <button
+                className="gacancel-confirm-button"
+                onClick={handleConfirm}
+              >
+                Xác nhận
+              </button>
+            ) : (
+              <button
+                className="gacancel-confirm-button"
+                onClick={handleRejectConfirm}
+              >
+                Xác nhận
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default GAppointmentCancelModal;
