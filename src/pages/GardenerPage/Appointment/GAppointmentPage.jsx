@@ -168,7 +168,7 @@ function GAppointmentPage() {
   const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
   const [isCancel, setIsCancel] = useState(false);
-  
+
   //Paginate variables
   const [totalPage, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -449,6 +449,7 @@ function GAppointmentPage() {
         },
         "CANCELLED"
       );
+      fetchPendingAppointment(1);
     } catch (err) {
       console.log(err);
     } finally {
