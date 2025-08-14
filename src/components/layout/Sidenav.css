@@ -1,0 +1,203 @@
+.brand {
+  padding: 16px;
+  text-align: center;
+}
+
+.brand img {
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+.brand span {
+  display: block;
+  font-weight: 600;
+  color: #001529;
+  font-size: 16px;
+}
+
+/* MENU chính */
+.ant-menu {
+  border-right: none !important;
+  width: 100% !important;
+  background-color: transparent;
+  padding: 8px;
+}
+
+/* ITEM cấp 1 */
+.ant-menu-item,
+.ant-menu-submenu-title {
+  height: 44px !important;
+  margin: 4px 0 !important;
+  padding-left: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 8px !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Text trong menu item */
+.ant-menu-item span,
+.ant-menu-submenu-title span,
+.ant-menu-item a {
+  color: rgba(0, 0, 0, 0.65) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  transform-origin: left center;
+  position: relative;
+}
+
+/* ITEM cấp 2 (submenu) */
+.ant-menu-sub .ant-menu-item {
+  padding-left: 48px !important;
+  height: 40px !important;
+  border-radius: 6px !important;
+  font-weight: normal;
+}
+
+/* HOVER */
+.ant-menu-item:hover span,
+.ant-menu-item:hover a,
+.ant-menu-submenu-title:hover span {
+  color: #000000 !important;
+}
+
+.ant-menu-item:hover svg,
+.ant-menu-submenu-title:hover svg {
+  color: #000000 !important;
+}
+
+/* SELECTED */
+.ant-menu-item-selected {
+  background-color: #ffffff !important;
+  font-weight: 500;
+}
+
+.ant-menu-item-selected a,
+.ant-menu-item-selected span {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  animation: textSlide 0.5s ease forwards;
+}
+
+@keyframes textSlide {
+  0% {
+    transform: translateX(-10px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.ant-menu-item-selected svg {
+  color: #000000 !important;
+  animation: iconSlide 0.5s ease forwards;
+}
+
+@keyframes iconSlide {
+  0% {
+    transform: translateX(-15px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* LINK trong item */
+.ant-menu-item a {
+  text-decoration: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ICON style */
+.ant-menu-item svg,
+.ant-menu-submenu-title svg {
+  margin-right: 12px;
+  width: 16px;
+  color: rgba(0, 0, 0, 0.65);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block !important;
+  flex-shrink: 0;
+  transform-origin: center;
+}
+
+/* LABEL nhóm menu */
+.ant-menu-item-group-title {
+  padding: 16px !important;
+  color: rgba(0, 0, 0, 0.45) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Divider */
+.ant-menu-item-divider {
+  margin: 12px 0 !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Submenu title */
+.ant-menu-submenu-title {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+}
+
+/* HR line */
+hr {
+  margin: 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Animation cho submenu */
+.ant-menu-sub {
+  background: transparent !important;
+}
+
+/* Submenu selected */
+.ant-menu-submenu-selected .ant-menu-submenu-title {
+  color: #000000 !important;
+}
+
+.ant-menu-submenu-selected .ant-menu-submenu-title span,
+.ant-menu-submenu-selected .ant-menu-submenu-title svg {
+  color: #000000 !important;
+  animation: textSlide 0.5s ease forwards;
+  font-weight: 600 !important;
+}
+
+/* Hide submenu arrow */
+.ant-menu-submenu-arrow {
+  display: none !important;
+}
+
+/* Fix icon alignment */
+.ant-menu-item a {
+  position: relative;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-menu-item svg {
+  position: static !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Fix text alignment */
+.ant-menu-item span {
+  display: block !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+}

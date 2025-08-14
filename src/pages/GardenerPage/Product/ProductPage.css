@@ -1,0 +1,381 @@
+/* Base styles for the entire page container */
+.gproduct-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px; /* py-8 px-4 */
+  z-index: 10;
+}
+@media (min-width: 768px) {
+  .gproduct-container {
+    padding-left: 1.5rem; /* md:px-6 */
+    padding-right: 1.5rem; /* md:px-6 */
+  }
+}
+
+/* Header section styles */
+.gproduct-header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem; /* gap-4 */
+  /* margin-bottom: 1.5rem;  */
+}
+@media (min-width: 768px) {
+  .gproduct-header-top {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.gproduct-title {
+  font-size: 2.2rem; /* text-2xl */
+  font-weight: bold; /* font-bold */
+}
+
+/* General button styles */
+.gproduct-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 0.375rem; /* rounded-md */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  height: 2.5rem; /* h-10 */
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  background-color: #1fd037; /* --primary */
+  color: #f8f8f8; /* --primary-foreground */
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.gproduct-button:hover {
+  background-color: #1ea12f; /* hover:bg-primary/90 (darker shade) */
+}
+.gproduct-button:focus {
+  outline: none;
+}
+.gproduct-button:focus-visible {
+  outline: none;
+}
+.gproduct-button:disabled {
+  opacity: 0.5; /* disabled:opacity-50 */
+  cursor: not-allowed;
+}
+
+/* Specific button styles */
+.gproduct-add-button {
+  gap: 0.5rem; /* gap-2 */
+}
+
+.gproduct-icon {
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+}
+
+/* Header bottom section (tabs and search) */
+.gproduct-header-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem; /* gap-4 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+@media (min-width: 768px) {
+  .gproduct-header-bottom {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Tabs styling */
+.gproduct-tabs-list {
+  display: grid;
+  width: 100%; /* w-full */
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* grid-cols-3 */
+  background-color: #f0f2f5; /* --muted */
+  border-radius: 0.375rem; /* rounded-md */
+  padding: 0.25rem; /* p-1 */
+}
+@media (min-width: 768px) {
+  .gproduct-tabs-list {
+    width: auto; /* md:w-auto */
+  }
+}
+
+.gproduct-tab-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 0.25rem; /* rounded-sm */
+  padding: 0.375rem 0.75rem; /* px-3 py-1.5 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  transition: all 0.2s ease-in-out;
+  color: #6b7280; /* --muted-foreground */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.gproduct-tab-trigger:hover {
+  color: #0c0a09; /* --foreground */
+}
+.gproduct-tab-trigger-active {
+  background-color: #ffffff; /* --background */
+  color: #0c0a09; /* --foreground */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+}
+
+/* Search input styling */
+.gproduct-search-container {
+  position: relative;
+  width: 100%; /* w-full */
+}
+@media (min-width: 768px) {
+  .gproduct-search-container {
+    max-width: 20rem; /* md:max-w-xs */
+  }
+}
+
+.gproduct-search-icon {
+  position: absolute;
+  left: 0.75rem; /* left-3 */
+  top: 50%; /* top-1/2 */
+  transform: translateY(-50%); /* -translate-y-1/2 */
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  color: #6b7280; /* --muted-foreground */
+}
+
+.gproduct-input {
+  display: flex;
+  width: 100%; /* w-full */
+  border-radius: 0.375rem; /* rounded-md */
+  border: 1px solid #e5e7eb; /* --input */
+  background-color: #ffffff; /* --background */
+  padding: 0.625rem 0.75rem; /* px-3 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.gproduct-input:focus-visible {
+  outline: none;
+  border-color: #0c0a09; /* --ring */
+  box-shadow: 0 0 0 2px #0c0a09; /* --ring */
+}
+.gproduct-input::placeholder {
+  color: #6b7280; /* --muted-foreground */
+}
+.gproduct-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5; /* disabled:opacity-50 */
+}
+.gproduct-search-input {
+  padding-left: 2.25rem; /* pl-9 */
+}
+
+/* Table styling */
+.gproduct-table-wrapper {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  z-index: 10;
+}
+
+.gproduct-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  z-index: inherit;
+}
+
+.gproduct-table-header {
+  background: #f8f9fa;
+}
+
+.gproduct-table-row {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+.gproduct-table-row:last-child {
+  border-bottom: none;
+}
+.gproduct-table-row:hover {
+  background-color: #f8f9fa;
+}
+
+.gproduct-table-head {
+  padding: 16px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gproduct-table-head:last-child {
+  border-right: none;
+}
+
+.gproduct-table-cell {
+  padding: 16px 12px;
+  font-size: 1rem;
+  color: #333;
+  vertical-align: middle;
+  border-right: 1px solid #f0f0f0;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gproduct-table-cell:last-child {
+  border-right: none;
+}
+
+.gproduct-cell-name {
+  font-weight: 500; /* font-medium */
+}
+
+.gproduct-action-header {
+  text-align: right; /* text-right */
+}
+
+.gproduct-action-cell {
+  position: relative; /* required for absolute child */
+  text-align: right;
+}
+
+/* Status badge styling */
+.gproduct-status-badge {
+  padding: 0.25rem 0.5rem; /* px-2 py-1 */
+  border-radius: 10rem; /* rounded-full */
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500; /* font-medium */
+}
+
+.gproduct-status-selling {
+  background-color: #e6f7e6; /* green-100 */
+  color: #22c55e; /* green-800 */
+}
+.dark .gproduct-status-selling {
+  background-color: #166534; /* green-900 */
+  color: #b9f5d0; /* green-200 */
+}
+
+.gproduct-status-out-of-stock {
+  background-color: #fee2e2; /* red-100 */
+  color: #dc2626; /* red-800 */
+}
+.dark .gproduct-status-out-of-stock {
+  background-color: #7f1d1d; /* red-900 */
+  color: #fecaca; /* red-200 */
+}
+
+/* No products message */
+.gproduct-no-products {
+  text-align: center; /* text-center */
+  padding: 2rem 0; /* py-8 */
+  color: #6b7280; /* --muted-foreground */
+  grid-column: span 6 / span 6; /* col-span-6 */
+}
+
+/* Dropdown menu styling */
+.gproduct-dropdown-menu {
+  position: relative;
+  display: inline-block; /* To make it wrap its content */
+}
+
+.gproduct-action-trigger {
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  padding: 0; /* p-0 */
+  background-color: transparent; /* bg-transparent */
+  color: #0c0a09; /* --foreground */
+  border: none;
+}
+.gproduct-action-trigger:hover {
+  background-color: #f0f2f5; /* --muted */
+}
+
+.gproduct-dropdown-content {
+  position: absolute;
+  right: 0; /* align-end */
+  background-color: #ffffff; /* --popover */
+  border: 1px solid #e5e7eb; /* --border */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  min-width: 8rem; /* min-w-[8rem] */
+  z-index: 999; /* z-50 */
+  padding: 0.25rem 0; /* p-1 */
+}
+
+.gproduct-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem; /* px-2 py-1.5 */
+  font-size: 0.875rem; /* text-sm */
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #0c0a09; /* --foreground */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.gproduct-dropdown-item:hover {
+  background-color: #f0f2f5; /* --muted */
+  color: #1a1a1a; /* --accent-foreground */
+}
+
+.gproduct-dropdown-item:focus {
+  outline: none;
+}
+
+/* Pagination styling */
+.gproduct-pagination-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem; /* mt-6 */
+  font-size: 0.875rem; /* text-sm */
+  color: #6b7280; /* --muted-foreground */
+}
+
+.gproduct-pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.gproduct-pagination-button {
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  background-color: transparent; /* bg-transparent */
+  border: 1px solid #e5e7eb; /* --input */
+  color: #0c0a09; /* --foreground */
+  border-radius: 0.375rem; /* rounded-md */
+  transition: background-color 0.2s ease-in-out;
+}
+.gproduct-pagination-button:hover {
+  background-color: #f0f2f5; /* --accent */
+  color: #1a1a1a; /* --accent-foreground */
+}
+.gproduct-pagination-button:focus-visible {
+  outline: 2px solid #0c0a09; /* --ring */
+  outline-offset: 2px; /* focus-visible:ring-offset-2 */
+}

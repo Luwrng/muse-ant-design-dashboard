@@ -1,0 +1,102 @@
+.gpup-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gpup-modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 450px;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.gpup-modal-content h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.gpup-modal-body {
+  margin-bottom: 25px;
+}
+
+.gpup-modal-body label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.gpup-modal-body input[type="number"],
+.gpup-modal-body textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.gpup-modal-body textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.gpup-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.gpup-modal-cancel-btn,
+.gpup-modal-confirm-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.gpup-modal-cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.gpup-modal-cancel-btn:hover {
+  background-color: #d0d0d0;
+}
+
+.gpup-modal-confirm-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.gpup-modal-confirm-btn:hover {
+  background-color: #0056b3;
+}

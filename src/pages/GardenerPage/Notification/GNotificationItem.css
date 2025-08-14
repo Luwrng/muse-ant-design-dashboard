@@ -1,0 +1,89 @@
+.gnotiitem-notification-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.gnotiitem-notification-item:hover {
+  background-color: #f9fafb;
+}
+
+.gnotiitem-notification-item.unread {
+  background-color: #fef3f2;
+  border-left: 3px solid #ef4444;
+}
+
+.gnotiitem-notification-avatar {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.gnotiitem-notification-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gnotiitem-notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.gnotiitem-notification-message {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.gnotiitem-sender-name {
+  font-weight: 600;
+  color: #111827;
+  margin-right: 4px;
+}
+
+.gnotiitem-message-text {
+  color: #374151;
+  font-size: 14px;
+}
+
+.gnotiitem-notification-meta {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.gnotiitem-category {
+  font-weight: 500;
+}
+
+.gnotiitem-separator {
+  margin: 0 6px;
+}
+
+.gnotiitem-time {
+  color: #9ca3af;
+}
+
+.gnotiitem-notification-actions {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.gnotiitem-three-dots-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.gnotiitem-three-dots-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}

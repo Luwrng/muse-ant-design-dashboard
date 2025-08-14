@@ -1,47 +1,69 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
+import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { Typography } from "antd";
 import { MinusOutlined } from "@ant-design/icons";
-import lineChart from "./configs/lineChart";
 
-function LineChart() {
+function LineChart({ monthlyRevenue = [] }) {
   const { Title, Paragraph } = Typography;
+
+  const categories = monthlyRevenue.map((item) => item.month);
+  const dataSeries = monthlyRevenue.map((item) => item.amount);
+  const total = dataSeries.reduce((sum, val) => sum + val, 0);
+
+  const chartData = {
+    series: [
+      {
+        name: "Doanh thu theo tháng",
+        data: dataSeries,
+      },
+    ],
+    options: {
+      chart: {
+        id: "monthly-revenue-chart",
+        type: "area",
+        zoom: { enabled: false },
+      },
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth" },
+      xaxis: {
+        categories,
+
+      },
+      yaxis: {
+        labels: {
+          formatter: (val) => `${val / 1_000_000}M`,
+        },
+
+      },
+      tooltip: {
+        y: {
+          formatter: (val) => `${val.toLocaleString()} VND`,
+        },
+      },
+    },
+  };
 
   return (
     <>
       <div className="linechart">
         <div>
-          <Title level={5}>Active Users</Title>
+          <Title level={5}>Biểu đồ doanh thu theo tháng</Title>
           <Paragraph className="lastweek">
-            than last week <span className="bnb2">+30%</span>
+            Tổng doanh thu: <span className="bnb2">{total.toLocaleString()} VND</span>
           </Paragraph>
         </div>
         <div className="sales">
-          <ul>
-            <li>{<MinusOutlined />} Traffic</li>
-            <li>{<MinusOutlined />} Sales</li>
-          </ul>
+
         </div>
       </div>
 
       <ReactApexChart
         className="full-width"
-        options={lineChart.options}
-        series={lineChart.series}
+        options={chartData.options}
+        series={chartData.series}
         type="area"
         height={350}
-        width={"100%"}
+        width="100%"
       />
     </>
   );

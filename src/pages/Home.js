@@ -1,16 +1,5 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-import { useState } from "react";
-
+import React, { useEffect, useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Card,
   Col,
@@ -30,9 +19,11 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
+import dayjs from "dayjs";
 
 import Echart from "../components/chart/EChart";
 import LineChart from "../components/chart/LineChart";
+import { cleanfood } from "../api_admin";
 
 import ava1 from "../assets/images/logo-shopify.svg";
 import ava2 from "../assets/images/logo-atlassian.svg";
@@ -46,12 +37,27 @@ import team3 from "../assets/images/team-3.jpg";
 import team4 from "../assets/images/team-4.jpg";
 import card from "../assets/images/info-card-1.jpg";
 
+
+
 function Home() {
   const { Title, Text } = Typography;
-
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
+
   const [reverse, setReverse] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    gardener: 0,
+    retailer: 0,
+    servicePackage: 0,
+    revenue: 0,
+    orderAmount: 0,
+    orderCount: 0,
+  });
+  const [activePackages, setActivePackages] = useState([]);
+  const [timelineList, setTimelineList] = useState([]);
+  const history = useHistory();
+
 
   const dollor = [
     <svg
@@ -139,188 +145,48 @@ function Home() {
       ></path>
     </svg>,
   ];
-  const count = [
+  const initialCount = useMemo(() => [
     {
-      today: "Today’s Sales",
-      title: "$53,000",
-      persent: "+30%",
-      icon: dollor,
-      bnb: "bnb2",
-    },
-    {
-      today: "Today’s Users",
-      title: "3,200",
-      persent: "+20%",
+      key: "gardener",
+      today: "Số lượng Nhà Vườn",
+      title: (stats.gardener ?? 0).toLocaleString(),
       icon: profile,
       bnb: "bnb2",
+      persent: "",
     },
     {
-      today: "New Clients",
-      title: "+1,200",
-      persent: "-20%",
-      icon: heart,
-      bnb: "redtext",
-    },
-    {
-      today: "New Orders",
-      title: "$13,200",
-      persent: "10%",
-      icon: cart,
+      key: "retailer",
+      today: "Số lượng Nhà bán lẻ",
+      title: (stats.retailer ?? 0).toLocaleString(),
+      icon: profile,
       bnb: "bnb2",
+      persent: "",
     },
-  ];
+    {
+      key: "servicePackage",
+      today: "Tổng số Gói dịch vụ",
+      title: (stats.servicePackage ?? 0).toLocaleString(),
+      icon: cart,
+      bnb: "redtext",
+      persent: "",
+    },
+    {
+      key: "revenue",
+      today: "Doanh thu",
+      title: `${(stats.orderAmount ?? 0).toLocaleString()} VND`,
+      icon: dollor,
+      bnb: "bnb2",
+      persent: "",
+    },
+  ], [stats]);
 
-  const list = [
-    {
-      img: ava1,
-      Title: "Soft UI Shopify Version",
-      bud: "$14,000",
-      progress: <Progress percent={60} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Jessica Doe">
-            <img className="tootip-img" src={team4} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava2,
-      Title: "Progress Track",
-      bud: "$3,000",
-      progress: <Progress percent={10} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava3,
-      Title: "Fix Platform Errors",
-      bud: "Not Set",
-      progress: <Progress percent={100} size="small" status="active" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava4,
-      Title: "Launch new Mobile App",
-      bud: "$20,600",
-      progress: <Progress percent={100} size="small" status="active" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-    {
-      img: ava5,
-      Title: "Add the New Landing Page",
-      bud: "$4,000",
-      progress: <Progress percent={80} size="small" />,
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Alexander Smith">
-            <img className="tootip-img" src={team3} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Jessica Doe">
-            <img className="tootip-img" src={team4} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
 
-    {
-      img: ava6,
-      Title: "Redesign Online Store",
-      bud: "$2,000",
-      progress: (
-        <Progress
-          percent={100}
-          size="small"
-          status="exception"
-          format={() => "Cancel"}
-        />
-      ),
-      member: (
-        <div className="avatar-group mt-2">
-          <Tooltip placement="bottom" title="Ryan Tompson">
-            <img className="tootip-img" src={team1} alt="" />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Romina Hadid">
-            <img className="tootip-img" src={team2} alt="" />
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
 
-  const timelineList = [
-    {
-      title: "$2,400 - Redesign store",
-      time: "09 JUN 7:20 PM",
-      color: "green",
-    },
-    {
-      title: "New order #3654323",
-      time: "08 JUN 12:20 PM",
-      color: "green",
-    },
-    {
-      title: "Company server payments",
-      time: "04 JUN 3:10 PM",
-    },
-    {
-      title: "New card added for order #4826321",
-      time: "02 JUN 2:45 PM",
-    },
-    {
-      title: "Unlock folders for development",
-      time: "18 MAY 1:30 PM",
-    },
-    {
-      title: "New order #46282344",
-      time: "14 MAY 3:30 PM",
-      color: "gray",
-    },
-  ];
+
+  const [count, setCount] = useState(initialCount);
+
+
+
 
   const uploadProps = {
     name: "file",
@@ -340,11 +206,107 @@ function Home() {
     },
   };
 
+
+  const fetchStats = async () => {
+    try {
+      const page = 1;
+      const size = 1000;
+      const search = "";
+
+      const [
+        gardenerRes,
+        retailerRes,
+        packageRes,
+        contractRes,
+        orderRes,
+        serviceRes
+      ] = await Promise.all([
+        // ✅ Chỉ lấy ACTIVE ngay từ server
+        cleanfood.gardener.getAll({ page, size, status: "ACTIVE" }),
+        cleanfood.retailer.getAll(page, size, "ACTIVE"),
+        cleanfood.admin.getPackage({ page, size }),
+        cleanfood.admin.getContract({ page, size }),
+        cleanfood.admin.getServicePackageOrders({ page, size, search }),
+        cleanfood.admin.getPackage({ page, size, search, status: "ACTIVE" })
+      ]);
+
+      const revenue = contractRes.items?.reduce(
+        (sum, contract) => sum + (contract.price || 0),
+        0
+      );
+
+      const successOrders = orderRes.items?.filter(order => order.status === "SUCCESS") || [];
+
+      const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order) => {
+        const status = order.status?.toUpperCase() || "UNKNOWN";
+        return {
+          title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()} VND`,
+          time: order.createdAt
+            ? new Date(order.createdAt).toLocaleString("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })
+            : "Không xác định",
+          color: status === "SUCCESS" ? "green" : "gray",
+          status,
+        };
+      });
+
+      const revenueMap = {};
+      for (const order of successOrders) {
+        const date = dayjs(order.createdAt).format("MM/YYYY");
+        revenueMap[date] = (revenueMap[date] || 0) + (order.totalAmount || 0);
+      }
+      const monthlyRevenue = Object.entries(revenueMap)
+        .sort(([a], [b]) => dayjs(a, "MM/YYYY").unix() - dayjs(b, "MM/YYYY").unix())
+        .map(([month, amount]) => ({ month, amount }));
+
+      const orderTotalAmount = successOrders.reduce(
+        (sum, order) => sum + (order.totalAmount || 0),
+        0
+      );
+      const orderCount = successOrders.length;
+
+      setTimelineList(newTimelineItems);
+
+      const active = (serviceRes.items || [])
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5);
+
+      setActivePackages(active);
+
+      // ✅ Dữ liệu đã lọc ACTIVE từ server nên chỉ cần đếm
+      setStats({
+        gardener: gardenerRes.total || 0,
+        retailer: retailerRes.total || 0,
+        servicePackage: packageRes.total || 0,
+        revenue: revenue || 0,
+        orderAmount: orderTotalAmount || 0,
+        orderCount: orderCount || 0,
+        monthlyRevenue,
+      });
+
+    } catch (err) {
+      console.error("❌ Lỗi fetch data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
     <>
       <div className="layout-content">
         <Row className="rowgap-vbox" gutter={[24, 0]}>
-          {count.map((c, index) => (
+          {initialCount.map((c, index) => (
             <Col
               key={index}
               xs={24}
@@ -354,13 +316,14 @@ function Home() {
               xl={6}
               className="mb-24"
             >
-              <Card bordered={false} className="criclebox ">
+              <Card bordered={false} className="criclebox">
                 <div className="number">
                   <Row align="middle" gutter={[24, 0]}>
                     <Col xs={18}>
                       <span>{c.today}</span>
                       <Title level={3}>
-                        {c.title} <small className={c.bnb}>{c.persent}</small>
+                        {c.title}{" "}
+                        <small className={c.bnb}>{c.persent}</small>
                       </Title>
                     </Col>
                     <Col xs={6}>
@@ -374,14 +337,15 @@ function Home() {
         </Row>
 
         <Row gutter={[24, 0]}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
+          {/* <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <Echart />
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
+          </Col> */}
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <LineChart />
+              <LineChart monthlyRevenue={stats.monthlyRevenue || []} />
+
             </Card>
           </Col>
         </Row>
@@ -391,52 +355,47 @@ function Home() {
             <Card bordered={false} className="criclebox cardbody h-full">
               <div className="project-ant">
                 <div>
-                  <Title level={5}>Projects</Title>
-                  <Paragraph className="lastweek">
-                    done this month<span className="blue">40%</span>
-                  </Paragraph>
+                  <Title level={5}>Các gói dịch vụ</Title>
                 </div>
                 <div className="ant-filtertabs">
                   <div className="antd-pro-pages-dashboard-analysis-style-salesExtra">
-                    <Radio.Group onChange={onChange} defaultValue="a">
-                      <Radio.Button value="a">ALL</Radio.Button>
-                      <Radio.Button value="b">ONLINE</Radio.Button>
-                      <Radio.Button value="c">STORES</Radio.Button>
-                    </Radio.Group>
+
                   </div>
                 </div>
               </div>
               <div className="ant-list-box table-responsive">
                 <table className="width-100">
-                  <thead>
-                    <tr>
-                      <th>COMPANIES</th>
-                      <th>MEMBERS</th>
-                      <th>BUDGET</th>
-                      <th>COMPLETION</th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {list.map((d, index) => (
-                      <tr key={index}>
+                    {activePackages.map((pkg, index) => (
+                      <tr key={pkg.servicePackageId}>
                         <td>
                           <h6>
-                            <img
-                              src={d.img}
-                              alt=""
-                              className="avatar-sm mr-10"
-                            />{" "}
-                            {d.Title}
+                            {pkg.packageName}
                           </h6>
                         </td>
-                        <td>{d.member}</td>
+                        <td>
+                          {pkg.features?.map((f) => (
+                            <div key={f.serviceFeatureId}>
+                              <Tooltip title={f.description}>
+                                <span className="text-xs">{f.serviceFeatureName}</span>
+                              </Tooltip>
+                            </div>
+                          ))}
+                        </td>
                         <td>
                           <span className="text-xs font-weight-bold">
-                            {d.bud}{" "}
+                            {pkg.price.toLocaleString()} VND
                           </span>
                         </td>
                         <td>
-                          <div className="percent-progress">{d.progress}</div>
+                          <div className="percent-progress">
+                            <Progress
+                              percent={100}
+                              size="small"
+                              status="active"
+                              format={() => `${pkg.duration} ngày`}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -444,111 +403,35 @@ function Home() {
                 </table>
               </div>
               <div className="uploadfile shadow-none">
-                <Upload {...uploadProps}>
-                  <Button
-                    type="dashed"
-                    className="ant-full-box"
-                    icon={<ToTopOutlined />}
-                  >
-                    <span className="click">Click to Upload</span>
-                  </Button>
-                </Upload>
+
               </div>
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
-                <Title level={5}>Orders History</Title>
+                <Title level={5}>Lịch sử giao dịch gần đây</Title>
                 <Paragraph className="lastweek" style={{ marginBottom: 24 }}>
-                  this month <span className="bnb2">20%</span>
-                </Paragraph>
 
-                <Timeline
-                  pending="Recording..."
-                  className="timelinelist"
-                  reverse={reverse}
-                >
-                  {timelineList.map((t, index) => (
-                    <Timeline.Item color={t.color} key={index}>
-                      <Title level={5}>{t.title}</Title>
-                      <Text>{t.time}</Text>
-                    </Timeline.Item>
-                  ))}
+                </Paragraph>
+                <Timeline className="timelinelist" reverse={reverse}>
+                  {timelineList
+                    .filter((t) => t.status === "SUCCESS")
+                    .map((t, index) => (
+                      <Timeline.Item color={t.color} key={index}>
+                        <Title level={5}>{t.title}</Title>
+                        <Text>{t.time}</Text>
+                      </Timeline.Item>
+                    ))}
                 </Timeline>
+
                 <Button
                   type="primary"
                   className="width-100"
-                  onClick={() => setReverse(!reverse)}
+                  onClick={() => history.push("/subscription-orders")}
                 >
-                  {<MenuUnfoldOutlined />} REVERSE
+                  {<MenuUnfoldOutlined />} Đi đến trang giao dịch
                 </Button>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row gutter={[24, 0]}>
-          <Col xs={24} md={12} sm={24} lg={12} xl={14} className="mb-24">
-            <Card bordered={false} className="criclebox h-full">
-              <Row gutter>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={14}
-                  className="mobile-24"
-                >
-                  <div className="h-full col-content p-20">
-                    <div className="ant-muse">
-                      <Text>Built by developers</Text>
-                      <Title level={5}>Muse Dashboard for Ant Design</Title>
-                      <Paragraph className="lastweek mb-36">
-                        From colors, cards, typography to complex elements, you
-                        will find the full documentation.
-                      </Paragraph>
-                    </div>
-                    <div className="card-footer">
-                      <a className="icon-move-right" href="#pablo">
-                        Read More
-                        {<RightOutlined />}
-                      </a>
-                    </div>
-                  </div>
-                </Col>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={10}
-                  className="col-img"
-                >
-                  <div className="ant-cret text-right">
-                    <img src={card} alt="" className="border10" />
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-
-          <Col xs={24} md={12} sm={24} lg={12} xl={10} className="mb-24">
-            <Card bordered={false} className="criclebox card-info-2 h-full">
-              <div className="gradent h-full col-content">
-                <div className="card-content">
-                  <Title level={5}>Work with the best</Title>
-                  <p>
-                    Wealth creation is an evolutionarily recent positive-sum
-                    game. It is all about who take the opportunity first.
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <a className="icon-move-right" href="#pablo">
-                    Read More
-                    <RightOutlined />
-                  </a>
-                </div>
               </div>
             </Card>
           </Col>

@@ -1,0 +1,23 @@
+.custom-tabs .ant-tabs-tab {
+  font-weight: 500; /* giảm từ 600 xuống 500 */
+  font-size: 16px;
+  color: #000;
+  padding: 8px 16px;
+  transition:
+    color 0.3s ease,
+    border-bottom 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-tabs .ant-tabs-tab:hover {
+  color: #1890ff;
+}
+
+.custom-tabs .ant-tabs-tab-active {
+  color: #1890ff;
+  border-bottom: 2px solid #1890ff;
+}
+
+.custom-tabs .ant-tabs-nav::before {
+  border-bottom: none !important;
+}

@@ -1,0 +1,94 @@
+.gpdconfirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gpdconfirm-popup {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.gpdconfirm-content {
+  padding: 32px 24px 24px;
+  text-align: center;
+}
+
+.gpdconfirm-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.gpdconfirm-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.gpdconfirm-message {
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.gpdconfirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.gpdconfirm-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+.gpdconfirm-btn-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.gpdconfirm-btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.gpdconfirm-btn-confirm {
+  background-color: #ef4444;
+  color: white;
+}
+
+.gpdconfirm-btn-confirm:hover {
+  background-color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .gpdconfirm-popup {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .gpdconfirm-actions {
+    flex-direction: column;
+  }
+
+  .gpdconfirm-btn {
+    width: 100%;
+  }
+}
