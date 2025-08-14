@@ -46,8 +46,14 @@ const updateAppointmentStatus = async (appointmentId, status) => {
   );
 };
 
-const cancelAppointment = async (appointmentId, data) => {
-  return await httpService.patch(`${endpoint}/${appointmentId}/cancel`, data);
+const cancelOrRejectAppointment = async (appointmentId, data, status) => {
+  return await httpService.patch(
+    `${endpoint}/${appointmentId}/cancel-or-reject`,
+    data,
+    {
+      params: { status },
+    }
+  );
 };
 
 const appointmentService = {
@@ -57,7 +63,7 @@ const appointmentService = {
   getAppointmentDetail,
   updateAppointment,
   updateAppointmentStatus,
-  cancelAppointment,
+  cancelOrRejectAppointment,
 };
 
 export default appointmentService;

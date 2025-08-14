@@ -167,6 +167,8 @@ function GAppointmentPage() {
   const [pendingAppointment, setPendingAppointments] = useState([]);
   const [scheduledAppointments, setScheduledAppointments] = useState([]);
 
+  const [isCancel, setIsCancel] = useState(false);
+  
   //Paginate variables
   const [totalPage, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -415,6 +417,14 @@ function GAppointmentPage() {
   };
 
   const handleCancelRequest = (appointment) => {
+    setIsCancel(true);
+    setShowDetailModal(false);
+    setShowCancelPopup(true);
+  };
+
+  const handleRejectRequest = (appointment) => {
+    setIsCancel(false);
+    setSelectedAppointment(appointment);
     setShowDetailModal(false);
     setShowCancelPopup(true);
   };
@@ -431,13 +441,43 @@ function GAppointmentPage() {
     try {
       // const gardenerId = localStorage.getItem("account_id");
       const gardenerName = localStorage.getItem("account_name");
-      await appointmentService.cancelAppointment(appointment.appointmentId, {
-        cancelledBy: gardenerName,
-        cancellationReason: reason,
-      });
+      await appointmentService.cancelOrRejectAppointment(
+        appointment.appointmentId,
+        {
+          actionedBy: gardenerName,
+          actionReason: reason,
+        },
+        "CANCELLED"
+      );
     } catch (err) {
       console.log(err);
     } finally {
+      setShowCancelPopup(false);
+      setSelectedAppointment(null);
+      setIsLoading(false);
+    }
+  };
+
+  const handleRejectConfirm = async (appointment, reason) => {
+    // console.log("Cancelled appointment:", appointment, "Reason:", reason);
+    setIsLoading(true);
+    try {
+      // const gardenerId = localStorage.getItem("account_id");
+      const gardenerName = localStorage.getItem("account_name");
+      await appointmentService.cancelOrRejectAppointment(
+        appointment.appointmentId,
+        {
+          actionedBy: gardenerName,
+          actionReason: reason,
+        },
+        "REJECTED"
+      );
+
+      fetchPendingAppointment(1);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      closeRequestModal();
       setShowCancelPopup(false);
       setSelectedAppointment(null);
       setIsLoading(false);
@@ -576,7 +616,7 @@ function GAppointmentPage() {
                           </button>
                           <button
                             className="gappointment-reject-button"
-                            onClick={() => handleReject(appointment)}
+                            onClick={() => handleRejectRequest(appointment)}
                           >
                             <CloseOutlined />
                           </button>
@@ -729,7 +769,7 @@ function GAppointmentPage() {
         isOpen={showRequestModal}
         onClose={closeRequestModal}
         onApprove={handleApprove}
-        onReject={handleReject}
+        onReject={handleRejectRequest}
       />
 
       {/* Appointment Detail Modal (for Schedule) */}
@@ -746,6 +786,8 @@ function GAppointmentPage() {
         isOpen={showCancelPopup}
         onClose={closeCancelPopup}
         onConfirm={handleCancelConfirm}
+        onRejectConfirm={handleRejectConfirm}
+        isCancel={isCancel}
       />
 
       <LoadingPopup isOpen={isLoading} />

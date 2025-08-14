@@ -2,33 +2,25 @@ import React from "react";
 import { useState } from "react";
 import "./GAppointmentCancelModal.css";
 
-function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
+function GAppointmentCancelModal({
+  appointment,
+  isOpen,
+  onClose,
+  onConfirm,
+  onRejectConfirm,
+  isCancel,
+}) {
   const [reason, setReason] = useState("");
 
   if (!isOpen || !appointment) return null;
 
-  // function getFormattedStartAndEndTime(isoDate, durationMinutes) {
-  //   const start = new Date(isoDate);
-  //   const end = new Date(start.getTime() + durationMinutes * 60000);
-
-  //   const formatTime = (date) => {
-  //     const hours = date.getHours().toString().padStart(2, "0");
-  //     const minutes = date.getMinutes().toString().padStart(2, "0");
-  //     return `${hours}:${minutes}`;
-  //   };
-
-  //   return {
-  //     startTime: formatTime(start),
-  //     endTime: formatTime(end),
-  //   };
-  // }
-  // const { startTime, endTime } = getFormattedStartAndEndTime(
-  //   appointment.appointmentDate,
-  //   appointment.duration
-  // );
-
   const handleConfirm = async () => {
     await onConfirm(appointment, reason);
+    setReason("");
+  };
+
+  const handleRejectConfirm = async () => {
+    await onRejectConfirm(appointment, reason);
     setReason("");
   };
 
@@ -45,7 +37,9 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
       >
         {/* Modal Header */}
         <div className="gacancel-modal-header">
-          <h2 className="gacancel-modal-title">Xác nhận hủy cuộc hẹn</h2>
+          <h2 className="gacancel-modal-title">
+            Xác nhận {isCancel ? "hủy" : "từ chối"} cuộc hẹn
+          </h2>
         </div>
 
         {/* Modal Body */}
@@ -54,7 +48,7 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
           <div className="gacancel-message-section">
             <div className="gacancel-warning-icon">⚠️</div>
             <p className="gacancel-confirmation-text">
-              Bạn muốn hủy cuộc hẹn này?
+              Bạn muốn {isCancel ? "hủy" : "từ chối"} cuộc hẹn này?
             </p>
           </div>
 
@@ -89,9 +83,21 @@ function GAppointmentCancelModal({ appointment, isOpen, onClose, onConfirm }) {
             <button className="gacancel-cancel-button" onClick={handleClose}>
               Hủy
             </button>
-            <button className="gacancel-confirm-button" onClick={handleConfirm}>
-              Xác nhận
-            </button>
+            {isCancel ? (
+              <button
+                className="gacancel-confirm-button"
+                onClick={handleConfirm}
+              >
+                Xác nhận
+              </button>
+            ) : (
+              <button
+                className="gacancel-confirm-button"
+                onClick={handleRejectConfirm}
+              >
+                Xác nhận
+              </button>
+            )}
           </div>
         </div>
       </div>
