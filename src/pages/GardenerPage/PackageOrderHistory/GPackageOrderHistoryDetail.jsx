@@ -20,7 +20,7 @@ function GPackageOrderHistoryDetail({ isOpen, onClose, paymentDetail }) {
       case "SUCCESS":
         return "Thành công";
       case "PENDING":
-        return "Chờ duyệt";
+        return "Chưa thanh toán";
       default:
         return "Không xác định";
     }

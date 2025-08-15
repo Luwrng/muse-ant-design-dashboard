@@ -18,6 +18,21 @@ function GRequestAppointment({
     await onReject(appointment);
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "PENDING":
+        return "Chờ duyệt";
+      case "REJECTED":
+        return "Từ chối";
+      case "ACCEPTED":
+        return "Xác nhận";
+      case "COMPLETED":
+        return "Hoàn thành";
+      default:
+        return "Đã hủy";
+    }
+  };
+
   return (
     <div className="garequest-modal-overlay" onClick={onClose}>
       <div
@@ -48,7 +63,7 @@ function GRequestAppointment({
                   {appointment.retailerName}
                 </h3>
                 <span className="garequest-status-badge">
-                  {appointment.status}
+                  {getStatusClass(appointment.status)}
                 </span>
               </div>
             </div>
