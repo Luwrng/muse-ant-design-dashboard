@@ -98,7 +98,7 @@ function GNotificationPopup({ notification, onClose }) {
                 notification.isRead ? "read" : "unread"
               }`}
             >
-              {notification.isRead ? "Read" : "Unread"}
+              {notification.isRead ? "Đã đọc" : "Chưa đọc"}
             </span>
           </div>
         </div>

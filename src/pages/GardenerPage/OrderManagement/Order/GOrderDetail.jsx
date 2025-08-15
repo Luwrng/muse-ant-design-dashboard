@@ -344,6 +344,23 @@ function GOrderDetail({ orderId, onBack }) {
     }
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "PENDING":
+        return "Chờ duyệt";
+      case "PREPARING":
+        return "Chuẩn bị hàng";
+      case "DELIVERING":
+        return "Đang giao";
+      case "DELIVERED":
+        return "Đã giao";
+      case "COMPLETED":
+        return "Hoàn thành";
+      default:
+        return "Đã hủy";
+    }
+  };
+
   if (!orderData) {
     return (
       <div className="godetail-loading">Đang tải chi tiết đơn hàng...</div>
@@ -397,7 +414,7 @@ function GOrderDetail({ orderId, onBack }) {
           <span
             className={`godetail-status godetail-status-${orderData.status.toLowerCase()}`}
           >
-            {orderData.status}
+            {getStatusClass(orderData.status)}
           </span>
         </div>
         <div className="godetail-info">
@@ -619,7 +636,7 @@ function GOrderDetail({ orderId, onBack }) {
                     <span
                       className={`godetail-status godetail-status-${delivery.deliveryStatus.toLowerCase()}`}
                     >
-                      {delivery.deliveryStatus}
+                      {getStatusClass(delivery.deliveryStatus)}
                     </span>
                     {expandedDeliveryId === delivery.orderDeliveryId ? (
                       <ChevronUp className="godetail-dropdown-icon" />

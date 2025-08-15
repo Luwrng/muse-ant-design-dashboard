@@ -107,6 +107,15 @@ function ProductDetailPage({
     </svg>
   );
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "Đang bán";
+      default:
+        return "Hết hàng";
+    }
+  };
+
   return (
     <div className="gpd-modal-overlay" onClick={handleOverlayClick}>
       <div className="gpd-modal-content">
@@ -160,11 +169,14 @@ function ProductDetailPage({
             <div className="gpd-product-id-section">
               <span className="gpd-product-id-title">Id: </span>
               <span className="gpd-product-id-value">{product.productId}</span>
-              <span className="gpd-status-badge">Status: </span>
+            </div>
+
+            <div className="gpd-product-status-section">
+              <span className="gpd-status-badge">Trạng thái: </span>
               <span
                 className={`gpd-status-badge-value ${product.status.toLowerCase()}`}
               >
-                {product.status}
+                {getStatusClass(product.status)}
               </span>
             </div>
 

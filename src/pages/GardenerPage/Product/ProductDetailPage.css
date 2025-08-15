@@ -170,7 +170,6 @@
   gap: 1rem;
 }
 .gpd-status-badge {
-  margin-left: 7.2rem;
   border-radius: 0.25rem;
   font-size: 1.25rem;
   font-weight: 500;
@@ -178,7 +177,7 @@
 .gpd-status-badge-value {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 .gpd-status-badge-value.active {
