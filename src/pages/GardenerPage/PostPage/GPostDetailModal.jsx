@@ -233,6 +233,15 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                         Đơn vị bán:
                       </span>
                       <span className="gpdetail-product-info-value">
+                        {/*currentPost?.depositAmount*/} {/*Change later */}
+                      </span>
+                    </div>
+
+                    <div className="gpdetail-product-info-row">
+                      <span className="gpdetail-product-info-label">
+                        Tiền đặt cọc:
+                      </span>
+                      <span className="gpdetail-product-info-value">
                         {currentPost?.productData?.weightUnit}
                       </span>
                     </div>
@@ -248,6 +257,15 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                             .split("T")[0]
                         }
                         {/* {currentPost?.harvestDate} */}
+                      </span>
+                    </div>
+
+                    <div className="gpdetail-product-info-row">
+                      <span className="gpdetail-product-info-label">
+                        Tình trạng mùa vụ:
+                      </span>
+                      <span className="gpdetail-product-info-value">
+                        {/*currentPost?.harvestStatus*/} {/*Change later */}
                       </span>
                     </div>
 

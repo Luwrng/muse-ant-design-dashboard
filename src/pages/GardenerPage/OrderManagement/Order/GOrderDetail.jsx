@@ -433,6 +433,10 @@ function GOrderDetail({ orderId, onBack }) {
           <p className="godetail-total">
             Chi phí vận chuyển: {formatPrice(orderData.shippingCost)}
           </p>
+          <p className="godetail-total">
+            Tổng tiền đặt cọc: {/*formatPrice(orderData.totalDepositAmount)*/}{" "}
+            {/*Change later */}
+          </p>
           <p className="godetail-unit">
             Phương thức thanh toán: {orderData.paymentMethod}
           </p>{" "}
@@ -649,8 +653,9 @@ function GOrderDetail({ orderId, onBack }) {
                   Ngày giao:{" "}
                   {new Date(delivery.deliveryDate).toLocaleDateString()}
                 </p>
+                <p>Tổng tiền: {/*delivery.totalAmount*/} 100000</p>{" "}
+                {/* Change later */}
                 <p>Ghi chú: {delivery.note || "Không có"}</p>
-
                 {delivery.deliveryStatus !== "DELIVERED" && (
                   <button
                     className="godetail-complete-button"
@@ -659,7 +664,6 @@ function GOrderDetail({ orderId, onBack }) {
                     Hoàn tất giao hàng
                   </button>
                 )}
-
                 {expandedDeliveryId === delivery.orderDeliveryId && (
                   <div className="godetail-delivery-details-list">
                     <h4>Sản phẩm đã giao:</h4>
