@@ -37,6 +37,105 @@
   gap: 12px;
   align-items: center;
 }
+
+/* Improved info card styling */
+.godetail-info-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+}
+
+.godetail-info-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-100);
+}
+
+.godetail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.godetail-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.godetail-info-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.godetail-info-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--gray-900);
+}
+
+.godetail-price {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+/* Contract image section styling */
+.godetail-contract-section {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+.godetail-contract-display {
+  margin-top: 8px;
+}
+
+.godetail-contract-image-container {
+  display: inline-block;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
+}
+
+.godetail-contract-image {
+  max-width: 400px;
+  max-height: 300px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: var(--border-radius);
+}
+
+.godetail-contract-error {
+  padding: 20px;
+  text-align: center;
+  color: var(--danger-color);
+  background: #fee2e2;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.godetail-no-contract {
+  padding: 16px 20px;
+  text-align: center;
+  color: var(--gray-500);
+  background: var(--gray-50);
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-style: italic;
+}
+
 .godetail-create-delivery-btn {
   background: #28a745;
   color: white;
