@@ -18,6 +18,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     postMediaDTOs: [],
     productId: "",
     gardenerId: localStorage.getItem("account_id"),
+    harvestStatus: "",
   });
 
   const [contentValue, setContentValue] = useState("");
@@ -53,6 +54,13 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     setFormData((prev) => ({
       ...prev,
       productId: productId,
+    }));
+  };
+
+  const handleHarvestStatusToggle = (status) => {
+    setFormData((prev) => ({
+      ...prev,
+      harvestStatus: status,
     }));
   };
 
@@ -155,6 +163,14 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     });
     onClose();
   };
+
+  const harvestStatusList = [
+    { status: "PREORDEROPEN", display: "Mỏ đặt cọc" },
+    { status: "PLANTING", display: "Đang trồng" },
+    { status: "HARVESTING", display: "Thu hoạch" },
+    { status: "PROCESSING", display: "Đóng gói" },
+    { status: "READYFORSALE", display: "Có hàng" },
+  ];
 
   return (
     <div className="gpcreate-overlay" onClick={onClose}>
@@ -287,6 +303,24 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
                 productList.map((product) => (
                   <option key={product.productId} value={product.productId}>
                     {product.productName}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Product */}
+          <div className="gpcreate-field">
+            <label className="gpcreate-label">Trạng thái mùa vụ:</label>
+
+            <select
+              onChange={(e) => handleHarvestStatusToggle(e.target.value)}
+              className="gpcreate-product-list"
+            >
+              <option value="">-- Chọn trạng thái mùa vụ --</option>
+              {Array.isArray(harvestStatusList) &&
+                harvestStatusList.map((hs) => (
+                  <option key={hs.status} value={hs.status}>
+                    {hs.label}
                   </option>
                 ))}
             </select>

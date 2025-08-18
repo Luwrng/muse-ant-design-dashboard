@@ -233,7 +233,8 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                         Đơn vị bán:
                       </span>
                       <span className="gpdetail-product-info-value">
-                        {/*currentPost?.depositAmount*/} {/*Change later */}
+                        {currentPost?.depositAmount} (
+                        {currentPost?.depositPercentage}%)
                       </span>
                     </div>
 
@@ -262,10 +263,10 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
 
                     <div className="gpdetail-product-info-row">
                       <span className="gpdetail-product-info-label">
-                        Tình trạng mùa vụ:
+                        Trạng thái mùa vụ:
                       </span>
                       <span className="gpdetail-product-info-value">
-                        {/*currentPost?.harvestStatus*/} {/*Change later */}
+                        {currentPost?.harvestStatus}
                       </span>
                     </div>
 

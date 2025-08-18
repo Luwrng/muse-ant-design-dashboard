@@ -180,15 +180,6 @@ function ProductDetailPage({
               </span>
             </div>
 
-            <div className="gpd-product-status-section">
-              <span className="gpd-status-badge">Tình trạng mùa vụ: </span>
-              <span
-                className={`gpd-status-badge-value ${product.status.toLowerCase()}`}
-              >
-                {getStatusClass(product.status)} {/*Change latter*/}
-              </span>
-            </div>
-
             <div className="gpd-price-section">
               <div className="gpd-price">
                 {new Intl.NumberFormat("vi-VN").format(product.price)}{" "}

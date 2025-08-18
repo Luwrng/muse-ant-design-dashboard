@@ -20,6 +20,9 @@ function GOrderDetail({ orderId, onBack }) {
   const [orderDeliveries, setOrderDeliveries] = useState([]);
   const [expandedDeliveryId, setExpandedDeliveryId] = useState(null);
 
+  // const [contractImage, setContractImage] = useState(null);
+  // const [contractImagePreview, setContractImagePreview] = useState(null);
+
   const [createOrderDelivery, setCreateOrderDelivery] = useState({
     deliveryDate: new Date().toISOString().split("T")[0],
     note: "",
@@ -37,6 +40,23 @@ function GOrderDetail({ orderId, onBack }) {
   useEffect(() => {
     fetchOrderDetail();
   }, [orderId]);
+
+  // const handleContractImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setContractImage(file);
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       setContractImagePreview(e.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  //  const removeContractImage = () => {
+  //    setContractImage(null);
+  //    setContractImagePreview(null);
+  //  };
 
   //Date time input handler
   const formatForDatetimeLocal = (date) => {
@@ -417,7 +437,9 @@ function GOrderDetail({ orderId, onBack }) {
             {getStatusClass(orderData.status)}
           </span>
         </div>
-        <div className="godetail-info">
+
+        {/* Order Detail Information */}
+        {/* <div className="godetail-info">
           <p className="godetail-customer">
             Khách hàng: {orderData.accountName}
           </p>
@@ -434,8 +456,7 @@ function GOrderDetail({ orderId, onBack }) {
             Chi phí vận chuyển: {formatPrice(orderData.shippingCost)}
           </p>
           <p className="godetail-total">
-            Tổng tiền đặt cọc: {/*formatPrice(orderData.totalDepositAmount)*/}{" "}
-            {/*Change later */}
+            Tổng tiền đặt cọc: {formatPrice(orderData.totalDepositAmount)}
           </p>
           <p className="godetail-unit">
             Phương thức thanh toán: {orderData.paymentMethod}
@@ -444,7 +465,93 @@ function GOrderDetail({ orderId, onBack }) {
             Ngày tạo:{" "}
             {new Date(orderData.createdAt).toISOString().split("T")[0]}
           </p>
+        </div> */}
+
+        <div className="godetail-info-card">
+          <h2 className="godetail-info-title">Thông tin đơn hàng</h2>
+          <div className="godetail-info-grid">
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Khách hàng:</span>
+              <span className="godetail-info-value">
+                {orderData.accountName}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Số điện thoại:</span>
+              <span className="godetail-info-value">
+                {orderData.phoneNumber}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Địa chỉ giao hàng:</span>
+              <span className="godetail-info-value">
+                {orderData.shippingAddress}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Tổng tiền sản phẩm:</span>
+              <span className="godetail-info-value godetail-price">
+                {formatPrice(orderData.totalAmount)}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Chi phí vận chuyển:</span>
+              <span className="godetail-info-value godetail-price">
+                {formatPrice(orderData.shippingCost)}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Tổng tiền đặt cọc:</span>
+              <span className="godetail-info-value godetail-price">
+                {formatPrice(orderData.totalDepositAmount)}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">
+                Phương thức thanh toán:
+              </span>
+              <span className="godetail-info-value">
+                {orderData.paymentMethod}
+              </span>
+            </div>
+            <div className="godetail-info-item">
+              <span className="godetail-info-label">Ngày tạo:</span>
+              <span className="godetail-info-value">
+                {new Date(orderData.createdAt).toISOString().split("T")[0]}
+              </span>
+            </div>
+
+            <div className="godetail-info-item godetail-contract-section">
+              <span className="godetail-info-label">Hình ảnh hợp đồng:</span>
+              <div className="godetail-contract-display">
+                {orderData.contractImage ? (
+                  <div className="godetail-contract-image-container">
+                    <img
+                      src={orderData.contractImage || "/placeholder.svg"}
+                      alt="Hình ảnh hợp đồng"
+                      className="godetail-contract-image"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "block";
+                      }}
+                    />
+                    <div
+                      className="godetail-contract-error"
+                      style={{ display: "none" }}
+                    >
+                      Không thể tải hình ảnh hợp đồng
+                    </div>
+                  </div>
+                ) : (
+                  <div className="godetail-no-contract">
+                    Chưa có hình ảnh hợp đồng
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
+
         <div className="godetail-products">
           <h2 className="godetail-products-title">Danh sách sản phẩm</h2>
           {Array.isArray(orderData.orderDetails) &&
@@ -541,6 +648,7 @@ function GOrderDetail({ orderId, onBack }) {
               </div>
             ))}
         </div>
+
         {isCreatingDelivery && (
           <>
             <div className="godetail-new-delivery-section mt-6">
@@ -653,8 +761,7 @@ function GOrderDetail({ orderId, onBack }) {
                   Ngày giao:{" "}
                   {new Date(delivery.deliveryDate).toLocaleDateString()}
                 </p>
-                <p>Tổng tiền: {/*delivery.totalAmount*/} 100000</p>{" "}
-                {/* Change later */}
+                <p>Tổng tiền: {formatPrice(delivery.totalAmount)} </p>
                 <p>Ghi chú: {delivery.note || "Không có"}</p>
                 {delivery.deliveryStatus !== "DELIVERED" && (
                   <button
