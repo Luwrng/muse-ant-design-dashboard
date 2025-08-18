@@ -143,6 +143,7 @@ function GPostPage() {
       await postService.updatePost(updatedPost.postId, {
         title: updatedPost.title,
         content: updatedPost.content,
+        harvestStatus: updatedPost.harvestStatus,
       });
 
       setPosts(

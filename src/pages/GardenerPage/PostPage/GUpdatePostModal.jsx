@@ -5,19 +5,29 @@ import "./GUpdatePostModal.css";
 function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [harvestStatus, setHarvestStatus] = useState("");
 
   useEffect(() => {
     if (post) {
       setTitle(post.title || "");
       setContent(post.content || "");
+      setHarvestStatus(post.harvestStatus || "");
     }
   }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onUpdate({ ...post, title, content });
+    await onUpdate({ ...post, title, content, harvestStatus });
     onClose();
   };
+
+  const harvestStatusList = [
+    { status: "PREORDEROPEN", display: "Mỏ đặt cọc" },
+    { status: "PLANTING", display: "Đang trồng" },
+    { status: "HARVESTING", display: "Thu hoạch" },
+    { status: "PROCESSING", display: "Đóng gói" },
+    { status: "READYFORSALE", display: "Có hàng" },
+  ];
 
   if (!isOpen) return null;
 
@@ -54,6 +64,23 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
               rows={6}
               required
             />
+          </div>
+
+          <div className="gpupdate-field">
+            <label className="gpupdate-label">Tiêu đề</label>
+            <select
+              onChange={(e) => setHarvestStatus(e.target.value)}
+              className="gpupdate-input"
+              value={harvestStatus}
+            >
+              <option value="">-- Chọn trạng thái mùa vụ --</option>
+              {Array.isArray(harvestStatusList) &&
+                harvestStatusList.map((hs) => (
+                  <option key={hs.status} value={hs.status}>
+                    {hs.label}
+                  </option>
+                ))}
+            </select>
           </div>
 
           <div className="gpupdate-actions">
