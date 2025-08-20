@@ -333,7 +333,7 @@ function GardenerProductPage() {
               <th className="gproduct-table-head">Đơn vị tính giá</th>
               <th className="gproduct-table-head">Chứng chỉ sản phẩm</th>
               <th className="gproduct-table-head gproduct-action-header">
-                Action
+                Hành động
               </th>
             </tr>
           </thead>
