@@ -19,6 +19,8 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     productId: "",
     gardenerId: localStorage.getItem("account_id"),
     harvestStatus: "",
+    depositAmount: 0,
+    depositPercentage: 0,
   });
 
   const [contentValue, setContentValue] = useState("");
@@ -33,6 +35,33 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
+    }));
+  };
+
+  const handleDepositAmountChange = (value) => {
+    // Only allow numbers and reset negative values to 0
+    let numericValue = Number.parseFloat(value) || 0;
+    if (numericValue < 0) {
+      numericValue = 0;
+    }
+
+    // Calculate deposit percentage based on selected product price
+    let depositPercentage = 0;
+    if (formData.productId && productList) {
+      const selectedProduct = productList.find(
+        (p) => p.productId === formData.productId
+      );
+      if (selectedProduct && selectedProduct.price > 0) {
+        depositPercentage = Math.floor(
+          (numericValue * 100) / selectedProduct.price
+        );
+      }
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      depositAmount: numericValue,
+      depositPercentage: depositPercentage,
     }));
   };
 
@@ -164,6 +193,22 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     onClose();
   };
 
+  const handleClose = () => {
+    setFormData({
+      title: "",
+      content: "",
+      harvestDate: "",
+      postEndDate: new Date(),
+      postMediaDTOs: [],
+      productId: "",
+      gardenerId: localStorage.getItem("account_id"),
+      harvestStatus: "",
+      depositAmount: 0,
+      depositPercentage: 0,
+    });
+    onClose();
+  };
+
   const harvestStatusList = [
     { status: "PREORDEROPEN", display: "Mỏ đặt cọc" },
     { status: "PLANTING", display: "Đang trồng" },
@@ -173,11 +218,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   ];
 
   return (
-    <div className="gpcreate-overlay" onClick={onClose}>
+    <div className="gpcreate-overlay" onClick={handleClose}>
       <div className="gpcreate-popup" onClick={(e) => e.stopPropagation()}>
         <div className="gpcreate-header">
           <h2 className="gpcreate-title">Tạo bài viết mới</h2>
-          <button className="gpcreate-close" onClick={onClose}>
+          <button className="gpcreate-close" onClick={handleClose}>
             ×
           </button>
         </div>
@@ -308,13 +353,14 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
             </select>
           </div>
 
-          {/* Product */}
+          {/* Must choose a product to fill the next required field (Harvest status, Deposit amount)*/}
+          {/* Harvest status */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">Trạng thái mùa vụ:</label>
-
             <select
               onChange={(e) => handleHarvestStatusToggle(e.target.value)}
               className="gpcreate-product-list"
+              disabled={formData.productId === ""}
             >
               <option value="">-- Chọn trạng thái mùa vụ --</option>
               {Array.isArray(harvestStatusList) &&
@@ -324,6 +370,21 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
                   </option>
                 ))}
             </select>
+          </div>
+
+          <div className="gpcreate-field">
+            <label className="gpcreate-label">
+              Tiền cọc sản phẩm ({formData.depositPercentage}%)
+            </label>
+            <input
+              type="number"
+              value={formData.depositAmount}
+              onChange={(e) => handleDepositAmountChange(e.target.value)}
+              className="gpcreate-input gpcreate-deposit-input"
+              placeholder="Nhập số tiền cọc"
+              min="0"
+              disabled={formData.productId === ""}
+            />
           </div>
 
           <div className="gpcreate-actions">
