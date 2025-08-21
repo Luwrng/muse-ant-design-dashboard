@@ -40,6 +40,7 @@ import GDashboard from "./pages/GardenerPage/Dashboard/GDashboard";
 import GPackageOrderHistory from "./pages/GardenerPage/PackageOrderHistory/GPackageOrderHistory";
 import GReportPage from "./pages/GardenerPage/Report/GReportPage";
 import SubscriptionTabs from "./pages/GardenerPage/SubscriptionHistory/SubscriptionTabs";
+import ContractPage from "./pages/GardenerPage/Contract/ContractPage";
 
 //Payment
 import PaymentResult from "./pages/GardenerPage/PaymentResult/PaymentResult";
@@ -145,11 +146,11 @@ function App() {
                     component={SubscriptionTabs}
                     allowedRoles={["gardener", "retailer"]}
                   />
-                  {/* <ProtectedRoute
-                    path="/gardener/subscription-history"
-                    component={SubscriptionTabs}
+                  <ProtectedRoute
+                    path="/gardener/contract-processing"
+                    component={ContractPage}
                     allowedRoles={["gardener", "retailer"]}
-                  /> */}
+                  />
                   <Route path="/gardener/report" component={GReportPage} />
                 </Switch>
               </GardenerMain>

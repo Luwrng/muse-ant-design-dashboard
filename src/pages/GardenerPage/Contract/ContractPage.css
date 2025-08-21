@@ -1,0 +1,578 @@
+/* Complete CSS rewrite with gcreatecontract- prefix for all classes */
+.gcreatecontract-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.gcreatecontract-wrapper {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.gcreatecontract-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.gcreatecontract-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gcreatecontract-back-btn {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.gcreatecontract-back-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.gcreatecontract-title-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gcreatecontract-icon-wrapper {
+  width: 2rem;
+  height: 2rem;
+  background-color: #10b981;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gcreatecontract-doc-icon {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.gcreatecontract-main-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gcreatecontract-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.gcreatecontract-preview-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-preview-btn:hover {
+  background-color: #2563eb;
+}
+
+.gcreatecontract-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.gcreatecontract-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.gcreatecontract-card-header {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.gcreatecontract-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.gcreatecontract-card-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.gcreatecontract-card-content {
+  padding: 1.5rem;
+}
+
+.gcreatecontract-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.gcreatecontract-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.gcreatecontract-full-width {
+  grid-column: span 2;
+}
+
+.gcreatecontract-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.gcreatecontract-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.gcreatecontract-textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  min-height: 4rem;
+  resize: vertical;
+}
+
+.gcreatecontract-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.gcreatecontract-table-wrapper {
+  overflow-x: auto;
+}
+
+.gcreatecontract-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #374151;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-th {
+  border: 1px solid #374151;
+  padding: 0.5rem;
+  text-align: left;
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.gcreatecontract-td {
+  border: 1px solid #374151;
+  padding: 0.5rem;
+}
+
+.gcreatecontract-center {
+  text-align: center;
+}
+
+.gcreatecontract-right {
+  text-align: right;
+}
+
+.gcreatecontract-table-input {
+  border: none;
+  padding: 0.25rem;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-table-input:focus {
+  outline: none;
+  background-color: #f3f4f6;
+}
+
+/* Added styles for dynamic table functionality */
+.gcreatecontract-table-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.gcreatecontract-add-row-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-add-row-btn:hover {
+  background-color: #059669;
+}
+
+.gcreatecontract-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+}
+
+.gcreatecontract-remove-btn:hover {
+  background-color: #dc2626;
+}
+
+.gcreatecontract-remove-btn:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.gcreatecontract-small-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.gcreatecontract-total-section {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.gcreatecontract-total-row {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Preview Styles */
+.gcreatecontract-preview-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.gcreatecontract-preview-header {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+}
+
+.gcreatecontract-preview-header-content {
+  max-width: 64rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gcreatecontract-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.gcreatecontract-edit-btn {
+  padding: 0.5rem 1rem;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-edit-btn:hover {
+  background-color: #059669;
+}
+
+.gcreatecontract-print-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-print-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.gcreatecontract-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #10b981;
+  color: #10b981;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-export-btn:hover {
+  background-color: #f0fdf4;
+}
+
+.gcreatecontract-document {
+  max-width: 64rem;
+  margin: 1rem auto;
+  padding: 2rem;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-family: "Times New Roman", serif;
+  line-height: 1.6;
+}
+
+.gcreatecontract-official-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.gcreatecontract-country-header {
+  font-weight: bold;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.gcreatecontract-motto {
+  font-style: italic;
+  font-size: 0.875rem;
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-separator {
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+}
+
+.gcreatecontract-contract-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.gcreatecontract-contract-title h1 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+}
+
+.gcreatecontract-contract-number {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.gcreatecontract-legal-refs {
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.gcreatecontract-legal-refs p {
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-date-location {
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-date-location p {
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-party-section {
+  margin-bottom: 1.5rem;
+}
+
+.gcreatecontract-party-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.gcreatecontract-party-info {
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-party-info p {
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-footnotes {
+  margin: 1rem 0;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.gcreatecontract-footnotes p {
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-footnotes-bottom {
+  margin-top: 2rem;
+}
+
+.gcreatecontract-agreement-text {
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-article {
+  margin: 1.5rem 0;
+}
+
+.gcreatecontract-article-title {
+  font-weight: bold;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.gcreatecontract-article-subtitle {
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+}
+
+.gcreatecontract-contract-table-wrapper {
+  margin: 1rem 0;
+}
+
+.gcreatecontract-contract-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #000;
+  font-size: 0.75rem;
+}
+
+.gcreatecontract-contract-table th,
+.gcreatecontract-contract-table td {
+  border: 1px solid #000;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+
+.gcreatecontract-contract-table th {
+  background-color: #f9fafb;
+  font-weight: bold;
+  text-align: center;
+}
+
+.gcreatecontract-dots {
+  text-align: center;
+  font-weight: bold;
+}
+
+.gcreatecontract-total-section-preview {
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+
+.gcreatecontract-total-line {
+  margin: 0.25rem 0;
+}
+
+.gcreatecontract-signature-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.gcreatecontract-signature-party {
+  text-align: center;
+}
+
+.gcreatecontract-signature-party h4 {
+  font-weight: bold;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.gcreatecontract-signature-note {
+  font-size: 0.75rem;
+  font-style: italic;
+  margin: 0 0 4rem 0;
+}
+
+.gcreatecontract-signature-space {
+  height: 4rem;
+}
+
+/* Print Styles */
+@media print {
+  .gcreatecontract-preview-header {
+    display: none !important;
+  }
+
+  .gcreatecontract-document {
+    margin: 0;
+    box-shadow: none;
+    padding: 1rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gcreatecontract-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gcreatecontract-full-width {
+    grid-column: span 1;
+  }
+
+  .gcreatecontract-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .gcreatecontract-preview-header-content {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .gcreatecontract-action-buttons {
+    justify-content: center;
+  }
+
+  .gcreatecontract-signature-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
