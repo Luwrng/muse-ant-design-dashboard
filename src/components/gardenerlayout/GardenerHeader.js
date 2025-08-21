@@ -2,14 +2,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Row, Col, Breadcrumb, Typography } from "antd";
 
-import { BellOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import GNotificationIcon from "../../pages/GardenerPage/Notification/GNotificationIcon";
 import notificationService from "../../pages/services/apiServices/notificationService";
-import SubscriptionIcon from "../../assets/images/gardener/subscription_icon.png";
+import SubscriptionIcon from "../../assets/images/gardener/SubscriptionIcon.png";
+import ContractIcon from "../../assets/images/gardener/ContractIcon.png";
 import { Tooltip } from "antd";
 // import UserInfo from "../UserInfo";
 
@@ -86,15 +86,33 @@ function GardenerHeader({
           fontSize: "20px",
         }}
       >
+        <Tooltip title="Hợp đồng">
+          <img
+            src={ContractIcon}
+            alt="Access Package"
+            style={{
+              width: 25,
+              height: 25,
+              marginBottom: "0.6rem",
+              marginRight: "0.8rem",
+              color: "black",
+            }}
+            onClick={() => {
+              // handle click event here
+              history.push("/gardener/contract-processing");
+            }}
+          />
+        </Tooltip>
         <Tooltip title="Gói dịch vụ">
           <img
             src={SubscriptionIcon}
             alt="Access Package"
             style={{
-              width: 30,
-              height: 30,
+              width: 25,
+              height: 25,
               marginBottom: "0.6rem",
-              marginRight: "0.8rem",
+              marginRight: "0.3rem",
+              color: "black",
             }}
             onClick={() => {
               // handle click event here
