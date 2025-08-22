@@ -230,17 +230,17 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
 
                     <div className="gpdetail-product-info-row">
                       <span className="gpdetail-product-info-label">
-                        Đơn vị bán:
+                        Phần trăm đặt cọc:
                       </span>
                       <span className="gpdetail-product-info-value">
-                        {currentPost?.depositAmount} (
-                        {currentPost?.depositPercentage}%)
+                        ({currentPost?.depositPercentage}%)
                       </span>
                     </div>
 
                     <div className="gpdetail-product-info-row">
                       <span className="gpdetail-product-info-label">
-                        Tiền đặt cọc:
+                        {" "}
+                        Đơn vị bán:{" "}
                       </span>
                       <span className="gpdetail-product-info-value">
                         {currentPost?.productData?.weightUnit}

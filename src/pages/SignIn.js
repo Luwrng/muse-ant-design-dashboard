@@ -296,8 +296,9 @@ export default function SignIn() {
       }
     } catch (err) {
       setLoading(false);
-      console.log("Login failed: ", err.response.data);
-      setError(err.response.data.Error);
+      console.log("Đăng nhập không thành công: ", err.response.data);
+      // setError(err.response.data.Error);
+      setError("Số điện thoại hoặc mật khẩu không chính xác");
     }
   };
 
@@ -373,7 +374,10 @@ export default function SignIn() {
               </Form.Item>
 
               <div className="mt-4">
-                <Link to="/forgot-password" className="text-blue-500 hover:underline">
+                <Link
+                  to="/forgot-password"
+                  className="text-blue-500 hover:underline"
+                >
                   Quên mật khẩu?
                 </Link>
               </div>
