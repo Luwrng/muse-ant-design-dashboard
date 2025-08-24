@@ -15,7 +15,7 @@ import {
   Input,
   Tabs,
   Select,
-  Tag
+  Tag,
 } from "antd";
 import "../Account/Account";
 
@@ -101,8 +101,6 @@ function Account() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingAccountId, setEditingAccountId] = useState(null);
 
-
-
   const showEditModal = (record) => {
     const normalizedStatus = record.Status?.toUpperCase();
 
@@ -116,17 +114,13 @@ function Account() {
     setEditModalVisible(true);
   };
 
-
-
-
-
   const handleViewImage = (url) => {
-    setImageSrc(url);              // Gán ảnh
-    setIsImageModalOpen(true);     // Mở modal
+    setImageSrc(url); // Gán ảnh
+    setIsImageModalOpen(true); // Mở modal
   };
 
   const handleCloseImageModal = () => {
-    setIsImageModalOpen(false);    // Đóng modal
+    setIsImageModalOpen(false); // Đóng modal
   };
 
   const handleApprove = (record) => {
@@ -134,8 +128,8 @@ function Account() {
       prevData.map((item) =>
         item.key === record.key
           ? { ...item, Status: "Active", RoleId: "gardener", IsVerified: true }
-          : item,
-      ),
+          : item
+      )
     );
     message.success("Gardener registration approved successfully");
   };
@@ -145,17 +139,16 @@ function Account() {
       prevData.map((item) =>
         item.key === record.key
           ? {
-            ...item,
-            Status: "Inactive", // đổi trạng thái
-            RoleId: "gardener", // nếu cần
-            IsVerified: false,  // hoặc true, tùy logic
-          }
+              ...item,
+              Status: "Inactive", // đổi trạng thái
+              RoleId: "gardener", // nếu cần
+              IsVerified: false, // hoặc true, tùy logic
+            }
           : item
       )
     );
     message.error("Gardener registration rejected");
   };
-
 
   const showUserDetails = (record) => {
     setSelectedUser(record);
@@ -188,7 +181,11 @@ function Account() {
   }, []);
   const fetchGardeners = async (page = 1, size = 10) => {
     try {
-      const data = await cleanfood.gardener.getAll({ page, size, sortOrder: "asc" });
+      const data = await cleanfood.gardener.getAll({
+        page,
+        size,
+        sortOrder: "asc",
+      });
 
       const formattedData = data.items.map((item) => {
         const address = item.addresses?.[0] || {};
@@ -203,8 +200,8 @@ function Account() {
             item.gender?.toLowerCase() === "male"
               ? "Nam"
               : item.gender?.toLowerCase() === "female"
-                ? "Nữ"
-                : "Không xác định",
+              ? "Nữ"
+              : "Không xác định",
           Avatar:
             item.avatar?.toLowerCase().startsWith("none") || !item.avatar
               ? defaultAvatar
@@ -213,8 +210,8 @@ function Account() {
             item.status?.toUpperCase() === "ACTIVE"
               ? "Active"
               : item.status?.toUpperCase() === "INACTIVE"
-                ? "Inactive"
-                : item.status,
+              ? "Inactive"
+              : item.status,
           RoleId: item.roleName?.toLowerCase() || "guest",
           IsVerified: item.isVerified,
           CreatedAt: item.createAt
@@ -245,8 +242,6 @@ function Account() {
     setActiveTab, // truyền thêm
   });
 
-
-
   const gardenerColumns = [
     {
       title: "Hình đại diện",
@@ -261,21 +256,18 @@ function Account() {
       dataIndex: "Name",
       key: "name",
       width: 150,
-
     },
     {
       title: "Email",
       dataIndex: "Email",
       key: "email",
       width: 200,
-
     },
     {
       title: "Số điện thoại",
       dataIndex: "PhoneNumber",
       key: "phone",
       width: 150,
-
     },
     {
       title: "Trạng thái",
@@ -303,7 +295,7 @@ function Account() {
         }
 
         return <Tag color={color}>{text}</Tag>;
-      }
+      },
     },
     {
       title: "Hành động",
@@ -321,7 +313,9 @@ function Account() {
               color: "#1890ff",
               cursor: "pointer",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.2)")
+            }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
           <EditButton
@@ -332,8 +326,6 @@ function Account() {
       ),
     },
   ];
-
-
 
   return (
     <>
@@ -355,11 +347,19 @@ function Account() {
                 </Space>
               }
             >
-              <Tabs activeKey={activeTab}
+              <Tabs
+                activeKey={activeTab}
                 onChange={(key) => setActiveTab(key)}
-                defaultActiveKey="1">
-
-                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Đang chờ duyệt </span>} key="1">
+                defaultActiveKey="1"
+              >
+                <Tabs.TabPane
+                  tab={
+                    <span style={{ fontSize: "16px", padding: "10px" }}>
+                      Đang chờ duyệt{" "}
+                    </span>
+                  }
+                  key="1"
+                >
                   <div className="table-responsive">
                     <Table
                       columns={approveColumns({
@@ -367,11 +367,10 @@ function Account() {
                         openRejectModal,
                         setDataSource,
                         setActiveTab,
-                        onApproved: fetchGardeners // truyền đúng hàm bạn có
+                        onApproved: fetchGardeners, // truyền đúng hàm bạn có
                       })}
-
                       dataSource={statusData.filter(
-                        (item) => item.Status === "PENDING",
+                        (item) => item.Status === "PENDING"
                       )}
                       pagination={{
                         current: pagination.current,
@@ -389,7 +388,6 @@ function Account() {
                       className="ant-border-space"
                       scroll={{ x: true }}
                     />
-
                   </div>
                   <Modal
                     open={isImageModalOpen}
@@ -403,40 +401,21 @@ function Account() {
                       style={{ width: "100%", borderRadius: "8px" }}
                     />
                   </Modal>
-
                 </Tabs.TabPane>
-                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}> Đang hoạt động</span>} key="2">
-                  <div className="table-responsive " >
+                <Tabs.TabPane
+                  tab={
+                    <span style={{ fontSize: "16px", padding: "10px" }}>
+                      {" "}
+                      Đang hoạt động
+                    </span>
+                  }
+                  key="2"
+                >
+                  <div className="table-responsive ">
                     <Table
                       columns={gardenerColumns}
                       dataSource={statusData.filter(
-                        (item) => item.Status === "Active",
-                      )}
-                      pagination={{
-                        current: pagination.current,
-                        pageSize: pagination.pageSize,
-                        total: pagination.total,
-                        position: ["bottomCenter", "bottomRight"],
-                        onChange: (page, size) => {
-                          setPagination({
-                            ...pagination,
-                            current: page,
-                            pageSize: size,
-                          });
-                        },
-                      }}
-                      className="ant-border-space"
-                      scroll={{ x: true }}
-
-                    />
-                  </div>
-                </Tabs.TabPane>
-                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Ngưng hoạt động</span>} key="3">
-                  <div className="table-responsive">
-                    <Table
-                      columns={gardenerColumns}
-                      dataSource={statusData.filter(
-                        (item) => item.Status === "Inactive",
+                        (item) => item.Status === "Active"
                       )}
                       pagination={{
                         current: pagination.current,
@@ -456,12 +435,51 @@ function Account() {
                     />
                   </div>
                 </Tabs.TabPane>
-                <Tabs.TabPane tab={<span style={{ fontSize: "16px", padding: "10px" }}>Bị cấm</span>} key="4">
+                <Tabs.TabPane
+                  tab={
+                    <span style={{ fontSize: "16px", padding: "10px" }}>
+                      Ngưng hoạt động
+                    </span>
+                  }
+                  key="3"
+                >
                   <div className="table-responsive">
                     <Table
                       columns={gardenerColumns}
                       dataSource={statusData.filter(
-                        (item) => item.Status === "BANNED",
+                        (item) => item.Status === "Inactive"
+                      )}
+                      pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        position: ["bottomCenter", "bottomRight"],
+                        onChange: (page, size) => {
+                          setPagination({
+                            ...pagination,
+                            current: page,
+                            pageSize: size,
+                          });
+                        },
+                      }}
+                      className="ant-border-space"
+                      scroll={{ x: true }}
+                    />
+                  </div>
+                </Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <span style={{ fontSize: "16px", padding: "10px" }}>
+                      Bị cấm
+                    </span>
+                  }
+                  key="4"
+                >
+                  <div className="table-responsive">
+                    <Table
+                      columns={gardenerColumns}
+                      dataSource={statusData.filter(
+                        (item) => item.Status === "BANNED"
                       )}
                       pagination={{
                         current: pagination.current,
@@ -487,9 +505,6 @@ function Account() {
         </Row>
       </div>
 
-
-
-
       {/* modal thông tin cá nhân */}
       <Modal
         title={null}
@@ -502,7 +517,9 @@ function Account() {
       >
         <div style={{ display: "flex", gap: "24px", padding: "24px" }}>
           {/* Cột trái - Thông tin tài khoản */}
-          <div style={{ width: 400, display: "flex", justifyContent: "center" }}>
+          <div
+            style={{ width: 400, display: "flex", justifyContent: "center" }}
+          >
             <div style={{ ...cardStyle, width: 400 }}>
               <h3 style={{ textAlign: "center" }}>Thông tin tài khoản</h3>
               <p>
@@ -512,34 +529,52 @@ function Account() {
                   style={{ marginLeft: 12, border: "2px solid #f0f0f0" }}
                 />
               </p>
-              <p><strong>Tên:</strong> {selectedUser?.Name}</p>
-              <p><strong>Email:</strong> {selectedUser?.Email}</p>
-              <p><strong>Điện thoại:</strong> {selectedUser?.PhoneNumber}</p>
-              <p><strong>Giới tính:</strong> {selectedUser?.Gender}</p>
-              <p><strong>Địa chỉ:</strong>
+              <p>
+                <strong>Tên:</strong> {selectedUser?.Name}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedUser?.Email}
+              </p>
+              <p>
+                <strong>Điện thoại:</strong> {selectedUser?.PhoneNumber}
+              </p>
+              <p>
+                <strong>Giới tính:</strong> {selectedUser?.Gender}
+              </p>
+              <p>
+                <strong>Địa chỉ:</strong>
                 {selectedUser?.Address
                   ? `${selectedUser.Address.addressLine}, ${selectedUser.Address.province}, ${selectedUser.Address.country}`
                   : "---"}
               </p>
               <p>
                 <strong>Trạng thái:</strong>{" "}
-                <Tag color={
-                  selectedUser?.Status === "Active" ? "green" :
-                    selectedUser?.Status === "Inactive" ? "red" :
-                      selectedUser?.Status === "BANNED" ? "volcano" :
-                        "default"
-                }>
+                <Tag
+                  color={
+                    selectedUser?.Status === "Active"
+                      ? "green"
+                      : selectedUser?.Status === "Inactive"
+                      ? "red"
+                      : selectedUser?.Status === "BANNED"
+                      ? "volcano"
+                      : "default"
+                  }
+                >
                   {selectedUser?.Status === "Active"
                     ? "Đang hoạt động"
                     : selectedUser?.Status === "Inactive"
-                      ? "Ngưng hoạt động"
-                      : selectedUser?.Status === "BANNED"
-                        ? "Bị cấm"
-                        : "Không xác định"}
+                    ? "Ngưng hoạt động"
+                    : selectedUser?.Status === "BANNED"
+                    ? "Bị cấm"
+                    : "Không xác định"}
                 </Tag>
               </p>
-              <p><strong>Ngày tạo:</strong> {selectedUser?.CreatedAt}</p>
-              <p><strong>Ngày cập nhật:</strong> {selectedUser?.UpdatedAt}</p>
+              <p>
+                <strong>Ngày tạo:</strong> {selectedUser?.CreatedAt}
+              </p>
+              <p>
+                <strong>Ngày cập nhật:</strong> {selectedUser?.UpdatedAt}
+              </p>
               <p>
                 <strong>Xác thực:</strong>{" "}
                 <span
@@ -593,7 +628,10 @@ function Account() {
         onCancel={() => setEditModalVisible(false)}
         onOk={async () => {
           try {
-            await cleanfood.admin.updateAccountStatus(editingAccountId, editStatus);
+            await cleanfood.admin.updateAccountStatus(
+              editingAccountId,
+              editStatus
+            );
             message.success("Cập nhật trạng thái thành công");
             setEditModalVisible(false);
             fetchGardeners(); // reload lại danh sách
@@ -616,10 +654,6 @@ function Account() {
           <Select.Option value="BANNED">Bị cấm</Select.Option>
         </Select>
       </Modal>
-
-
-
-
     </>
   );
 }
