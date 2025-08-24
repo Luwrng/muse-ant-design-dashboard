@@ -38,7 +38,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     }));
   };
 
-  const handleDepositAmountChange = (value) => {
+  const handleDepositPercentageChange = (value) => {
     // Only allow numbers and reset negative values to 0
     let numericValue = Number.parseFloat(value) || 0;
     if (numericValue < 0) {
@@ -46,22 +46,22 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     }
 
     // Calculate deposit percentage based on selected product price
-    let depositPercentage = 0;
+    let depositAmount = 0;
     if (formData.productId && productList) {
       const selectedProduct = productList.find(
         (p) => p.productId === formData.productId
       );
       if (selectedProduct && selectedProduct.price > 0) {
-        depositPercentage = Math.floor(
-          (numericValue * 100) / selectedProduct.price
+        depositAmount = Math.floor(
+          (numericValue / 100) * selectedProduct.price
         );
       }
     }
 
     setFormData((prev) => ({
       ...prev,
-      depositAmount: numericValue,
-      depositPercentage: depositPercentage,
+      depositAmount: depositAmount,
+      depositPercentage: numericValue,
     }));
   };
 
@@ -373,16 +373,15 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           </div>
 
           <div className="gpcreate-field">
-            <label className="gpcreate-label">
-              Tiền cọc sản phẩm ({formData.depositPercentage}%)
-            </label>
+            <label className="gpcreate-label">Phần trăm đặt cọc</label>
             <input
               type="number"
-              value={formData.depositAmount}
-              onChange={(e) => handleDepositAmountChange(e.target.value)}
+              value={formData.depositPercentage}
+              onChange={(e) => handleDepositPercentageChange(e.target.value)}
               className="gpcreate-input gpcreate-deposit-input"
               placeholder="Nhập số tiền cọc"
               min="0"
+              max="100"
               disabled={formData.productId === ""}
             />
           </div>
