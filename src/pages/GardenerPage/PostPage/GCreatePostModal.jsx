@@ -363,12 +363,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
               disabled={formData.productId === ""}
             >
               <option value="">-- Chọn trạng thái mùa vụ --</option>
-              {Array.isArray(harvestStatusList) &&
-                harvestStatusList.map((hs) => (
-                  <option key={hs.status} value={hs.status}>
-                    {hs.label}
-                  </option>
-                ))}
+              {harvestStatusList.map((hs) => (
+                <option key={hs.status} value={hs.status}>
+                  {hs.display}
+                </option>
+              ))}
             </select>
           </div>
 
