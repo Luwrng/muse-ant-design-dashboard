@@ -576,3 +576,43 @@
     gap: 1rem;
   }
 }
+
+/* Print styling part */
+@page {
+  size: A4; /* You can change to Letter if needed */
+  margin: 16mm; /* Adjust print margins */
+}
+
+@media print {
+  body * {
+    visibility: hidden !important; /* hide everything */
+  }
+  #contract-preview,
+  #contract-preview * {
+    visibility: visible !important;
+  }
+  #contract-preview {
+    position: static !important; /* let it flow naturally */
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .gcreatecontract-signature-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-top: 40px;
+  }
+  .gcreatecontract-signature-party {
+    width: 45%; /* so they don't wrap */
+    text-align: center;
+  }
+
+  nav,
+  header,
+  footer,
+  .no-print {
+    display: none !important; /* extra safety */
+  }
+}

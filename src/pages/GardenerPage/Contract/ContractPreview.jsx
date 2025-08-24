@@ -1270,7 +1270,7 @@ export default function ContractPreview({ contractData, onBack }) {
   };
 
   return (
-    <div className="gcreatecontract-preview-container">
+    <div className="gcreatecontract-preview-container" id="contract-prview">
       {/* Header */}
       <div className="gcreatecontract-preview-header">
         <div className="gcreatecontract-preview-header-content">
@@ -1310,7 +1310,7 @@ export default function ContractPreview({ contractData, onBack }) {
       </div>
 
       {/* Contract Document */}
-      <div className="gcreatecontract-document">
+      <div className="gcreatecontract-document" id="contract-preview">
         {/* Official Header */}
         <div className="gcreatecontract-official-header">
           <div className="gcreatecontract-country-header">
