@@ -3,6 +3,7 @@ import "./CreateProductCertificatePopup.css";
 import { useState } from "react";
 import axios from "axios";
 import { X } from "lucide-react";
+import { message } from "antd";
 
 function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
   const [certificateFormData, setCertificateFormData] = useState({
@@ -43,7 +44,10 @@ function CreateProductCertificatePopup({ onClose, onAddCertificate }) {
       !certificateFormData.expirationDate ||
       !file
     ) {
-      alert("Please fill in all required fields.");
+      // alert("Please fill in all required fields.");
+      message.warning(
+        "Xin vui lòng nhập thông tin vào các trường thông tin bắt buộc."
+      );
       return;
     }
     setShowConfirmModal(true); // Show confirmation modal

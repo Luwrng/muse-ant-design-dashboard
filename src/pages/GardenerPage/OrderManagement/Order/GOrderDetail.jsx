@@ -9,6 +9,7 @@ import GApprovePopup from "./Popups/GApprovePopup";
 import GRejectPopup from "./Popups/GRejectPopup";
 import LoadingPopup from "../../../../components/loading/LoadingPopup";
 import notificationService from "../../../services/apiServices/notificationService";
+import { message } from "antd";
 
 function GOrderDetail({ orderId, onBack }) {
   const [isCreatingDelivery, setIsCreatingDelivery] = useState(false);
@@ -164,7 +165,10 @@ function GOrderDetail({ orderId, onBack }) {
     // Check for any errors before proceeding
     const hasErrors = Object.values(errors).some((error) => error !== null);
     if (hasErrors) {
-      alert("Vui lòng sửa các lỗi nhập liệu trước khi tạo đơn giao hàng.");
+      // alert("Vui lòng sửa các lỗi nhập liệu trước khi tạo đơn giao hàng.");
+      message.error(
+        "Vui lòng sửa các lỗi nhập liệu trước khi tạo đơn giao hàng."
+      );
       return;
     }
 
@@ -185,7 +189,8 @@ function GOrderDetail({ orderId, onBack }) {
       }));
 
     if (orderDetailsToDeliver.length === 0) {
-      alert("Vui lòng chọn ít nhất một sản phẩm để giao.");
+      // alert("Vui lòng chọn ít nhất một sản phẩm để giao.");
+      message.wwarning("Vui lòng chọn ít nhất một sản phẩm để giao.");
       return;
     }
 
@@ -232,7 +237,8 @@ function GOrderDetail({ orderId, onBack }) {
 
       setMinDeliveryDate(formatDateToLocalDatetimeString(finalMinDate));
 
-      alert("Đơn giao hàng đã được tạo thành công!");
+      // alert("Đơn giao hàng đã được tạo thành công!");
+      message.success("Đơn giao hàng đã được tạo thành công!");
     } catch (err) {
       console.log(err);
     } finally {

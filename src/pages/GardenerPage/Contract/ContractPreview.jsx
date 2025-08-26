@@ -15,6 +15,7 @@ import {
 } from "docx";
 import { saveAs } from "file-saver";
 import "./ContractPage.css";
+import { message } from "antd";
 
 export default function ContractPreview({ contractData, onBack }) {
   const handlePrint = () => {
@@ -1249,7 +1250,8 @@ export default function ContractPreview({ contractData, onBack }) {
       saveAs(blob, fileName);
     } catch (error) {
       console.error("Error generating document:", error);
-      alert("Có lỗi xảy ra khi xuất file. Vui lòng thử lại.");
+      // alert("Có lỗi xảy ra khi xuất file. Vui lòng thử lại.");
+      message.error("Có lỗi xảy ra khi xuất file. Vui lòng thử lại.");
     }
   };
 
