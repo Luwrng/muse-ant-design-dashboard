@@ -52,6 +52,9 @@ import SignUpPage from "./pages/authentication/SignUpPage";
 import AuthService from "./pages/services/AuthService";
 import { useEffect } from "react";
 
+//Test
+// import Test from "./pages/GardenerPage/Test";
+
 function App() {
   useEffect(() => {
     const isOnUnAuthPage =
@@ -68,6 +71,9 @@ function App() {
     <div className="App">
       <AuthCheck>
         <Switch>
+          {/* Test Route */}
+          {/* <Route path="/test" exact component={Test} /> */}
+
           {/* Auth routes */}
           <Route path="/sign-up" exact component={SignUpPage} />
           <Route path="/sign-in" exact component={SignIn} />
