@@ -6,9 +6,12 @@ const getGeneralDashboardInfo = async (id) => {
   return await httpService.get(`${gardenerEndpoint}/${id}/statistic/general`);
 };
 
-const getYearOrderStatistic = async (id) => {
+const getYearOrderStatistic = async (id, year) => {
   return await httpService.get(
-    `${gardenerEndpoint}/${id}/statistic/year-orders`
+    `${gardenerEndpoint}/${id}/statistic/year-orders`,
+    {
+      params: { year },
+    }
   );
 };
 

@@ -33,6 +33,10 @@ function GDashboard() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // 👇 Added year state
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
   useEffect(() => {
     const statusOrder = [
       "PENDING",
@@ -51,7 +55,8 @@ function GDashboard() {
           gardenerId
         );
         var yearlyOrder = await statisticService.getYearOrderStatistic(
-          gardenerId
+          gardenerId,
+          selectedYear
         );
         var upcommingAppointmentsData =
           await statisticService.getUpcommingAppointment(gardenerId);
@@ -139,7 +144,7 @@ function GDashboard() {
     };
 
     fetchStatistic();
-  }, []);
+  }, [selectedYear]);
 
   // Options for bar chart
   const barOptions = {
@@ -295,6 +300,20 @@ function GDashboard() {
             {/* Bar Chart */}
             <div className="gdashboard-chart-card gdashboard-bar-chart">
               <h3>Số đơn hàng theo tháng</h3>
+              {/* 👇 Year selector */}
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="gdashboard-year-select"
+              >
+                {Array.from({ length: 5 }, (_, i) => currentYear - i).map(
+                  (year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  )
+                )}
+              </select>
               <div className="gdashboard-chart-wrapper">
                 <Bar options={barOptions} data={dashboardData.monthlyOrders} />
               </div>
