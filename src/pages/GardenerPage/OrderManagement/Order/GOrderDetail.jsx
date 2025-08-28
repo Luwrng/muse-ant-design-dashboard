@@ -528,10 +528,11 @@ function GOrderDetail({ orderId, onBack }) {
             </div>
 
             <div className="godetail-info-item godetail-contract-section">
-              <span className="godetail-info-label">Hình ảnh hợp đồng:</span>
+              <span className="godetail-info-label">Tệp hợp đồng:</span>
               <div className="godetail-contract-display">
                 {orderData.contractImage ? (
-                  <div className="godetail-contract-image-container">
+                  <>
+                    {/* <div className="godetail-contract-image-container">
                     <img
                       src={orderData.contractImage || "/placeholder.svg"}
                       alt="Hình ảnh hợp đồng"
@@ -545,12 +546,38 @@ function GOrderDetail({ orderId, onBack }) {
                       className="godetail-contract-error"
                       style={{ display: "none" }}
                     >
-                      Không thể tải hình ảnh hợp đồng
+                      Không thể file hợp đồng
                     </div>
-                  </div>
+                  </div> */}
+                    <div className="godetail-contract-file-container">
+                      <div className="godetail-contract-file-info">
+                        📄 File hợp đồng
+                      </div>
+                      <div className="godetail-contract-file-actions">
+                        <a
+                          href={orderData.contractImage}
+                          download
+                          className="godetail-contract-download-btn"
+                        >
+                          Tải xuống hợp đồng
+                        </a>
+                        {/* Optional: view on Office Online if file is public */}
+                        <a
+                          href={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                            orderData.contractImage
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="godetail-contract-view-btn"
+                        >
+                          Xem trên Office Online
+                        </a>
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <div className="godetail-no-contract">
-                    Chưa có hình ảnh hợp đồng
+                    Chưa có tệp hợp đồng
                   </div>
                 )}
               </div>
