@@ -337,7 +337,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
 
           {/* Product */}
           <div className="gpcreate-field">
-            <label className="gpcreate-label">Chọn sản phẩm</label>
+            <label className="gpcreate-label">Chọn sản phẩm *</label>
 
             <select
               onChange={(e) => handleProductToggle(e.target.value)}
@@ -356,7 +356,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           {/* Must choose a product to fill the next required field (Harvest status, Deposit amount)*/}
           {/* Harvest status */}
           <div className="gpcreate-field">
-            <label className="gpcreate-label">Trạng thái mùa vụ:</label>
+            <label className="gpcreate-label">Trạng thái mùa vụ: *</label>
             <select
               onChange={(e) => handleHarvestStatusToggle(e.target.value)}
               className="gpcreate-product-list"
@@ -372,7 +372,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           </div>
 
           <div className="gpcreate-field">
-            <label className="gpcreate-label">Phần trăm đặt cọc</label>
+            <label className="gpcreate-label">Phần trăm đặt cọc *</label>
             <input
               type="number"
               value={formData.depositPercentage}
