@@ -532,23 +532,6 @@ function GOrderDetail({ orderId, onBack }) {
               <div className="godetail-contract-display">
                 {orderData.contractImage ? (
                   <>
-                    {/* <div className="godetail-contract-image-container">
-                    <img
-                      src={orderData.contractImage || "/placeholder.svg"}
-                      alt="Hình ảnh hợp đồng"
-                      className="godetail-contract-image"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "block";
-                      }}
-                    />
-                    <div
-                      className="godetail-contract-error"
-                      style={{ display: "none" }}
-                    >
-                      Không thể file hợp đồng
-                    </div>
-                  </div> */}
                     <div className="godetail-contract-file-container">
                       <div className="godetail-contract-file-info">
                         📄 File hợp đồng
