@@ -144,11 +144,25 @@ function GPostPage() {
         title: updatedPost.title,
         content: updatedPost.content,
         harvestStatus: updatedPost.harvestStatus,
+        harvestDate: updatedPost.harvestDate,
+        postEndDate: updatedPost.postEndDate,
       });
 
-      setPosts(
-        posts.map((post) =>
-          post.postId === updatedPost.postId ? updatedPost : post
+      // console.log(posts);
+      // console.log(updatedPost);
+      const normalizedPost = {
+        ...updatedPost,
+        harvestDate: updatedPost.harvestDate
+          ? new Date(updatedPost.harvestDate).toISOString().split("T")[0]
+          : null,
+        postEndDate: updatedPost.postEndDate
+          ? new Date(updatedPost.postEndDate).toISOString().split("T")[0]
+          : null,
+      };
+
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.postId === normalizedPost.postId ? normalizedPost : post
         )
       );
     } catch (err) {

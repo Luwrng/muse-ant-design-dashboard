@@ -6,27 +6,40 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [harvestStatus, setHarvestStatus] = useState("");
+  const [harvestDate, setHarvestDate] = useState(new Date());
+  const [postEndDate, setPostEndDate] = useState(new Date());
 
   useEffect(() => {
-    if (post) {
+    if (post && isOpen) {
+      // console.log(post);
       setTitle(post.title || "");
       setContent(post.content || "");
       setHarvestStatus(post.harvestStatus || "");
+      setHarvestDate(post.harvestDate || new Date());
+      setPostEndDate(post.postEndDate || new Date());
     }
-  }, [post]);
+  }, [post, isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onUpdate({ ...post, title, content, harvestStatus });
+    await onUpdate({
+      ...post,
+      title,
+      content,
+      harvestStatus,
+      harvestDate,
+      postEndDate,
+    });
     onClose();
   };
 
   const harvestStatusList = [
-    { status: "PREORDEROPEN", display: "Mỏ đặt cọc" },
-    { status: "PLANTING", display: "Đang trồng" },
-    { status: "HARVESTING", display: "Thu hoạch" },
-    { status: "PROCESSING", display: "Đóng gói" },
-    { status: "READYFORSALE", display: "Có hàng" },
+    { status: "PREORDEROPEN", label: "Mở đặt cọc", order: 1 },
+    { status: "PLANTING", label: "Đang trồng", order: 2 },
+    { status: "HARVESTING", label: "Thu hoạch", order: 4 },
+    { status: "PROCESSING", label: "Đóng gói", order: 5 },
+    { status: "READYFORSALE", label: "Có hàng", order: 6 },
+    { status: "HARVESTFAILED", label: "Mất mùa", order: 3 },
   ];
 
   if (!isOpen) return null;
@@ -67,7 +80,7 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
           </div>
 
           <div className="gpupdate-field">
-            <label className="gpupdate-label">Tiêu đề</label>
+            <label className="gpupdate-label">Trạng thái mùa vụ</label>
             <select
               onChange={(e) => setHarvestStatus(e.target.value)}
               className="gpupdate-input"
@@ -75,13 +88,67 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
             >
               <option value="">-- Chọn trạng thái mùa vụ --</option>
               {Array.isArray(harvestStatusList) &&
-                harvestStatusList.map((hs) => (
-                  <option key={hs.status} value={hs.status}>
-                    {hs.label}
-                  </option>
-                ))}
+                harvestStatusList
+                  .filter((hs) => {
+                    const current = harvestStatusList.find(
+                      (s) => s.status === post.harvestStatus
+                    );
+                    if (!current) return true;
+
+                    // Always allow current status so it shows in the UI
+                    if (hs.status === current.status) return true;
+
+                    // Allow only higher order OR HARVESTFAILED
+                    return (
+                      hs.order > current.order || hs.status === "HARVESTFAILED"
+                    );
+                  })
+                  .map((hs) => (
+                    <option
+                      key={hs.status}
+                      value={hs.status}
+                      disabled={hs.status === harvestStatus}
+                    >
+                      {hs.label}
+                    </option>
+                  ))}
             </select>
           </div>
+
+          {["PREORDEROPEN", "PLANTING", "HARVESTING"].includes(
+            harvestStatus
+          ) && (
+            <div className="gpupdate-field">
+              <label className="gpupdate-label">
+                Ngày bắt đầu thu hoạch (Dự kiến)
+              </label>
+              <input
+                type="date"
+                value={new Date(harvestDate).toISOString().split("T")[0]}
+                onChange={(e) => setHarvestDate(e.target.value)}
+                className="gpupdate-input"
+                min={new Date().toISOString().split("T")[0]}
+                max={postEndDate || undefined}
+                required
+              />
+            </div>
+          )}
+
+          {harvestStatus !== "HARVESTFAILED" && (
+            <div className="gpupdate-field">
+              <label className="gpupdate-label">
+                Ngày kết thúc bài đăng (Dự kiến) *
+              </label>
+              <input
+                type="date"
+                value={new Date(postEndDate).toISOString().split("T")[0]}
+                onChange={(e) => setPostEndDate(e.target.value)}
+                className="gpupdate-input"
+                min={harvestDate || new Date().toISOString().split("T")[0]}
+                required
+              />
+            </div>
+          )}
 
           <div className="gpupdate-actions">
             <button
