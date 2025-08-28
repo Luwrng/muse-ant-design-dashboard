@@ -53,7 +53,7 @@ import AuthService from "./pages/services/AuthService";
 import { useEffect } from "react";
 
 //Test
-// import Test from "./pages/GardenerPage/Test";
+import Test from "./pages/GardenerPage/Test";
 
 function App() {
   useEffect(() => {
@@ -72,7 +72,7 @@ function App() {
       <AuthCheck>
         <Switch>
           {/* Test Route */}
-          {/* <Route path="/test" exact component={Test} /> */}
+          <Route path="/test" exact component={Test} />
 
           {/* Auth routes */}
           <Route path="/sign-up" exact component={SignUpPage} />
