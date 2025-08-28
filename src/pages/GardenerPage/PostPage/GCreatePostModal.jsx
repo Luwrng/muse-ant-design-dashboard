@@ -210,7 +210,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   };
 
   const harvestStatusList = [
-    { status: "PREORDEROPEN", display: "Mỏ đặt cọc" },
+    { status: "PREORDEROPEN", display: "Mở đặt cọc" },
     { status: "PLANTING", display: "Đang trồng" },
     { status: "HARVESTING", display: "Thu hoạch" },
     { status: "PROCESSING", display: "Đóng gói" },

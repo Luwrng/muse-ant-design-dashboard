@@ -40,6 +40,14 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
     BANNED: "Bị cấm",
   };
 
+  const harvestStatusMap = {
+    PREORDEROPEN: "Mở đặt cọc",
+    PLANTING: "Đang trồng",
+    HARVESTING: "Thu hoạch",
+    PROCESSING: "Đóng gói",
+    READYFORSALE: "Có hàng",
+  };
+
   return (
     <div className="gpdetail-overlay" onClick={onClose}>
       <div className="gpdetail-popup" onClick={(e) => e.stopPropagation()}>
@@ -266,7 +274,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
                         Trạng thái mùa vụ:
                       </span>
                       <span className="gpdetail-product-info-value">
-                        {currentPost?.harvestStatus}
+                        {harvestStatusMap[currentPost?.harvestStatus]}
                       </span>
                     </div>
 
