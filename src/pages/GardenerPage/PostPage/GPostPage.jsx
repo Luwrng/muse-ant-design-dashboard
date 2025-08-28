@@ -170,6 +170,9 @@ function GPostPage() {
         productId: newPostData.productId,
         gardenerId: newPostData.gardenerId,
         postMediaDTOs: newPostData.postMediaDTOs,
+        harvestStatus: newPostData.harvestStatus,
+        depositAmount: newPostData.depositAmount,
+        depositPercentage: newPostData.depositPercentage,
       };
 
       // console.log(newPostData.postMediaDTOs);
