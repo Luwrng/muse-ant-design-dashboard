@@ -13,7 +13,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    harvestDate: "",
+    harvestDate: new Date(),
     postEndDate: new Date(),
     postMediaDTOs: [],
     productId: "",
@@ -40,10 +40,11 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
 
   const handleDepositPercentageChange = (value) => {
     // Only allow numbers and reset negative values to 0
-    let numericValue = Number.parseFloat(value) || 0;
-    if (numericValue < 0) {
-      numericValue = 0;
-    }
+    let numericValue = parseInt(value, 10) || 0;
+
+    // Enforce min 0 and max 100
+    if (numericValue < 0) numericValue = 0;
+    if (numericValue > 100) numericValue = 100;
 
     // Calculate deposit percentage based on selected product price
     let depositAmount = 0;
@@ -166,11 +167,14 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
       setFormData({
         title: "",
         content: "",
-        harvestDate: "",
+        harvestDate: new Date(),
         postEndDate: new Date(),
         postMediaDTOs: [],
         productId: "",
         gardenerId: localStorage.getItem("account_id"),
+        harvestStatus: "",
+        depositAmount: 0,
+        depositPercentage: 0,
       });
       setContentValue("");
       setCreateVideo();
@@ -189,6 +193,9 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
       postMediaDTOs: [],
       productId: "",
       gardenerId: localStorage.getItem("account_id"),
+      harvestStatus: "",
+      depositAmount: 0,
+      depositPercentage: 0,
     });
     onClose();
   };
@@ -197,7 +204,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     setFormData({
       title: "",
       content: "",
-      harvestDate: "",
+      harvestDate: new Date(),
       postEndDate: new Date(),
       postMediaDTOs: [],
       productId: "",
@@ -307,13 +314,16 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
 
           {/* Havest Date */}
           <div className="gpcreate-field">
-            <label className="gpcreate-label">Ngày bắt đầu thu hoạch *</label>
+            <label className="gpcreate-label">
+              Ngày bắt đầu thu hoạch (Dự kiến) *
+            </label>
             <input
               type="date"
               id="harvestDate"
               value={formData.harvestDate}
               onChange={(e) => handleInputChange("harvestDate", e.target.value)}
               min={new Date().toISOString().split("T")[0]}
+              max={formData.postEndDate || undefined}
               className="gpcreate-input"
               required
             />
@@ -322,14 +332,16 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
           {/* Post End Date */}
           <div className="gpcreate-field">
             <label className="gpcreate-label">
-              Ngày dự tính kết thúc bài đăng *
+              Ngày kết thúc bài đăng (Dự kiến) *
             </label>
             <input
               type="date"
               id="postEndDate"
               value={formData.postEndDate}
               onChange={(e) => handleInputChange("postEndDate", e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
+              min={
+                formData.harvestDate || new Date().toISOString().split("T")[0]
+              }
               className="gpcreate-input"
               required
             />
@@ -378,7 +390,8 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
               value={formData.depositPercentage}
               onChange={(e) => handleDepositPercentageChange(e.target.value)}
               className="gpcreate-input gpcreate-deposit-input"
-              placeholder="Nhập số tiền cọc"
+              placeholder="Nhập số phần trăn tiền cọc"
+              step="1"
               min="0"
               max="100"
               disabled={formData.productId === ""}

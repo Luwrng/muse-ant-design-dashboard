@@ -25,7 +25,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
     };
 
     fetchPost();
-  }, [postId]);
+  }, [postId, isOpen]);
 
   if (!isOpen) return null;
 
@@ -46,6 +46,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
     HARVESTING: "Thu hoạch",
     PROCESSING: "Đóng gói",
     READYFORSALE: "Có hàng",
+    HARVESTFAILED: "Mất mùa",
   };
 
   return (
@@ -257,7 +258,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
 
                     <div className="gpdetail-product-info-row">
                       <span className="gpdetail-product-info-label">
-                        Ngày bắt đầu thu hoạch:
+                        Ngày bắt đầu thu hoạch (dự kiến):
                       </span>
                       <span className="gpdetail-product-info-value">
                         {
