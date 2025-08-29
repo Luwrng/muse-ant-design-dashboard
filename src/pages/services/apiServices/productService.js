@@ -47,7 +47,7 @@ const changeProductStatus = async (productId, status) => {
 
 //Reviews
 const getProductReview = async (productId) => {
-  return await httpService.get(`${productEndpoint}/${productId}/reviews`);
+  return await httpService.get(`/retailer/products/${productId}/reviews`);
 };
 
 //Product Price
