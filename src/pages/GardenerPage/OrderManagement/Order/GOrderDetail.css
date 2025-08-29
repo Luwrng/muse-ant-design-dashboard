@@ -135,12 +135,88 @@
   font-size: 14px;
   font-style: italic;
 }
+
+.godetail-contract-label {
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.godetail-contract-arrow {
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.godetail-contract-collapsed {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--gray-50);
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+.godetail-contract-gallery {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--gray-400) var(--gray-200);
+}
+
+.godetail-contract-gallery::-webkit-scrollbar {
+  height: 10px; /* always visible */
+}
+
+.godetail-contract-gallery::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 6px;
+}
+
+.godetail-contract-gallery::-webkit-scrollbar-track {
+  background: var(--gray-200);
+}
+
+.godetail-contract-image-container {
+  flex: 0 0 auto;
+  width: 250px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+}
+
+/* Zoom Modal */
+.godetail-contract-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.godetail-contract-zoom-container img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+}
+
 /* End contract image */
 
 /* ======================= */
 /* Contract File Styling   */
 /* ======================= */
-.godetail-contract-file-container {
+/* .godetail-contract-file-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -159,7 +235,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  word-break: break-all; /* handle long filenames */
+  word-break: break-all;
 }
 
 .godetail-contract-file-actions {
@@ -169,7 +245,7 @@
 
 .godetail-contract-download-btn,
 .godetail-contract-view-btn {
-  background: #f3f4f6; /* light gray */
+  background: #f3f4f6; 
   color: #333;
   padding: 6px 12px;
   font-size: 13px;
@@ -197,14 +273,14 @@
 }
 
 .godetail-contract-view-btn {
-  background: #2563eb; /* blue */
+  background: #2563eb;
   color: white;
   border: none;
 }
 
 .godetail-contract-view-btn:hover {
   background: #1d4ed8;
-}
+} */
 /* End contract file */
 
 .godetail-create-delivery-btn {
@@ -303,7 +379,50 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+/* ORDER STATUS */
 .godetail-status-pending {
+  background: #fdba74; /* medium orange */
+  color: #7c2d12; /* dark burnt orange */
+}
+
+.godetail-status-preparing {
+  background: #93c5fd; /* medium blue */
+  color: #1e3a8a; /* navy blue */
+}
+
+.godetail-status-delivering {
+  background: #c4b5fd; /* medium purple */
+  color: #4c1d95; /* deep purple */
+}
+
+.godetail-status-delivered {
+  background: #fcd34d; /* golden yellow */
+  color: #78350f; /* dark gold-brown */
+}
+
+.godetail-status-completed {
+  background: #86efac; /* medium green */
+  color: #14532d; /* dark forest green */
+}
+
+.godetail-status-cancelled {
+  background: #fca5a5; /* medium red */
+  color: #7f1d1d; /* dark red */
+}
+
+/* DELIVERY STATUS */
+.godetail-delivery-delivering {
+  background: #fed7aa; /* soft orange background */
+  color: #9a3412; /* dark orange-brown text */
+}
+
+.godetail-delivery-delivered {
+  background: #e9d5ff; /* soft lavender purple background */
+  color: #6b21a8; /* deep purple text */
+}
+
+/* .godetail-status-pending {
   background: #fff3cd;
   color: #856404;
 }
@@ -313,7 +432,6 @@
 }
 .godetail-status-completed,
 .godetail-status-delivered {
-  /* Added .godetail-status-delivered */
   background: #d4edda;
   color: #155724;
 }
@@ -321,7 +439,7 @@
 .godetail-status-cancelled {
   background: #ffcccc;
   color: #571515;
-}
+} */
 .godetail-info {
   margin-bottom: 32px;
 }

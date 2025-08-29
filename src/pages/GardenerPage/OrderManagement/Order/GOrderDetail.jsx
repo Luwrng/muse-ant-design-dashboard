@@ -387,6 +387,14 @@ function GOrderDetail({ orderId, onBack }) {
     }
   };
 
+  //Contract image gallery setup
+  const [isOpen, setIsOpen] = useState(false);
+  const [zoomImage, setZoomImage] = useState(null);
+
+  const toggleGallery = () => setIsOpen(!isOpen);
+  const openZoom = (img) => setZoomImage(img);
+  const closeZoom = () => setZoomImage(null);
+
   if (!orderData) {
     return (
       <div className="godetail-loading">Đang tải chi tiết đơn hàng...</div>
@@ -527,43 +535,98 @@ function GOrderDetail({ orderId, onBack }) {
               </span>
             </div>
 
-            <div className="godetail-info-item godetail-contract-section">
-              <span className="godetail-info-label">Tệp hợp đồng:</span>
+            {/* <div className="godetail-info-item godetail-contract-section">
+              <span className="godetail-info-label">Ảnh hợp đồng:</span>
               <div className="godetail-contract-display">
                 {orderData.contractImage ? (
-                  <>
-                    <div className="godetail-contract-file-container">
-                      <div className="godetail-contract-file-info">
-                        📄 File hợp đồng
-                      </div>
-                      <div className="godetail-contract-file-actions">
-                        <a
-                          href={orderData.contractImage}
-                          download
-                          className="godetail-contract-download-btn"
-                        >
-                          Tải xuống hợp đồng
-                        </a>
-                        {/* Optional: view on Office Online if file is public */}
-                        <a
-                          href={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                            orderData.contractImage
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="godetail-contract-view-btn"
-                        >
-                          Xem trên Office Online
-                        </a>
-                      </div>
+                  <div className="godetail-contract-image-container">
+                    <img
+                      src={orderData.contractImage || "/placeholder.svg"}
+                      alt="Hình ảnh hợp đồng"
+                      className="godetail-contract-image"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "block";
+                      }}
+                    />
+                    <div
+                      className="godetail-contract-error"
+                      style={{ display: "none" }}
+                    >
+                      Không thể tải hình ảnh hợp đồng
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <div className="godetail-no-contract">
-                    Chưa có tệp hợp đồng
+                    Chưa có hình ảnh hợp đồng
                   </div>
                 )}
               </div>
+            </div> */}
+
+            <div className="godetail-info-item godetail-contract-section">
+              <div
+                className="godetail-info-label godetail-contract-label"
+                onClick={toggleGallery}
+              >
+                Ảnh hợp đồng{" "}
+                <span className="godetail-contract-arrow">
+                  {isOpen ? "▼" : "▶"}
+                </span>
+              </div>
+
+              {orderData.contractImage && orderData.contractImage.length > 0 ? (
+                <div className="godetail-contract-display">
+                  {/* Show only first image if collapsed */}
+                  {!isOpen ? (
+                    <div className="godetail-contract-collapsed">
+                      Có {orderData.contractImage.length} ảnh hợp đồng, bấm để
+                      xem
+                    </div>
+                  ) : (
+                    <div className="godetail-contract-gallery">
+                      {orderData.contractImage.map((img, index) => (
+                        <div
+                          key={index}
+                          className="godetail-contract-image-container"
+                          onClick={() => openZoom(img)}
+                        >
+                          <img
+                            src={img}
+                            alt={`Hợp đồng ${index + 1}`}
+                            className="godetail-contract-image"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.nextSibling.style.display = "block";
+                            }}
+                          />
+                          <div
+                            className="godetail-contract-error"
+                            style={{ display: "none" }}
+                          >
+                            Không thể tải hình ảnh hợp đồng
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div> //
+              ) : (
+                <div className="godetail-no-contract">
+                  Chưa có hình ảnh hợp đồng
+                </div>
+              )}
+              {/* Zoom Modal */}
+              {zoomImage && (
+                <div
+                  className="godetail-contract-zoom-overlay"
+                  onClick={closeZoom}
+                >
+                  <div className="godetail-contract-zoom-container">
+                    <img src={zoomImage} alt="Zoom hợp đồng" />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -762,7 +825,7 @@ function GOrderDetail({ orderId, onBack }) {
                   <h3>Mã giao hàng: {delivery.orderDeliveryId}</h3>
                   <div className="godetail-delivery-header-right">
                     <span
-                      className={`godetail-status godetail-status-${delivery.deliveryStatus.toLowerCase()}`}
+                      className={`godetail-status godetail-delivery-${delivery.deliveryStatus.toLowerCase()}`}
                     >
                       {getStatusClass(delivery.deliveryStatus)}
                     </span>

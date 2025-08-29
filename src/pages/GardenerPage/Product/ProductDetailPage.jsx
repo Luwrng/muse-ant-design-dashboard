@@ -32,7 +32,7 @@ function ProductDetailPage({
     };
 
     fetchReviews();
-  }, [product]);
+  }, [product, isOpen]);
 
   if (!isOpen || !product) return null;
 
