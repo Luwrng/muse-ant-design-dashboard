@@ -302,8 +302,7 @@ function SignUpPage() {
               {/* Postal Code nếu muốn người dùng nhập */}
               <div className="siup-field-group">
                 <label className="siup-field-label">
-                  Mã bưu điện (Postal Code){" "}
-                  <span className="siup-required">*</span>
+                  Mã bưu điện (Postal Code)
                 </label>
                 <input
                   type="text"
