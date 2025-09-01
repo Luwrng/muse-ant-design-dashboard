@@ -8,20 +8,9 @@ import {
   faUserGroup,
   faClone,
   faList,
-  faFileContract,
-  faBoxes,
-  faNewspaper,
-  faChartLine,
-  faBell,
   faUserCheck,
-  faBug,
-  faUser,
-  faSignInAlt,
-  faUserPlus,
-  faFileAlt,
-  faShoppingBasket,
   faMoneyBill,
-  faExclamationCircle,
+  faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidenav.css";
 
@@ -43,7 +32,6 @@ function Sidenav() {
             <span>Tổng Quan</span>
           </NavLink>
         </Menu.Item>
-
         {/* FE-01: Quản lý tài khoản */}
         <Menu.SubMenu
           key="account-management"
@@ -52,7 +40,7 @@ function Sidenav() {
         >
           <Menu.Item key="account">
             <NavLink to="/account">
-              <FontAwesomeIcon icon={faList} />
+              <FontAwesomeIcon icon={faUserCheck} />
               <span>Nhà Vườn</span>
             </NavLink>
           </Menu.Item>
@@ -63,92 +51,55 @@ function Sidenav() {
             </NavLink>
           </Menu.Item>
         </Menu.SubMenu>
-
         {/* FE-02: Quản lý dịch vụ */}
-        <Menu.SubMenu
-          key="services-management"
-          icon={<FontAwesomeIcon icon={faClone} />}
-          title="Quản Lý Dịch Vụ"
-        >
-          <Menu.Item key="services">
-            <NavLink to="/services">
-              <FontAwesomeIcon icon={faList} />
-              <span>Danh Sách Dịch Vụ</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.SubMenu>
-
+        <Menu.Item key="services">
+          <NavLink to="/services">
+            <FontAwesomeIcon icon={faClone} />
+            <span>Quản Lý Dịch Vụ</span>
+          </NavLink>
+        </Menu.Item>
         {/* FE-03: Quản lý gói dịch vụ */}
-        <Menu.SubMenu
-          key="package-management"
-          icon={<FontAwesomeIcon icon={faBoxes} />}
-          title="Quản Lý Gói Dịch Vụ"
-        >
-          <Menu.Item key="package">
-            <NavLink to="/package">
-              <FontAwesomeIcon icon={faList} />
-              <span>Danh Sách Gói</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.SubMenu>
+        <Menu.Item key="package">
+          <NavLink to="/package">
+            <FontAwesomeIcon icon={faList} />
+            <span>Quản Lý Gói Dịch Vụ</span>
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key="subscription-orders">
+          <NavLink to="/subscription-orders">
+            <FontAwesomeIcon icon={faMoneyBill} />
+            <span>Quản lí đăng kí</span>
+          </NavLink>
+        </Menu.Item>
 
-
-        <Menu.SubMenu
-          key="subscription-management"
-          icon={<FontAwesomeIcon icon={faFileContract} />}
-          title="Quản Lý Đăng Ký"
-        >
-          {/* <Menu.Item key="subscription-contracts">
-            <NavLink to="/subscription-contracts">
-              <FontAwesomeIcon icon={faFileContract} />
-              <span>Quản lí mua gói</span>
-            </NavLink>
-          </Menu.Item> */}
-          <Menu.Item key="subscription-orders">
-            <NavLink to="/subscription-orders">
-              <FontAwesomeIcon icon={faMoneyBill} />
-              <span>Quản lí mua gói</span>
-            </NavLink>
-          </Menu.Item>
-        </Menu.SubMenu>
         <Menu.Item key="productcategory">
           <NavLink to="/productcategory">
             <FontAwesomeIcon icon={faUserGroup} />
             <span>Danh mục sản phẩm</span>
           </NavLink>
         </Menu.Item>
-
         {/* <Menu.Item key="active-package-customers">
           <NavLink to="/active-package-customers">
             <FontAwesomeIcon icon={faUserGroup} />
             <span>Danh Sách Khách Hàng Đang Sử Dụng Gói</span>
           </NavLink>
         </Menu.Item> */}
-
-
         {/* FE-09: Quản lý báo cáo */}
-        <Menu.SubMenu
-          key="report-management"
-          icon={<FontAwesomeIcon icon={faExclamationCircle} />}
-          title="Quản Lý Báo Cáo"
-        >
-          <Menu.Item key="reports-list">
-            <NavLink to="/reports-list">
-              <FontAwesomeIcon icon={faList} />
-              <span>Danh Sách Báo Cáo</span>
-            </NavLink>
-          </Menu.Item>
-          {/* <Menu.Item key="reported-posts">
+
+        <Menu.Item key="reports-list">
+          <NavLink to="/reports-list">
+            <FontAwesomeIcon icon={faCircleExclamation} />
+            <span>Quản Lý Báo Cáo</span>
+          </NavLink>
+        </Menu.Item>
+        {/* <Menu.Item key="reported-posts">
             <NavLink to="/reported-posts">
               <FontAwesomeIcon icon={faNewspaper} />
               <span>Bài Viết Bị Báo Cáo</span>
             </NavLink>
           </Menu.Item> */}
-        </Menu.SubMenu>
 
         <Menu.Divider />
-
-
       </Menu>
     </>
   );

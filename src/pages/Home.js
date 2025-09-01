@@ -37,12 +37,9 @@ import team3 from "../assets/images/team-3.jpg";
 import team4 from "../assets/images/team-4.jpg";
 import card from "../assets/images/info-card-1.jpg";
 
-
-
 function Home() {
   const { Title, Text } = Typography;
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
-
 
   const [reverse, setReverse] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -57,7 +54,6 @@ function Home() {
   const [activePackages, setActivePackages] = useState([]);
   const [timelineList, setTimelineList] = useState([]);
   const history = useHistory();
-
 
   const dollor = [
     <svg
@@ -145,48 +141,45 @@ function Home() {
       ></path>
     </svg>,
   ];
-  const initialCount = useMemo(() => [
-    {
-      key: "gardener",
-      today: "Số lượng Nhà Vườn",
-      title: (stats.gardener ?? 0).toLocaleString(),
-      icon: profile,
-      bnb: "bnb2",
-      persent: "",
-    },
-    {
-      key: "retailer",
-      today: "Số lượng Nhà bán lẻ",
-      title: (stats.retailer ?? 0).toLocaleString(),
-      icon: profile,
-      bnb: "bnb2",
-      persent: "",
-    },
-    {
-      key: "servicePackage",
-      today: "Tổng số Gói dịch vụ",
-      title: (stats.servicePackage ?? 0).toLocaleString(),
-      icon: cart,
-      bnb: "redtext",
-      persent: "",
-    },
-    {
-      key: "revenue",
-      today: "Doanh thu",
-      title: `${(stats.orderAmount ?? 0).toLocaleString()} VND`,
-      icon: dollor,
-      bnb: "bnb2",
-      persent: "",
-    },
-  ], [stats]);
-
-
-
+  const initialCount = useMemo(
+    () => [
+      {
+        key: "gardener",
+        today: "Số lượng Nhà Vườn",
+        title: (stats.gardener ?? 0).toLocaleString(),
+        icon: profile,
+        bnb: "bnb2",
+        persent: "",
+      },
+      {
+        key: "retailer",
+        today: "Số lượng Nhà bán lẻ",
+        title: (stats.retailer ?? 0).toLocaleString(),
+        icon: profile,
+        bnb: "bnb2",
+        persent: "",
+      },
+      {
+        key: "servicePackage",
+        today: "Tổng số Gói dịch vụ",
+        title: (stats.servicePackage ?? 0).toLocaleString(),
+        icon: cart,
+        bnb: "redtext",
+        persent: "",
+      },
+      {
+        key: "revenue",
+        today: "Doanh thu",
+        title: `${(stats.orderAmount ?? 0).toLocaleString()}`,
+        icon: dollor,
+        bnb: "bnb2",
+        persent: "",
+      },
+    ],
+    [stats]
+  );
 
   const [count, setCount] = useState(initialCount);
-
-
-
 
   const uploadProps = {
     name: "file",
@@ -206,6 +199,56 @@ function Home() {
     },
   };
 
+  // Lấy TẤT CẢ đơn mua gói dịch vụ (ServicePackageOrders)
+  async function getAllServicePackageOrders({
+    search = "",
+    size = 200,
+    pageStart = 1,
+  } = {}) {
+    let page = pageStart; // nếu API 0-based thì đổi pageStart = 0
+    const all = [];
+    let total;
+
+    while (true) {
+      const res = await cleanfood.admin.getServicePackageOrders({
+        page,
+        size,
+        search,
+      });
+
+      const items =
+        res?.items ?? res?.data?.items ?? res?.data ?? res?.results ?? [];
+
+      if (total === undefined) {
+        total =
+          res?.total ??
+          res?.data?.total ??
+          res?.pagination?.total ??
+          res?.meta?.total;
+      }
+
+      const totalPages =
+        res?.totalPages ?? res?.data?.totalPages ?? res?.pagination?.totalPages;
+
+      all.push(...items);
+
+      // điều kiện dừng an toàn
+      if (typeof totalPages === "number") {
+        if (page >= pageStart + totalPages - 1) break;
+      } else if (typeof total === "number") {
+        if (all.length >= total) break;
+      } else {
+        if (items.length < size) break;
+      }
+
+      page += 1;
+    }
+
+    return {
+      items: all,
+      total: typeof total === "number" ? total : all.length,
+    };
+  }
 
   const fetchStats = async () => {
     try {
@@ -219,15 +262,15 @@ function Home() {
         packageRes,
         contractRes,
         orderRes,
-        serviceRes
+        serviceRes,
       ] = await Promise.all([
         // ✅ Chỉ lấy ACTIVE ngay từ server
         cleanfood.gardener.getAll({ page, size, status: "ACTIVE" }),
         cleanfood.retailer.getAll(page, size, "ACTIVE"),
         cleanfood.admin.getPackage({ page, size }),
         cleanfood.admin.getContract({ page, size }),
-        cleanfood.admin.getServicePackageOrders({ page, size, search }),
-        cleanfood.admin.getPackage({ page, size, search, status: "ACTIVE" })
+        getAllServicePackageOrders({ search, size: 200 }),
+        cleanfood.admin.getPackage({ page, size, search, status: "ACTIVE" }),
       ]);
 
       const revenue = contractRes.items?.reduce(
@@ -235,25 +278,29 @@ function Home() {
         0
       );
 
-      const successOrders = orderRes.items?.filter(order => order.status === "SUCCESS") || [];
+      const successOrders =
+        orderRes.items?.filter((order) => order.status === "SUCCESS") || [];
 
-      const newTimelineItems = (orderRes.items || []).slice(0, 5).map((order) => {
-        const status = order.status?.toUpperCase() || "UNKNOWN";
-        return {
-          title: `${order.gardenerName || "Chủ vườn"} - ${(order.totalAmount || 0).toLocaleString()} VND`,
-          time: order.createdAt
-            ? new Date(order.createdAt).toLocaleString("vi-VN", {
-              hour: "2-digit",
-              minute: "2-digit",
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })
-            : "Không xác định",
-          color: status === "SUCCESS" ? "green" : "gray",
-          status,
-        };
-      });
+      const newTimelineItems = (orderRes.items || [])
+        .filter((o) => (o?.status || "").toUpperCase() === "SUCCESS") // nếu timeline chỉ muốn SUCCESS
+        .slice() // tránh mutate mảng gốc
+        .sort(
+          (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+        ) // sort mới → cũ
+        .slice(0, 5) // lấy 5 giao dịch mới nhất
+        .map((order) => {
+          const status = (order.status || "UNKNOWN").toUpperCase();
+          return {
+            title: `${order.gardenerName || "Chủ vườn"} - ${(
+              order.totalAmount || 0
+            ).toLocaleString()} VND`,
+            time: order.createdAt
+              ? dayjs(order.createdAt).format("HH:mm DD/MM/YYYY")
+              : "Không xác định",
+            color: status === "SUCCESS" ? "green" : "gray",
+            status,
+          };
+        });
 
       const revenueMap = {};
       for (const order of successOrders) {
@@ -261,7 +308,9 @@ function Home() {
         revenueMap[date] = (revenueMap[date] || 0) + (order.totalAmount || 0);
       }
       const monthlyRevenue = Object.entries(revenueMap)
-        .sort(([a], [b]) => dayjs(a, "MM/YYYY").unix() - dayjs(b, "MM/YYYY").unix())
+        .sort(
+          ([a], [b]) => dayjs(a, "MM/YYYY").unix() - dayjs(b, "MM/YYYY").unix()
+        )
         .map(([month, amount]) => ({ month, amount }));
 
       const orderTotalAmount = successOrders.reduce(
@@ -288,15 +337,12 @@ function Home() {
         orderCount: orderCount || 0,
         monthlyRevenue,
       });
-
     } catch (err) {
       console.error("❌ Lỗi fetch data:", err);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   useEffect(() => {
     fetchStats();
@@ -322,8 +368,7 @@ function Home() {
                     <Col xs={18}>
                       <span>{c.today}</span>
                       <Title level={3}>
-                        {c.title}{" "}
-                        <small className={c.bnb}>{c.persent}</small>
+                        {c.title} <small className={c.bnb}>{c.persent}</small>
                       </Title>
                     </Col>
                     <Col xs={6}>
@@ -345,7 +390,6 @@ function Home() {
           <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <LineChart monthlyRevenue={stats.monthlyRevenue || []} />
-
             </Card>
           </Col>
         </Row>
@@ -358,9 +402,7 @@ function Home() {
                   <Title level={5}>Các gói dịch vụ</Title>
                 </div>
                 <div className="ant-filtertabs">
-                  <div className="antd-pro-pages-dashboard-analysis-style-salesExtra">
-
-                  </div>
+                  <div className="antd-pro-pages-dashboard-analysis-style-salesExtra"></div>
                 </div>
               </div>
               <div className="ant-list-box table-responsive">
@@ -369,15 +411,15 @@ function Home() {
                     {activePackages.map((pkg, index) => (
                       <tr key={pkg.servicePackageId}>
                         <td>
-                          <h6>
-                            {pkg.packageName}
-                          </h6>
+                          <h6>{pkg.packageName}</h6>
                         </td>
                         <td>
                           {pkg.features?.map((f) => (
                             <div key={f.serviceFeatureId}>
                               <Tooltip title={f.description}>
-                                <span className="text-xs">{f.serviceFeatureName}</span>
+                                <span className="text-xs">
+                                  {f.serviceFeatureName}
+                                </span>
                               </Tooltip>
                             </div>
                           ))}
@@ -402,21 +444,25 @@ function Home() {
                   </tbody>
                 </table>
               </div>
-              <div className="uploadfile shadow-none">
-
-              </div>
+              <div className="uploadfile shadow-none"></div>
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
                 <Title level={5}>Lịch sử giao dịch gần đây</Title>
-                <Paragraph className="lastweek" style={{ marginBottom: 24 }}>
-
-                </Paragraph>
+                <Paragraph
+                  className="lastweek"
+                  style={{ marginBottom: 24 }}
+                ></Paragraph>
                 <Timeline className="timelinelist" reverse={reverse}>
                   {timelineList
                     .filter((t) => t.status === "SUCCESS")
+                    .sort(
+                      (a, b) =>
+                        dayjs(a.time, "HH:mm DD/MM/YYYY", true).valueOf() -
+                        dayjs(b.time, "HH:mm DD/MM/YYYY", true).valueOf()
+                    )
                     .map((t, index) => (
                       <Timeline.Item color={t.color} key={index}>
                         <Title level={5}>{t.title}</Title>

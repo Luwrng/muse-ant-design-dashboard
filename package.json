@@ -18,7 +18,7 @@
     "apexcharts": "^4.7.0",
     "axios": "^1.10.0",
     "cross-env": "^7.0.3",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "firebase": "^11.10.0",
