@@ -183,6 +183,7 @@ function SignUpPage() {
       city: formData.city,
       province: formData.province,
       postalCode: formData.postalCode,
+      certName: formData.certName,
     };
 
     try {
