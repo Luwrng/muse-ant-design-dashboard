@@ -20,9 +20,12 @@ const updateRecordStatus = async (
     await cleanfood.admin.updateAccountStatus(record.key, newStatus, true);
 
     message.success(`Đã cập nhật trạng thái thành ${newStatus}`);
-
     if (newStatus === "ACTIVE") {
-      setActiveTab("ACTIVE");
+      setActiveTab("Hoạt động");
+    } else if (newStatus === "INACTIVE") {
+      setActiveTab("Ngưng hoạt động");
+    } else {
+      setActiveTab("Khác");
     }
 
     if (fetchData) {
