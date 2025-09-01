@@ -9,6 +9,7 @@ import Paginate from "../../../components/paginate/Paginate";
 import "./GAppointmentPage.css";
 import appointmentService from "../../services/apiServices/appointmentService";
 import LoadingPopup from "../../../components/loading/LoadingPopup";
+import notificationService from "../../services/apiServices/notificationService";
 
 const timeSlots = [
   //   "0:00",
@@ -284,6 +285,16 @@ function GAppointmentPage() {
       setPendingAppointments((prev) =>
         prev.filter((item) => item.appointmentId !== appointment.appointmentId)
       );
+
+      const gardenerName = localStorage.getItem("account_name");
+
+      const data = {
+        accountId: appointment.retailerId,
+        message: `Cuộc hẹn của bạn với ${gardenerName} đã được chấp nhận`,
+        link: "Không có",
+        sender: gardenerName,
+      };
+      await notificationService.sendNotification(data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -381,6 +392,14 @@ function GAppointmentPage() {
       );
 
       fetchPendingAppointment(1);
+
+      const data = {
+        accountId: appointment.retailerId,
+        message: `Cuộc hẹn của bạn với ${gardenerName} đã bị từ chối`,
+        link: "Không có",
+        sender: gardenerName,
+      };
+      await notificationService.sendNotification(data);
     } catch (err) {
       console.log(err);
     } finally {
