@@ -183,6 +183,7 @@ function SignUpPage() {
       city: formData.city,
       province: formData.province,
       postalCode: formData.postalCode,
+      certName: formData.certName,
     };
 
     try {
@@ -302,8 +303,7 @@ function SignUpPage() {
               {/* Postal Code nếu muốn người dùng nhập */}
               <div className="siup-field-group">
                 <label className="siup-field-label">
-                  Mã bưu điện (Postal Code){" "}
-                  <span className="siup-required">*</span>
+                  Mã bưu điện (Postal Code)
                 </label>
                 <input
                   type="text"
