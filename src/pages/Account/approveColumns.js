@@ -22,7 +22,7 @@ const updateRecordStatus = async (
       ACTIVE: "Hoạt động",
       INACTIVE: "Ngưng hoạt động",
     };
-    message.success(`Tài khoản đã được ${newStatus}`);
+    message.success(`Tài khoản đã được ${statusMap[newStatus]}`);
     if (newStatus === "ACTIVE") {
       setActiveTab("Hoạt động");
     } else if (newStatus === "INACTIVE") {
