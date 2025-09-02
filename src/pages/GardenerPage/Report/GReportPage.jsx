@@ -16,9 +16,9 @@ const { TextArea } = Input;
 
 const GReportPage = () => {
   const [formData, setFormData] = useState({
-    reportType: "",
+    reportType: "Báo cáo hành vi người dùng",
     phoneNumber: "",
-    targetType: "",
+    targetType: "USER",
     subject: "",
     description: "",
     severity: "",
@@ -43,14 +43,25 @@ const GReportPage = () => {
       setFormData({
         reportType: "",
         phoneNumber: "",
-        targetType: "",
+        targetType: "USER",
         subject: "",
         description: "",
         severity: "",
         accountId: localStorage.getItem("account_id") || "",
       });
     } catch (err) {
-      AntMessage.error("Gửi báo cáo thất bại!");
+      const error = err.response.data.Error;
+      switch (error) {
+        case "Account is not found, please check the phone number again":
+          AntMessage.error(
+            "Số điện thoại người bị báo cáo không tồn tại trong hệ thống!"
+          );
+          break;
+        default:
+          AntMessage.error("Gửi báo cáo thất bại!");
+          break;
+      }
+
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -71,26 +82,18 @@ const GReportPage = () => {
           Gửi Báo Cáo Đến Quản Trị Viên
         </Title>
         <Form layout="vertical" onFinish={handleSubmit}>
-          <Form.Item label="Loại báo cáo" required>
+          {/* <Form.Item label="Loại báo cáo">
             <Input
               name="reportType"
               value={formData.reportType}
-              onChange={handleChange}
+              disabled={true}
             />
-          </Form.Item>
+          </Form.Item> */}
 
-          <Form.Item label="Số điện thoại" required>
+          <Form.Item label="Số điện thoại người bị báo cáo" required>
             <Input
-              name="targetId"
+              name="phoneNumber"
               value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-          </Form.Item>
-
-          <Form.Item label="Loại đối tượng" required>
-            <Input
-              name="targetType"
-              value={formData.targetType}
               onChange={handleChange}
             />
           </Form.Item>
@@ -118,15 +121,15 @@ const GReportPage = () => {
               value={formData.severity}
               onChange={handleSelectChange}
             >
-              <Select.Option value="low">Thấp</Select.Option>
-              <Select.Option value="medium">Trung bình</Select.Option>
-              <Select.Option value="high">Cao</Select.Option>
+              <Select.Option value="LOW">Thấp</Select.Option>
+              <Select.Option value="MEDIUM">Trung bình</Select.Option>
+              <Select.Option value="HIGH">Cao</Select.Option>
             </Select>
           </Form.Item>
 
-          <Form.Item label="ID tài khoản (tự động)" required>
+          {/* <Form.Item label="ID tài khoản (tự động)" required>
             <Input name="accountId" value={formData.accountId} disabled />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
