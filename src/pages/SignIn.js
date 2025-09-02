@@ -297,8 +297,28 @@ export default function SignIn() {
     } catch (err) {
       setLoading(false);
       console.log("Đăng nhập không thành công: ", err.response.data);
+      var error = err.response.data.Error;
+
       // setError(err.response.data.Error);
-      setError("Số điện thoại hoặc mật khẩu không chính xác");
+      // setError("Số điện thoại hoặc mật khẩu không chính xác");
+      switch (error) {
+        case "This PhoneNUmber does not registered in the system":
+          setError(
+            "Số điện thoại chưa được đăng ký, xin vui lòng kiểm tra lại."
+          );
+          break;
+        case "Your account has been banned or disable":
+          setError(
+            "Tài khoản của bạn hiện chưa được quản trị viên chấp thuận hoặc bị cấm"
+          );
+          break;
+        case "Incorrect Account Password":
+          setError("Mật khẩu không chính xác, xin vui lòng kiểm tra lại.");
+          break;
+        default:
+          setError("Có lỗi hệ thông, xin vui lòng chờ."); //500 error
+          break;
+      }
     }
   };
 
