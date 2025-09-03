@@ -244,24 +244,17 @@ function GPostPage() {
     <div className="gpost-article-management">
       <div className="gpost-header">
         <div className="gpost-title-section">
-          <h1>Quản lý bài viết</h1>
+          <h1>Quản lý bài đăng</h1>
         </div>
 
         <div className="gpost-header-actions">
-          <button
-            className="gpost-create-btn"
-            onClick={() => setShowCreatePopup(true)}
-          >
-            + Tạo bài viết
-          </button>
-
           {/* Usage Info Card */}
           {benefitValue ? (
             <div className="gpost-usage-card">
               <div className="gpost-usage-text">
-                Số bài viết có thể tạo:{" "}
+                Số bài đăng có thể tạo:{" "}
                 <strong>{benefitValue.remainingValue}</strong> /{" "}
-                {benefitValue.defaultValue}
+                <strong>{benefitValue.defaultValue}</strong>
               </div>
               <div className="gpost-usage-bar">
                 <div
@@ -279,6 +272,13 @@ function GPostPage() {
           ) : (
             <></>
           )}
+
+          <button
+            className="gpost-create-btn"
+            onClick={() => setShowCreatePopup(true)}
+          >
+            + Tạo bài đăng
+          </button>
         </div>
       </div>
 
@@ -304,7 +304,7 @@ function GPostPage() {
               <SearchIcon className="gpost-search-icon" />
               <input
                 type="text"
-                placeholder="Tìm kiếm bài viết theo tiêu đề ..."
+                placeholder="Tìm kiếm bài đăng theo tiêu đề ..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => {

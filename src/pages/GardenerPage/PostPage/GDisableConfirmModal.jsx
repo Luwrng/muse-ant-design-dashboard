@@ -27,10 +27,10 @@ function GDisableConfirmModal({ post, isOpen, onClose, onConfirm }) {
           </div>
 
           <h3 className="gpdconfirm-title">
-            Xác nhận {post.status === "ACTIVE" ? "tắt" : "bật"} bài viết
+            Xác nhận {post.status === "ACTIVE" ? "tắt" : "bật"} bài đăng
           </h3>
           <p className="gpdconfirm-message">
-            Bạn có muốn {post.status === "ACTIVE" ? "tắt" : "bật"} bài viết này
+            Bạn có muốn {post.status === "ACTIVE" ? "tắt" : "bật"} bài đăng này
             không?
           </p>
 

@@ -63,7 +63,7 @@ function Header({
     "reported-posts": "Bài Viết Bị Báo Cáo",
     profile: "Hồ Sơ",
     "sign-in": "Đăng Nhập",
-    "sign-up": "Đăng Ký"
+    "sign-up": "Đăng Ký",
   };
   const location = useLocation();
   const path = location.pathname.replace("/", "");
@@ -75,11 +75,22 @@ function Header({
     history.push("/notifications");
   };
 
-
   return (
     <>
-      <div style={{ position: "absolute", top: 20, right: 40, display: "flex", alignItems: "center", gap: "20px" }}>
-        <div onClick={goToNotifications} style={{ cursor: "pointer", fontSize: "20px" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 40,
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+        }}
+      >
+        <div
+          onClick={goToNotifications}
+          style={{ cursor: "pointer", fontSize: "20px" }}
+        >
           <BellOutlined />
         </div>
         <UserInfo />
@@ -103,7 +114,6 @@ function Header({
             </span>
           </div>
         </Col>
-
       </Row>
     </>
   );

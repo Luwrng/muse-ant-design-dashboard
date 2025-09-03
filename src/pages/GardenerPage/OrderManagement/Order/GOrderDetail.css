@@ -205,8 +205,8 @@
 }
 
 .godetail-contract-zoom-container img {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 80vw;
+  max-height: 90vh;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
 }
