@@ -48,7 +48,7 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
     <div className="gpupdate-overlay" onClick={onClose}>
       <div className="gpupdate-popup" onClick={(e) => e.stopPropagation()}>
         <div className="gpupdate-header">
-          <h2 className="gpupdate-title">Chỉnh sửa bài viết</h2>
+          <h2 className="gpupdate-title">Chỉnh sửa bài đăng</h2>
           <button className="gpupdate-close" onClick={onClose}>
             ×
           </button>
@@ -62,7 +62,7 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="gpupdate-input"
-              placeholder="Nhập tiêu đề bài viết"
+              placeholder="Nhập tiêu đề đăng"
               required
             />
           </div>
@@ -73,7 +73,7 @@ function GUpdatePostModal({ post, isOpen, onClose, onUpdate }) {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="gpupdate-textarea"
-              placeholder="Nhập nội dung bài viết"
+              placeholder="Nhập nội dung bài đăng"
               rows={6}
               required
             />

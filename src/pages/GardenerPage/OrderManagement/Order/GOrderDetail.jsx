@@ -616,17 +616,6 @@ function GOrderDetail({ orderId, onBack }) {
                   Chưa có hình ảnh hợp đồng
                 </div>
               )}
-              {/* Zoom Modal */}
-              {zoomImage && (
-                <div
-                  className="godetail-contract-zoom-overlay"
-                  onClick={closeZoom}
-                >
-                  <div className="godetail-contract-zoom-container">
-                    <img src={zoomImage} alt="Zoom hợp đồng" />
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -895,6 +884,15 @@ function GOrderDetail({ orderId, onBack }) {
           onClose={() => setShowRejectModal(false)}
           onConfirm={handleRejectConfirm}
         />
+      )}
+
+      {/* Zoom Modal */}
+      {zoomImage && (
+        <div className="godetail-contract-zoom-overlay" onClick={closeZoom}>
+          <div className="godetail-contract-zoom-container">
+            <img src={zoomImage} alt="Zoom hợp đồng" />
+          </div>
+        </div>
       )}
 
       <LoadingPopup isOpen={isLoading} />

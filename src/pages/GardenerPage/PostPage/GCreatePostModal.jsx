@@ -228,7 +228,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
     <div className="gpcreate-overlay" onClick={handleClose}>
       <div className="gpcreate-popup" onClick={(e) => e.stopPropagation()}>
         <div className="gpcreate-header">
-          <h2 className="gpcreate-title">Tạo bài viết mới</h2>
+          <h2 className="gpcreate-title">Tạo bài đăng mới</h2>
           <button className="gpcreate-close" onClick={handleClose}>
             ×
           </button>
@@ -297,7 +297,7 @@ function GCreatePostModal({ isOpen, onClose, onCreate, productList }) {
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               className="gpcreate-input"
-              placeholder="Nhập tiêu đề bài viết"
+              placeholder="Nhập tiêu đề bài đăng"
               required
             />
           </div>

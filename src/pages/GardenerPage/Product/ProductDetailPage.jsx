@@ -3,6 +3,7 @@ import { StarIcon } from "lucide-react";
 import "./ProductDetailPage.css";
 import productService from "../../services/apiServices/productService";
 import LoadingPage from "./Loading/LoadingPage";
+import DefaultAvatar from "../../../assets/images/gardener/defaultavatar.jpg";
 
 function ProductDetailPage({
   product,
@@ -240,7 +241,11 @@ function ProductDetailPage({
                     <div className="gpd-reviewer-header">
                       <div className="gpd-reviewer-avatar-container">
                         <img
-                          src={review.avatar || "/placeholder.svg"}
+                          src={
+                            review.avatar === "None"
+                              ? DefaultAvatar
+                              : review.avatar
+                          }
                           alt={`Avatar of ${review.name}`}
                           className="gpd-reviewer-avatar"
                         />

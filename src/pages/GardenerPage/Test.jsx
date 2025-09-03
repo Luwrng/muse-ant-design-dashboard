@@ -21,7 +21,7 @@ function Test() {
 
     try {
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dhin0zlf7/raw/upload",
+        "https://api.cloudinary.com/v1_1/dhin0zlf7/image/upload",
         formData
       );
       setUrl(res.data.secure_url);
@@ -35,7 +35,7 @@ function Test() {
 
   return (
     <div>
-      <input type="file" accept=".doc,.docx" onChange={handleFileChange} />
+      <input type="file" accept="*" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={uploading}>
         {uploading ? "Uploading..." : "Upload"}
       </button>

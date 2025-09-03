@@ -53,7 +53,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
     <div className="gpdetail-overlay" onClick={onClose}>
       <div className="gpdetail-popup" onClick={(e) => e.stopPropagation()}>
         <div className="gpdetail-header">
-          <h2 className="gpdetail-title">Chi tiết bài viết</h2>
+          <h2 className="gpdetail-title">Chi tiết bài đăng</h2>
           <button className="gpdetail-close" onClick={onClose}>
             ×
           </button>
@@ -303,7 +303,7 @@ function GPostDetailModal({ postId, isOpen, onClose, onEdit, onDisable }) {
               className="gpdetail-btn gpdetail-btn-disable"
               onClick={onDisable}
             >
-              Ẩn bài viết
+              Ẩn bài đăng
             </button>
           </div>
         )}
