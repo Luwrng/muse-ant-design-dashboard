@@ -208,13 +208,15 @@ function GPostPage() {
         selectedPost.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
       await postService.changePostStatus(selectedPost.postId, updatedStatus);
 
-      setPosts(
-        posts.map((post) =>
-          post.postId === selectedPost.id
-            ? { ...post, status: updatedStatus }
-            : post
-        )
-      );
+      // setPosts(
+      //   posts.map((post) =>
+      //     post.postId === selectedPost.id
+      //       ? { ...post, status: updatedStatus }
+      //       : post
+      //   )
+      // );
+
+      fetchData(1);
     } catch (err) {
       console.log(err);
     } finally {
